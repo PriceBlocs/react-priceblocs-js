@@ -4,7 +4,10 @@
   "description": "React components for PriceBlocs",
   "author": "phoenixbox",
   "license": "MIT",
-  "repository": "PriceBlocs/react-priceblocs-js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/PriceBlocs/react-priceblocs-js.git"
+  },
   "main": "dist/index.js",
   "engines": {
     "node": ">=8",
