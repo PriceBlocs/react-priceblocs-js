@@ -204,10 +204,11 @@ export interface IPriceBlocsContext {
   useContext: () => IPriceBlocsProviderValue
 }
 
-export interface IPriceBlocsProvider extends React.FC<any> {
-  value?: IPriceBlocsProviderValue
-  children?: React.ReactNode
-}
+export interface IPriceBlocsProvider
+  extends React.FC<{
+    value?: IPriceBlocsProviderValue
+    children?: React.ReactNode
+  }> {}
 
 export interface IStripeElementContextProps {
   setReady: (ready: boolean) => void
