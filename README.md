@@ -135,14 +135,6 @@ const {
 } = usePriceBlocsContext()
 ```
 
-| Key                             | Type     | Description                                                               |
-| ------------------------------- | -------- | ------------------------------------------------------------------------- |
-| [customer](#values-api)         | Object   | Core pricing resources like products and featureGroups etc.               |
-| [form](#form-api)               | Object   | Form state values like currencies and intervals to help with presentation |
-| [checkout](#checkout)           | Function | Start a checkout session                                                  |
-| [billing](#billing)             | Function | Start a billing portal session for the provided customer                  |
-| [setFieldValue](#setfieldvalue) | Function | Update any of the context values                                          |
-
 ### Present
 
 - Once initialized, you will be able to access your fetched data via the `usePriceBlocsContext` context hook
