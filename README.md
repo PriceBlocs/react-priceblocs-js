@@ -40,7 +40,7 @@ There are 3 steps to adding prices and checkout to your app:
 - Import `PriceBlocs` and initialize it with both:
   - `api_key`: your PriceBlocs publishable API key
     - Use your `PB_pk_live_*` API key for live Stripe resources and checkout
-    - Use your `PB_pk_test_*` API key for live Stripe resources and checkout
+    - Use your `PB_pk_test_*` API key for test Stripe resources and checkout
   - `prices`: set of prices you want to show to customers (live)
 - You can also pass additional checkout configuration options like a customer id / email
 
