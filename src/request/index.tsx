@@ -10,29 +10,19 @@ import {
   ICustomer,
 } from '../types'
 import { URLS, METHODS } from '../constants'
+import { stringify } from 'qs'
 
 const getAuthHeaders = (apiKey: string): IAuthHeaders => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${apiKey}`,
 })
+
 export const fetchConfig = async (
   apiKey: string,
   params: IFetchConfigParams
 ) => {
-  let queryParams = [] as string[]
-  for (const key in params) {
-    const value = params[key]
-    if (value) {
-      if (Array.isArray(value)) {
-        value.forEach((val) => {
-          queryParams.push(`${key}[]=${val}`)
-        })
-      } else {
-        queryParams.push(`${key}=${value}`)
-      }
-    }
-  }
-  const queryString = queryParams.join('&')
+  const queryString = stringify(params)
+
   const url = queryString ? `${URLS.PRICING}?${queryString}` : URLS.PRICING
 
   const response = await fetch(url, {
@@ -76,7 +66,10 @@ const getCustomerParams = (customer: ICustomer): ICustomerParams => {
 
 export const prepareCheckoutData = (
   checkout: ICheckoutProps | string,
-  props: ICheckoutActionProps
+  props: Pick<
+    ICheckoutActionProps,
+    'success_url' | 'cancel_url' | 'return_url' | 'customer' | 'metadata'
+  >
 ): ICheckoutData => {
   const currentUrl = window.location.href
   if (typeof checkout === 'string') {

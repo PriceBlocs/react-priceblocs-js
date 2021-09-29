@@ -13,6 +13,7 @@ export default (props: IFetchDataActionProps) => {
     customer_email,
     email,
     prices,
+    query,
   } = props
 
   return async () => {
@@ -24,6 +25,7 @@ export default (props: IFetchDataActionProps) => {
           customer_email,
           email,
           prices,
+          query,
         } as IFetchConfigParams
         const { data, ...metadata } = await fetchConfig(api_key, fetchData)
 

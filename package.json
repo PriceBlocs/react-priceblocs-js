@@ -1,6 +1,6 @@
 {
   "name": "@priceblocs/react-priceblocs-js",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "React components for PriceBlocs",
   "author": "phoenixbox",
   "license": "MIT",
@@ -15,31 +15,44 @@
   },
   "scripts": {
     "build": "rollup -c",
-    "start": "rollup -c -w"
+    "start": "rollup -c -w",
+    "test": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx",
+    "test:watch": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx --watch"
   },
   "dependencies": {
-    "lodash": "^4.17.21",
     "@stripe/react-stripe-js": "^1.1.2",
-    "@stripe/stripe-js": "^1.11.0"
+    "@stripe/stripe-js": "^1.11.0",
+    "lodash": "^4.17.21",
+    "qs": "^6.10.1"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0"
   },
   "devDependencies": {
+    "@rollup/plugin-replace": "^3.0.0",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
+    "@types/chai": "^4.2.22",
     "@types/lodash": "^4.14.173",
+    "@types/mocha": "^9.0.0",
+    "@types/qs": "^6.9.7",
     "@types/react": "^16.3.13",
     "@types/react-dom": "^16.0.5",
     "babel-core": "^6.26.3",
     "babel-runtime": "^6.26.0",
+    "chai": "^4.3.4",
+    "dotenv": "^10.0.0",
+    "jsdom": "17.0.0",
+    "jsdom-global": "3.0.2",
+    "lodash": "^4.17.21",
+    "mocha": "^9.1.2",
     "react": ">=16.8.0",
     "react-dom": ">=16.8.0",
-    "lodash": "^4.17.21",
     "rollup": "^1.29.0",
     "rollup-plugin-sass": "^1.2.7",
     "rollup-plugin-typescript2": "^0.25.3",
+    "ts-node": "^10.2.1",
     "typescript": "^2.8.3"
   },
   "files": [

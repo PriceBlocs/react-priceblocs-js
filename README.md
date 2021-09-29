@@ -86,15 +86,51 @@ export default () => {
 
 #### Props
 
-| Key          | Required | Type   | Description                                                                                                                                                                    | Example                       |
-| ------------ | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ----------------------------- |
-| api_key      | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...         |
-| prices       | Yes      | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['p_123', 'p_456']            |
-| success_url  | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success |
-| cancel_url   | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel  |
-| customer     | No       | String | Stripe customer id                                                                                                                                                             | cu_123                        |
-| email        | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com            |
-| presentation | No       | Object | Control the presentation of the response                                                                                                                                       | {order: 'desc'}               |
+| Key                 | Required | Type   | Description                                                                                                                                                                    | Example                                                             |
+| ------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| api_key             | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...                                               |
+| prices              | Yes      | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['p_123', 'p_456']                                                  |
+| success_url         | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success                                       |
+| cancel_url          | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel                                        |
+| customer            | No       | String | Stripe customer id                                                                                                                                                             | cu_123                                                              |
+| email               | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com                                                  |
+| presentation        | No       | Object | Control the presentation of the response                                                                                                                                       | {order: 'desc'}                                                     |
+| query[#query-props] | No       | Object | Fetch associations or expand responses                                                                                                                                         | {customer: {expand: ['default_source'], associations: ['invoices']} |
+
+##### Query props
+
+- An optional query object can be passed to fetch associated collections and expand responses
+- For example if you wanted to fetch all of a customers invoices, you could pass that parameter within the customer associations array like below.
+- To expand part of the customer response itself, you can pass parameters which align to Stripe's customer expand parameters. Read more [here](https://stripe.com/docs/api/expanding_objects) about expanding Stripe responses.
+
+```javascript
+{
+  api_key: 'PB_pk_test_oYQN',
+  prices: ['p_123', 'p_456'],
+  customer: 'cus_123',
+  query: {
+    customer: {
+      expand: [
+        'default_source',
+        'invoice_settings.default_payment_method'
+      ],
+      associations: [
+        'invoices',
+        'subscriptions',
+        'cards'
+      ]
+    }
+  }
+}
+```
+
+| Key                             | Type     | Description                                                               |
+| ------------------------------- | -------- | ------------------------------------------------------------------------- |
+| [customer](#values-api)         | Object   | Core pricing resources like products and featureGroups etc.               |
+| [form](#form-api)               | Object   | Form state values like currencies and intervals to help with presentation |
+| [checkout](#checkout)           | Function | Start a checkout session                                                  |
+| [billing](#billing)             | Function | Start a billing portal session for the provided customer                  |
+| [setFieldValue](#setfieldvalue) | Function | Update any of the context values                                          |
 
 ### Present
 

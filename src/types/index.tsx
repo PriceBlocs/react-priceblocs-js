@@ -1,6 +1,11 @@
 import * as React from 'react'
 import { Stripe } from '@stripe/stripe-js'
 
+type StripeCustomerAssociation = 'subscriptions' | 'cards'
+type StripeCustomerExpand =
+  | 'default_source'
+  | 'invoice_settings.default_payment_method'
+
 export interface ICustomerParams {
   [key: string]: string
   customer?: string
@@ -10,10 +15,18 @@ export interface ICustomerParams {
 
 export interface IFetchConfigParams
   extends Pick<ICustomerParams, 'customer' | 'customer_email' | 'email'> {
-  [key: string]: string | string[]
+  [key: string]: string | string[] | IFetchConfigQueryParams
   prices?: string[]
   id?: string
   session?: string
+  query?: IFetchConfigQueryParams
+}
+
+export interface IFetchConfigQueryParams {
+  customer?: {
+    associations?: StripeCustomerAssociation[]
+    expand?: StripeCustomerExpand[]
+  }
 }
 
 export interface IFetchDataActionProps
@@ -25,6 +38,7 @@ export interface IFetchDataActionProps
   setMetadata: (values: IMetadata) => void
   setError: (error: IPriceBlocsError | IError) => void
   prices: string[]
+  query?: IFetchConfigQueryParams
 }
 
 export interface ICheckoutActionProps {
@@ -33,7 +47,7 @@ export interface ICheckoutActionProps {
   cancel_url?: string
   return_url?: string
   customer?: ICustomer
-  metadata: IMetadata
+  metadata?: IMetadata
   isSubmitting: boolean
   setIsSubmitting: (isSubmiting: boolean) => void
   setError: (error: IPriceBlocsError | IError) => void
@@ -74,13 +88,13 @@ export interface ICheckoutData
 
 export interface ICheckoutProps {
   prices: string[]
-  cancel_url: string
+  cancel_url?: string
   success_url?: string
   return_url?: string
   id?: string
   customer?: ICustomer
   session?: string
-  metadata: IMetadata
+  metadata?: IMetadata
 }
 
 export interface IPriceBlocsContextProps
@@ -88,6 +102,7 @@ export interface IPriceBlocsContextProps
   api_key: string
   children: React.ReactNode | ((props: IPriceBlocsProviderValue) => any)
   prices?: string[]
+  query?: IFetchConfigQueryParams
   success_url?: string
   cancel_url?: string
   return_url?: string

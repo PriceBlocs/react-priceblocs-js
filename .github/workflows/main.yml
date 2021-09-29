@@ -27,6 +27,8 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+      - name: Run tests
+        run: npm run test
       # Runs a single command using the runners shell
       - name: Build package
         run: npm run build rollup.config.js --if-present
@@ -41,6 +43,8 @@ jobs:
           node-version: 14
       - name: Install dependencies
         run: npm install
+      - name: Run tests
+        run: npm run test
       # Runs a single command using the runners shell
       - name: Build package
         run: npm run build rollup.config.js --if-present
