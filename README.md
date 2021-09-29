@@ -174,13 +174,12 @@ const {
 - Once initialized, you will be able to access your fetched data via the `usePriceBlocsContext` context hook
 - There are a variety of fields to help you present, update and initiate checkout
 
-| Key                             | Type     | Description                                                               |
-| ------------------------------- | -------- | ------------------------------------------------------------------------- |
-| [values](#values-api)           | Object   | Core pricing resources like products and featureGroups etc.               |
-| [form](#form-api)               | Object   | Form state values like currencies and intervals to help with presentation |
-| [checkout](#checkout)           | Function | Start a checkout session                                                  |
-| [billing](#billing)             | Function | Start a billing portal session for the provided customer                  |
-| [setFieldValue](#setfieldvalue) | Function | Update any of the context values                                          |
+| Key                             | Type     | Description                                                 |
+| ------------------------------- | -------- | ----------------------------------------------------------- |
+| [values](#values-api)           | Object   | Core pricing resources like products and featureGroups etc. |
+| [checkout](#checkout)           | Function | Start a checkout session                                    |
+| [billing](#billing)             | Function | Start a billing portal session for the provided customer    |
+| [setFieldValue](#setfieldvalue) | Function | Update any of the context values                            |
 
 ```javascript
 import {
@@ -237,7 +236,7 @@ const { checkout } = usePriceBlocsContext()
 - Use the `billing` function from context to start a new Stripe billing portal session
 - A valid customer id is required to start a new session
 - By default, we will use the customer in context if you have initiated PriceBlocs with a valid customer
-- Otherwise you can pass a customer parameter into the billing call
+  - Otherwise you can pass a specific customer id parameter into the billing call
 
 ```javascript
 const { billing } = usePriceBlocsContext()
@@ -291,12 +290,12 @@ const {
 
 #### Values API
 
-| Key                                  | Description                |
-| ------------------------------------ | -------------------------- |
-| [products](#product-api)             | An array of products       |
-| [featureGroups](#feature-groups-api) | An array of feature groups |
-
----
+| Key                                  | Type   | Description                                                               |
+| ------------------------------------ | ------ | ------------------------------------------------------------------------- |
+| [products](#product-api)             | Array  | An array of products                                                      |
+| [customer](#customer-api)            | Object | A Stripe customer                                                         |
+| [form](#form-api)                    | Object | Form state values like currencies and intervals to help with presentation |
+| [featureGroups](#feature-groups-api) | Array  | An array of feature groups                                                |
 
 #### Product API
 
@@ -308,9 +307,7 @@ This shape is closely aligned to the [Stripe products API](https://stripe.com/do
 | description          | Description of the product |
 | [prices](#price-api) | Array of Stripe prices     |
 
----
-
-#### Price API
+##### Price API
 
 - This shape is closely aligned to the [Stripe prices API](https://stripe.com/docs/api/pricess/object)
 
@@ -323,7 +320,7 @@ This shape is closely aligned to the [Stripe products API](https://stripe.com/do
 | [formatted](#price-formatting-api) | Formatted price values                       |
 | symbol                             | Currency symbol for this price               |
 
-#### Price formatting API
+###### Price formatting API
 
 - We format the unit_amount of each price so you don't have to.
 - This also includes formatting them for a variery of different intervals (day, week, month, year)
@@ -334,7 +331,18 @@ This shape is closely aligned to the [Stripe products API](https://stripe.com/do
 | unit_amount | Formatted version of the unit amount                                                                               | 12000 -> $120.00                                                 |
 | intervals   | Price formatted for different intervals [day, week, month, year]. e.g a yearly price presented as a per month cost | { day: "$0.33", week: "$2.31", month: "$10.00", year: "$120.00"} |
 
----
+#### Customer API
+
+This shape is closely aligned to the [Stripe customers API](https://stripe.com/docs/api/customer/object)
+This object will be extended with any additional expanded attributes or associations requested via the initial [query props](#query-props)
+
+| Key           | Present       | Required                                      |
+| ------------- | ------------- | --------------------------------------------- |
+| id            | always        | ID of the Customer                            |
+| email         | always        | Email of the Customer                         |
+| invoices      | conditionally | Array of this Customer's Stripe invoices      |
+| subscriptions | conditionally | Array of this Customer's Stripe subscriptions |
+| cards         | conditionally | Array of this Customer's Stripe cards         |
 
 #### Form API
 
@@ -351,3 +359,28 @@ This shape is closely aligned to the [Stripe products API](https://stripe.com/do
 | Key      | Description                                                                                                                                                                 | Example |
 | -------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------- |
 | interval | The interval presentation interval. For example 'month' will present all amounts in terms of per month pricing, so a $120 per year price will be presented as $10 per month | 'month' |
+
+#### Feature Groups API
+
+| Key                       | Present       | Required                                        | Example                              |
+| ------------------------- | ------------- | ----------------------------------------------- | ------------------------------------ |
+| uuid                      | always        | UUID for the feature group                      | 847169d9-05bf-485f-8d01-637189e9c9a1 |
+| title                     | always        | Title for the feature group                     | Analytics & Reports                  |
+| [features](#features-api) | conditionally | Array of Features included in the feature group |                                      |
+
+##### Feature API
+
+| Key                                   | Required                                                                      | Example                              |
+| ------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------ |
+| uuid                                  | UUID of the feature group                                                     | f0ecdee3-579f-4a9f-aeba-92ff9dbaa767 |
+| title                                 | Report generator                                                              | Analytics & Reports                  |
+| description                           | Generate monthly financial reports                                            | Analytics & Reports                  |
+| [product_config](#product-config-api) | Definition of what products are enabled for this feature, keyed by product id | { product_123: { enabled: true } }   |
+
+##### Product Config API
+
+| Key     | Type    | Required                     | Example                   |
+| ------- | ------- | ---------------------------- | ------------------------- |
+| enabled | boolean | UUID of the feature group    | true                      |
+| value   | string  | Value for the config         | Limit 100 runs a month    |
+| tooltip | string  | Optional tooltip for feature | Custom scheduling allowed |
