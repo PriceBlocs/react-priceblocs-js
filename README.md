@@ -1,6 +1,14 @@
 # PriceBlocs [beta]
 
-PriceBlocs makes it easy for developers to add in payments and billing management to their products through a set of context hooks and components.
+PriceBlocs makes it easy for developers to get started with in-app payments and billing through a set of functional components.
+
+In just a few lines of code you'll be able to:
+
+- Show products and prices
+- Initiate checkouts
+- Enable billing managment
+
+Everything you need to get started with in-app payments, with less server side code.
 
 - [Getting Started](#getting-started)
 - [Workflow](#workflow)
@@ -10,16 +18,42 @@ PriceBlocs makes it easy for developers to add in payments and billing managemen
 
 - API Keys - Sign up for [PriceBlocs](https://priceblocs.com) and get your publishable API keys.
 - Test mode - Enable test mode from within the app to use test Stripe resources for local development.
-- [Install](#install) - Add `priceblocs` to your project
+- [Install](#install) - Add `@priceblocs/react-priceblocs-js` to your project
 
 Our first set of components and hooks are compatible with React, examples of which you can see below.
 
 ### Install
 
-- PriceBlocs is available via npm
+- @priceblocs/react-priceblocs-js is available via npm
 
 ```
-npm i --save priceblocs
+npm i --save @priceblocs/react-priceblocs-js
+```
+
+## Quick start
+
+The quickest way to get started is to:
+
+1. Wrap any content with an authenticated PriceBlocs component
+2. Attach the `checkout` function to any click handler
+3. Pass any price id to the `checkout` call
+
+```javascript
+import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
+
+export default () => (
+  <PriceBlocs api_key="PB_pk_live_123" prices={['price_123']}>
+    {({ loading, values, checkout }) => {
+      if (loading) {
+        return null
+      }
+      const { products } = values
+      const { name, name, prices } = products[0]
+      const { id } = prices[0]
+      return <button onClick={() => checkout(id)}>{`Buy ${name}`}</button>
+    }}
+  </PriceBlocs>
+)
 ```
 
 ## Workflow
@@ -27,11 +61,11 @@ npm i --save priceblocs
 There are 3 steps to adding prices and checkout to your app:
 
 - [Setup](#setup)
-  - Wrap any part of your app with an authenticated PriceBlocs HOC
-  - Pass an `api_key` and a set of `prices
+  - Wrap any part of your app with an authenticated PriceBlocs component
+  - Pass an `api_key` and a set of `prices`
     - Additional checkout and customer [configuration options](#props) can also be passed
 - [Present](#present)
-  - Access your fetched data via context hooks and use it to present purchase options to your customers
+  - Access your fetched data via context hooks and use it to present product options to your customers
 - [Checkout](#checkout)
   - Attach the `checkout` function to any of your price CTA actions to initiate a new checkout session
 
@@ -61,7 +95,7 @@ There are 3 steps to adding prices and checkout to your app:
 | `PB_pk_test_*` | false    | Public   |
 
 ```javascript
-import { PriceBlocs } from 'priceblocs'
+import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
 
 export default () => {
   const props = {
@@ -149,7 +183,10 @@ const {
 | [setFieldValue](#setfieldvalue) | Function | Update any of the context values                                          |
 
 ```javascript
-import { usePriceBlocsContext, getActiveProductPrice } from 'priceblocs'
+import {
+  usePriceBlocsContext,
+  getActiveProductPrice,
+} from '@priceblocs/react-priceblocs-js'
 
 const PricingTable = () => {
   const {
@@ -183,7 +220,8 @@ const PricingTable = () => {
 
 ### Checkout
 
-- Use the `checkout` function from context to start a checkout session by passing a single price or collection of prices as an argument
+- Use the `checkout` function from context to start a checkout session
+- `checkout` accepts wither a single price or a collection or resources as an argument
 
 ```javascript
 const { checkout } = usePriceBlocsContext()
