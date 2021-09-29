@@ -1,0 +1,31 @@
+{
+  "presets": [
+    [
+      "@babel/preset-env",
+      /**
+       * Allow async and await (i.e. prevent regenerator runtime error)
+       */
+      {
+        "targets": {
+          "node": "10"
+        }
+      }
+    ]
+  ],
+  "plugins": [
+    [
+      "module-resolver",
+      {
+        "root": ["./"],
+        "alias": {
+          "@actions": "./src/actions",
+          "@constants": "./src/constants",
+          "@hooks": "./src/hooks",
+          "@request": "./src/request/index.tsx",
+          "@types": "./src/types",
+          "@utils": "./src/utils"
+        }
+      }
+    ]
+  ]
+}

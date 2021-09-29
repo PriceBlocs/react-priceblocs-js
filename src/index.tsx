@@ -99,8 +99,15 @@ export const {
 } = createUseContext(
   (Provider: IPriceBlocsProvider) =>
     (contextProps: IPriceBlocsContextProps): any => {
-      const { children, api_key, success_url, cancel_url, return_url, prices } =
-        contextProps
+      const {
+        children,
+        api_key,
+        success_url,
+        cancel_url,
+        return_url,
+        prices,
+        query,
+      } = contextProps
 
       const [metadata, setMetadata] = React.useState<IMetadata | undefined>()
       const [values, setValues] = React.useState<IValues | undefined>()
@@ -125,6 +132,7 @@ export const {
         customer_email: contextProps.customer_email,
         email: contextProps.email,
         prices,
+        query,
         loading,
         setLoading,
         setValues,
