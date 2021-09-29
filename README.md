@@ -124,6 +124,17 @@ export default () => {
 }
 ```
 
+- You can then access the associations and expanded properties on the related resource within the context values
+- For example, customer associations and expansions are then available on the customer object
+
+```javascript
+const {
+  values: {
+    customer: { default_source, subscriptions, invoices, cards },
+  },
+} = usePriceBlocsContext()
+```
+
 | Key                             | Type     | Description                                                               |
 | ------------------------------- | -------- | ------------------------------------------------------------------------- |
 | [customer](#values-api)         | Object   | Core pricing resources like products and featureGroups etc.               |
