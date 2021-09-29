@@ -36,6 +36,7 @@
     "@babel/plugin-transform-runtime": "^7.12.10",
     "@babel/preset-env": "^7.9.5",
     "@babel/register": "^7.10.1",
+    "@rollup/plugin-replace": "^3.0.0",
     "@stripe/react-stripe-js": "^1.1.2",
     "@stripe/stripe-js": "^1.11.0",
     "@types/chai": "^4.2.22",

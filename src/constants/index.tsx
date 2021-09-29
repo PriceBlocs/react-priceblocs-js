@@ -1,9 +1,7 @@
-const API_ROOT = process.env.API_ROOT || 'https://api.priceblocs.com'
-
 export const URLS = {
-  PRICING: `${API_ROOT}/v1/config/pricing`,
-  CHECKOUT: `${API_ROOT}/v1/config/checkout`,
-  BILLING: `${API_ROOT}/v1/config/billing`,
+  PRICING: `${process.env.API_ROOT}/v1/config/pricing`,
+  CHECKOUT: `${process.env.API_ROOT}/v1/config/checkout`,
+  BILLING: `${process.env.API_ROOT}/v1/config/billing`,
 }
 
 const POST = 'POST'
