@@ -44,7 +44,7 @@ import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
 export default () => (
   <PriceBlocs api_key="PB_pk_live_123" prices={['price_123']}>
     {({ loading, values, checkout }) => {
-      if (loading) {
+      if (loading || !values) {
         return null
       }
       const { products } = values
