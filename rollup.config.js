@@ -9,6 +9,8 @@ import sass from 'rollup-plugin-sass'
 import typescript from 'rollup-plugin-typescript2'
 import pkg from './package.json'
 
+const API_ROOT = "https://api.priceblocs.com"
+
 export default {
   input: 'src/index.tsx',
   output: [
@@ -24,7 +26,7 @@ export default {
     sass({ insert: true }),
     typescript(),
     replace({
-      "process.env.API_ROOT": JSON.stringify(process.env.API_ROOT),
+      "process.env.API_ROOT": JSON.stringify(process.env.API_ROOT || API_ROOT),
       preventAssignment: true
     }),
   ],
