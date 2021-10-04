@@ -7,7 +7,9 @@ import {
   IFeatureTableGroupColumn,
   IProductConfig,
   IProductsFeatureTable,
-} from 'src/types'
+  ISubscription,
+  SubscriptionStatus,
+} from '../types'
 
 type QueryInput = Pick<IFormData, 'currency' | 'interval'>
 
@@ -94,3 +96,12 @@ export const getProductsFeaturesTable = ({
     })),
   }
 }
+
+export const getGoodStandingSubscriptions = (
+  subscriptions: ISubscription[]
+): ISubscription[] =>
+  subscriptions.filter(
+    ({ status }: ISubscription) =>
+      status === SubscriptionStatus.active.toString() ||
+      status === SubscriptionStatus.trialing.toString()
+  )
