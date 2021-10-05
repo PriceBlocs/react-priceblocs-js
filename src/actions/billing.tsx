@@ -1,37 +1,24 @@
-import { IBillingActionProps, IBillingProps } from 'src/types'
+import { BillingActionProps, BillingProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
-import { createBilling, prepareBillingData } from 'src/request'
+import { createBilling } from '../request'
+import { getBillingData } from '../request/data'
 
-export default (props: IBillingActionProps) => {
-  const { api_key, isSubmitting, setIsSubmitting, setError } = props
+export default (configProps: BillingActionProps) => {
+  const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  /**
-   * Should allow for optional override of checkout input props here
-   */
-  return async (billingProps: IBillingProps, stripe: Stripe) => {
+  return async (callProps: BillingProps, stripe?: Stripe) => {
     if (!stripe) {
       console.error(
-        'Stripe is not initialized - ensure you have passed a valid API key'
+        'Stripe not present - ensure you have passed a valid API key within initialization or have passed your own Stripe instance to this call.'
       )
       return
     }
     if (isSubmitting) {
-      console.warn('Billing in progress')
+      console.warn('Billing request in progress')
       return
     }
 
-    const billingData = prepareBillingData({
-      customer:
-        billingProps && billingProps.customer
-          ? billingProps.customer
-          : props.customer && props.customer.id
-          ? props.customer.id
-          : null,
-      return_url:
-        billingProps && billingProps.return_url
-          ? billingProps.return_url
-          : props.return_url,
-    })
+    const billingData = getBillingData(configProps, callProps)
 
     if (!billingData.customer) {
       console.error(
@@ -51,7 +38,7 @@ export default (props: IBillingActionProps) => {
         }
       }
     } catch (err) {
-      setError({ message: err.message })
+      setError({ message: err.message, statusCode: err.statusCode })
     }
 
     setIsSubmitting(false)

@@ -3,32 +3,36 @@ import { clone, set } from 'lodash'
 import { Elements, useStripe } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import {
-  ICheckoutProps,
-  IMetadata,
-  IPriceBlocsContextProps,
-  IValues,
-  IPriceBlocsError,
-  IPriceBlocsProviderValue,
-  IPriceBlocsProvider,
-  IStripeElementContextProps,
-  IWithStripeContextProps,
-  IPriceBlocsContext,
-  IBillingProps,
-  IError,
+  CheckoutProps,
+  Metadata,
+  PriceBlocsContextProps,
+  Values,
+  PriceBlocsError,
+  PriceBlocsProviderValue,
+  PriceBlocsProvider,
+  StripeElementContextProps,
+  WithStripeContextProps,
+  PriceBlocsContextType,
+  BillingProps,
+  Error,
 } from './types'
 import * as Hooks from './hooks'
 import * as Utils from './utils'
 import * as Constants from './constants'
-import { checkout, billing, fetchData } from './actions'
+import {
+  checkout,
+  previewInvoice,
+  updateSubscription,
+  billing,
+  fetchData,
+} from './actions'
+import { checkoutAdd, checkoutRemove } from './form'
 
 const createUseContext = (
   contextProviderWrapperCreator: (
-    provider: IPriceBlocsProvider
-  ) => IPriceBlocsProvider
-): IPriceBlocsContext => {
-  /**
-   * Test out option argument
-   */
+    provider: PriceBlocsProvider
+  ) => PriceBlocsProvider
+): PriceBlocsContextType => {
   const Context = React.createContext<null>(null)
   const useContext = () => React.useContext(Context)
   let ContextProvider
@@ -53,9 +57,12 @@ const WithStripeContext = ({
   providerValue,
   setReady,
   ready,
-}: IWithStripeContextProps) => {
+}: WithStripeContextProps) => {
   const stripe = useStripe()
 
+  /**
+   * Once Stripe is initialized set ready: true
+   */
   React.useEffect(() => {
     if (stripe && !ready) {
       setReady(true)
@@ -67,14 +74,18 @@ const WithStripeContext = ({
 
   const value = {
     ...providerValue,
-    checkout: async (props: ICheckoutProps) => initialCheckout(props, stripe),
-    billing: async (props: IBillingProps) => initialBilling(props, stripe),
+    /**
+     * Proxy checkout and billing calls through this function
+     * so that the Stripe instance doesn't need to be exposed / managed by the consumer
+     */
+    checkout: async (props: CheckoutProps) => initialCheckout(props, stripe),
+    billing: async (props: BillingProps) => initialBilling(props, stripe),
   }
 
   return <Provider value={value}>{children}</Provider>
 }
 
-const StripeElementContainer = (props: IStripeElementContextProps) => {
+const StripeElementContainer = (props: StripeElementContextProps) => {
   const promise = React.useMemo(() => loadStripe(props.clientKey), [])
 
   return (
@@ -97,8 +108,8 @@ export const {
   useContext: usePriceBlocsContext,
   /* eslint-disable-next-line react/display-name, react/prop-types */
 } = createUseContext(
-  (Provider: IPriceBlocsProvider) =>
-    (contextProps: IPriceBlocsContextProps): any => {
+  (Provider: PriceBlocsProvider) =>
+    (contextProps: PriceBlocsContextProps): any => {
       const {
         children,
         api_key,
@@ -109,19 +120,19 @@ export const {
         query,
       } = contextProps
 
-      const [metadata, setMetadata] = React.useState<IMetadata | undefined>()
-      const [values, setValues] = React.useState<IValues | undefined>()
+      const [metadata, setMetadata] = React.useState<Metadata | undefined>()
+      const [values, setValues] = React.useState<Values | undefined>()
       const [loading, setLoading] = React.useState(false)
       const [ready, setReady] = React.useState(false)
       const [isSubmitting, setIsSubmitting] = React.useState(false)
-      const [error, setError] = React.useState<
-        IPriceBlocsError | IError | null
-      >(null)
+      const [error, setError] = React.useState<PriceBlocsError | Error | null>(
+        null
+      )
       const clientKey = values && values.admin && values.admin.clientKey
 
       const setFieldValue = (path: string, value: any) => {
         const updatedValues = clone(values)
-        set(updatedValues as IValues, path, value)
+        set(updatedValues as Values, path, value)
         setValues(updatedValues)
       }
       const customer = values ? values.customer : null
@@ -144,7 +155,15 @@ export const {
         refetch()
       }, [])
 
-      const providerValue: IPriceBlocsProviderValue = {
+      const commonProps = {
+        api_key,
+        customer,
+        isSubmitting,
+        setIsSubmitting,
+        setError,
+      }
+
+      const providerValue: PriceBlocsProviderValue = {
         ready,
         loading,
         isSubmitting,
@@ -152,23 +171,25 @@ export const {
         setFieldValue,
         refetch: refetch,
         checkout: checkout({
-          api_key,
-          customer,
+          ...commonProps,
           success_url,
           cancel_url,
           return_url,
           metadata,
-          isSubmitting,
-          setIsSubmitting,
-          setError,
         }),
         billing: billing({
-          api_key,
-          customer,
+          ...commonProps,
           return_url,
-          isSubmitting,
-          setIsSubmitting,
-          setError,
+        }),
+        checkoutAdd: checkoutAdd({ setValues, values }),
+        checkoutRemove: checkoutRemove({ setValues, values }),
+        previewInvoice: previewInvoice({
+          ...commonProps,
+          values,
+        }),
+        updateSubscription: updateSubscription({
+          ...commonProps,
+          values,
         }),
       }
 
@@ -185,6 +206,9 @@ export const {
       const content =
         typeof children === 'function' ? children(providerValue) : children
 
+      /**
+       * Client key is required to initialize the Stripe container
+       */
       return clientKey ? (
         <StripeElementContainer
           ready={ready}
@@ -212,6 +236,7 @@ export const useActiveProductPrice = Hooks.useActiveProductPrice
 export const getActiveProductPrice = Utils.getActiveProductPrice
 export const getProductFeatures = Utils.getProductFeatures
 export const getProductsFeaturesTable = Utils.getProductsFeaturesTable
+export const getGoodStandingSubscriptions = Utils.getGoodStandingSubscriptions
 
 /**
  * Constants

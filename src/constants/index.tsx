@@ -1,15 +1,21 @@
 export const URLS = {
   PRICING: `${process.env.API_ROOT}/v1/config/pricing`,
   CHECKOUT: `${process.env.API_ROOT}/v1/config/checkout`,
+  INVOICE_PREVIEW: `${process.env.API_ROOT}/v1/config/invoice/preview`,
+  SUBSCRIPTIONS: `${process.env.API_ROOT}/v1/config/subscriptions`,
   BILLING: `${process.env.API_ROOT}/v1/config/billing`,
 }
 
 const POST = 'POST'
 const GET = 'GET'
+const PUT = 'PUT'
+const DELETE = 'DELETE'
 
 export const METHODS = {
   POST,
   GET,
+  PUT,
+  DELETE,
 }
 
 const DAY = 'day'

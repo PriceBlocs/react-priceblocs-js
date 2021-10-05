@@ -1,29 +1,49 @@
 import {
-  IFetchConfigParams,
-  ICheckoutData,
-  IAuthHeaders,
-  ICheckoutProps,
-  IBillingProps,
-  IBillingData,
-  ICheckoutActionProps,
-  ICustomerParams,
-  ICustomer,
+  FetchConfigData,
+  CheckoutData,
+  BillingData,
+  PreviewInvoiceData,
+  UpdateSubscriptionProps,
 } from '../types'
 import { URLS, METHODS } from '../constants'
 import { stringify } from 'qs'
+import { getAuthHeaders } from './data'
 
-const getAuthHeaders = (apiKey: string): IAuthHeaders => ({
-  'Content-Type': 'application/json',
-  Authorization: `Bearer ${apiKey}`,
-})
+export const fetchConfig = async (apiKey: string, data: FetchConfigData) => {
+  const url = `${URLS.PRICING}?${stringify(data)}`
+  const response = await fetch(url, {
+    method: METHODS.GET,
+    headers: getAuthHeaders(apiKey),
+  })
 
-export const fetchConfig = async (
+  return response.json()
+}
+
+export const createSession = async (apiKey: string, data: CheckoutData) => {
+  const response = await fetch(URLS.CHECKOUT, {
+    method: METHODS.POST,
+    headers: getAuthHeaders(apiKey),
+    body: stringify(data),
+  })
+
+  return response.json()
+}
+
+export const createBilling = async (apiKey: string, data: BillingData) => {
+  const response = await fetch(URLS.BILLING, {
+    method: METHODS.POST,
+    headers: getAuthHeaders(apiKey),
+    body: stringify(data),
+  })
+
+  return response.json()
+}
+
+export const fetchPreviewInvoice = async (
   apiKey: string,
-  params: IFetchConfigParams
+  data: PreviewInvoiceData
 ) => {
-  const queryString = stringify(params)
-
-  const url = queryString ? `${URLS.PRICING}?${queryString}` : URLS.PRICING
+  const url = `${URLS.INVOICE_PREVIEW}?${stringify(data)}`
 
   const response = await fetch(url, {
     method: METHODS.GET,
@@ -33,103 +53,16 @@ export const fetchConfig = async (
   return response.json()
 }
 
-export const createSession = async (apiKey: string, data: ICheckoutData) => {
-  const response = await fetch(URLS.CHECKOUT, {
-    method: METHODS.POST,
+export const updateSubscription = async (
+  apiKey: string,
+  id: string,
+  data: Pick<UpdateSubscriptionProps, 'items' | 'customer' | 'proration_date'>
+) => {
+  const response = await fetch(`${URLS.SUBSCRIPTIONS}/${id}`, {
+    method: METHODS.PUT,
     headers: getAuthHeaders(apiKey),
     body: JSON.stringify(data),
   })
 
   return response.json()
 }
-
-export const createBilling = async (apiKey: string, data: IBillingData) => {
-  const response = await fetch(URLS.BILLING, {
-    method: METHODS.POST,
-    headers: getAuthHeaders(apiKey),
-    body: JSON.stringify(data),
-  })
-
-  return response.json()
-}
-
-const getCustomerParams = (customer: ICustomer): ICustomerParams => {
-  const result = {} as ICustomerParams
-  if (customer.id) {
-    result.customer = customer.id
-  } else if (customer.email) {
-    result.customer_email = customer.email
-  }
-
-  return result
-}
-
-export const prepareCheckoutData = (
-  checkout: ICheckoutProps | string,
-  props: Pick<
-    ICheckoutActionProps,
-    'success_url' | 'cancel_url' | 'return_url' | 'customer' | 'metadata'
-  >
-): ICheckoutData => {
-  const currentUrl = window.location.href
-  if (typeof checkout === 'string') {
-    const result = {
-      prices: [checkout],
-      cancel_url: currentUrl,
-    } as ICheckoutData
-
-    if (props.success_url) {
-      result.success_url = props.success_url
-    }
-    if (props.cancel_url) {
-      result.cancel_url = props.cancel_url
-    }
-    const returnUrl = props.return_url || currentUrl
-    if (returnUrl) {
-      result.return_url = returnUrl
-    }
-
-    const customer = getCustomerParams(props.customer)
-    for (const key in customer) {
-      result[key] = customer[key]
-    }
-
-    return result
-  } else {
-    const result = {
-      prices: typeof checkout === 'string' ? [checkout] : checkout.prices,
-      cancel_url: currentUrl,
-    } as ICheckoutData
-
-    if (props.metadata && props.metadata.id) {
-      result.id = props.metadata.id
-    }
-
-    const successUrl = checkout.success_url || props.success_url
-    if (successUrl) {
-      result.success_url = successUrl
-    }
-
-    const cancelUrl = checkout.cancel_url || props.cancel_url
-    if (cancelUrl) {
-      result.cancel_url = cancelUrl
-    }
-
-    const returnUrl = checkout.return_url || props.return_url || currentUrl
-    if (returnUrl) {
-      result.return_url = returnUrl
-    }
-
-    const customer = getCustomerParams(checkout.customer || props.customer)
-    for (const key in customer) {
-      result[key] = customer[key]
-    }
-
-    return result
-  }
-}
-
-export const prepareBillingData = (props: IBillingProps): IBillingData => ({
-  customer: props.customer,
-  return_url: props.return_url || window.location.href,
-})

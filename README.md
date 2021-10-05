@@ -35,25 +35,40 @@ npm i --save @priceblocs/react-priceblocs-js
 The quickest way to get started is to:
 
 1. Wrap any content with an authenticated PriceBlocs component
+   a. Production: use a live api key and Stripe prices where livemode is true
+   b. Development: use a test api key and Stripe prices where livemode is false
 2. Attach the `checkout` function to any click handler
 3. Pass any price id to the `checkout` call
 
 ```javascript
 import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
 
-export default () => (
-  <PriceBlocs api_key="PB_pk_live_123" prices={['price_123']}>
-    {({ loading, values, checkout }) => {
-      if (loading || !values) {
-        return null
-      }
-      const { products } = values
-      const { name, name, prices } = products[0]
-      const { id } = prices[0]
-      return <button onClick={() => checkout(id)}>{`Buy ${name}`}</button>
-    }}
-  </PriceBlocs>
-)
+export default () => {
+  const props =
+    process.env.NODE_ENV === 'production'
+      ? {
+          api_key: 'PB_pk_live_*',
+          prices: ['price_123'],
+        }
+      : {
+          api_key: 'PB_pk_test_*',
+          prices: ['price_456'],
+        }
+
+  return (
+    <PriceBlocs {...props}>
+      {({ loading, values, checkout }) => {
+        if (loading || !values) {
+          return null
+        }
+        const { products } = values
+        const { name, name, prices } = products[0]
+        const { id } = prices[0]
+        return <button onClick={() => checkout(id)}>{`Buy ${name}`}</button>
+      }}
+    </PriceBlocs>
+  )
+}
 ```
 
 ## Workflow
@@ -64,7 +79,7 @@ There are 3 steps to adding prices and checkout to your app:
   - Wrap any part of your app with an authenticated PriceBlocs component
   - Pass an `api_key` and a set of `prices`
     - Additional checkout and customer [configuration options](#props) can also be passed
-- [Present](#present)
+- [Presentation](#presetnation)
   - Access your fetched data via context hooks and use it to present product options to your customers
 - [Checkout](#checkout)
   - Attach the `checkout` function to any of your price CTA actions to initiate a new checkout session
@@ -98,10 +113,16 @@ There are 3 steps to adding prices and checkout to your app:
 import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
 
 export default () => {
-  const props = {
-    api_key: 'PB_pk_test_oYQN',
-    prices: ['p_123', 'p_456'],
-  }
+  const props =
+    process.env.NODE_ENV === 'production'
+      ? {
+          api_key: 'PB_pk_live_*',
+          prices: ['price_123'],
+        }
+      : {
+          api_key: 'PB_pk_test_*',
+          prices: ['price_456'],
+        }
 
   return (
     <PriceBlocs {...props}>
@@ -123,7 +144,7 @@ export default () => {
 | Key                   | Required | Type   | Description                                                                                                                                                                    | Example                                                             |
 | --------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
 | api_key               | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...                                               |
-| prices                | Yes      | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['p_123', 'p_456']                                                  |
+| prices                | Yes      | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['price_123', 'price_456']                                          |
 | success_url           | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success                                       |
 | cancel_url            | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel                                        |
 | customer              | No       | String | Stripe customer id                                                                                                                                                             | cu_123                                                              |
@@ -140,7 +161,7 @@ export default () => {
 ```javascript
 {
   api_key: 'PB_pk_test_oYQN',
-  prices: ['p_123', 'p_456'],
+  prices: ['price_123', 'price_456'],
   customer: 'cus_123',
   query: {
     customer: {
@@ -169,17 +190,21 @@ const {
 } = usePriceBlocsContext()
 ```
 
-### Present
+### Presentation
 
 - Once initialized, you will be able to access your fetched data via the `usePriceBlocsContext` context hook
 - There are a variety of fields to help you present, update and initiate checkout
 
-| Key                             | Type     | Description                                                 |
-| ------------------------------- | -------- | ----------------------------------------------------------- |
-| [values](#values-api)           | Object   | Core pricing resources like products and featureGroups etc. |
-| [checkout](#checkout)           | Function | Start a checkout session                                    |
-| [billing](#billing)             | Function | Start a billing portal session for the provided customer    |
-| [setFieldValue](#setfieldvalue) | Function | Update any of the context values                            |
+| Key                                       | Type     | Description                                                               |
+| ----------------------------------------- | -------- | ------------------------------------------------------------------------- |
+| [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.               |
+| [checkout](#checkout)                     | Function | Start a checkout session                                                  |
+| [billing](#billing)                       | Function | Start a billing portal session for the provided customer                  |
+| [addCheckout](#addcheckout)               | Function | Add a price to the form checkout items                                    |
+| [removeCheckout](#removecheckout)         | Function | Remove a price from the form checkout items                               |
+| [previewInvoice](#previewInvoice)         | Function | Request a preview of the next invoice for the subscription                |
+| [updateSubscription](#updateSubscription) | Function | Update a subscription with the a collection of updated subscription items |
+| [setFieldValue](#setfieldvalue)           | Function | Update any of the context values                                          |
 
 ```javascript
 import {
@@ -217,7 +242,7 @@ const PricingTable = () => {
 }
 ```
 
-### Checkout
+### checkout
 
 - Use the `checkout` function from context to start a checkout session
 - `checkout` accepts wither a single price or a collection or resources as an argument
@@ -231,7 +256,7 @@ const { checkout } = usePriceBlocsContext()
 <button onClick={() => checkout({prices: [price.id]})}>Buy Now</button>
 ```
 
-### Billing
+### billing
 
 - Use the `billing` function from context to start a new Stripe billing portal session
 - A valid customer id is required to start a new session
@@ -245,6 +270,79 @@ const { billing } = usePriceBlocsContext()
 <button onClick={billing}>Manage billing</button>
 // Provide a customer to the billing call
 <button onClick={() => billing({ customer: 'cus_123' })}>Manage billing</button>
+```
+
+### previewInvoice
+
+- Use the `previewInvoice` function from context to preview the effects of changed subscription items
+- To preview changes against a specific subscription, pass its `id` as well as a collection of `prices` to preview on its upcoming invoice
+
+```javascript
+const previewData = await previewInvoice({
+  subscription: 'sub-123',
+  items: [
+    {
+      price: 'p_123',
+    },
+  ],
+})
+```
+
+- The preview response will include an itemized preview for the invvoice and the raw invoice itself
+
+| Key                        | Description                                             |
+| -------------------------- | ------------------------------------------------------- |
+| [preview](invoice-preview) | Itemized invoice preview including confirmation payload |
+| invoice                    | Context hook                                            |
+
+#### Invoice preview
+
+- The preview response will inclide an itemized list for rendering the invoice preview as well as a `confirm` payload which can be used to pass along in a subscription update request to confirm the previewed invoice
+
+| Key         | Description                                                                                   |
+| ----------- | --------------------------------------------------------------------------------------------- |
+| lineItems   | A collection of invoice line items describing the elements of invoice                         |
+| amountItems | A collection invoice amount items which describe the total amounts due / credited / paid etc. |
+| confirm     | A payload which can be passed in a subscription update request to apply the previewed changes |
+
+### updateSubscription
+
+- Use the `updateSubscription` function from context to update a customers subscription with the options passed.
+
+```javascript
+const previewData = await updateSubscription({
+  id: 'sub-123',
+  items: [
+    {
+      id: "si_123",
+      deleted: true,
+      clear_usage: true,
+    },
+    {
+      id: "si_456",
+      price: "p_B_1"
+    },
+    {
+      price: "p_A_3"
+    }
+  ]
+  proration_data: 12345678
+})
+```
+
+- For convenience you can pick the `confirm` object from the `invoicePreview` response and use it when calling `updateSubscription` e.g.
+- A `proration_date` timestamp is included in the preview response so that it too is available to be passed along in the request.
+
+```javascript
+const response = await previewInvoice({
+  subscription: 'sub-123',
+  items: [
+    {
+      price: 'p_123',
+    },
+  ],
+})
+await updateSubscription(response.preview.confirm)
 ```
 
 ### setFieldValue
@@ -336,8 +434,8 @@ This shape is closely aligned to the [Stripe products API](https://stripe.com/do
 This shape is closely aligned to the [Stripe customers API](https://stripe.com/docs/api/customer/object)
 This object will be extended with any additional expanded attributes or associations requested via the initial [query props](#query-props)
 
-| Key           | Present       | Required                                      |
-| ------------- | ------------- | --------------------------------------------- |
+| Key           | Present       | Required                                      | ation |
+| ------------- | ------------- | --------------------------------------------- | ----- |
 | id            | always        | ID of the Customer                            |
 | email         | always        | Email of the Customer                         |
 | invoices      | conditionally | Array of this Customer's Stripe invoices      |
@@ -352,7 +450,7 @@ This object will be extended with any additional expanded attributes or associat
 | intervals                              | Set of intervals for prices in response                 | ['month', 'year']   |
 | currency                               | The default currency based on prices in config response | 'usd'               |
 | currencies                             | Set of intervals for prices in response                 | ['usd','eur']       |
-| [presentation](#form-presentation-api) | Presentation values for form                            | {interval: "month"} |
+| [presentation](#form-presentation-api) | Presentation values for ationform                       | {interval: "month"} |
 
 #### Form presentation API
 
@@ -362,7 +460,7 @@ This object will be extended with any additional expanded attributes or associat
 
 #### Feature Groups API
 
-| Key                       | Present       | Required                                        | Example                              |
+| Key                       | Present       | ationRequired                                   | Example                              |
 | ------------------------- | ------------- | ----------------------------------------------- | ------------------------------------ |
 | uuid                      | always        | UUID for the feature group                      | 847169d9-05bf-485f-8d01-637189e9c9a1 |
 | title                     | always        | Title for the feature group                     | Analytics & Reports                  |
