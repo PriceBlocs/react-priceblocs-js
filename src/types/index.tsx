@@ -29,6 +29,10 @@ export type ValuesCheckoutItems = {
   }
 }
 
+export type CheckoutConfigProps = Pick<
+  ICheckoutActionProps,
+  'success_url' | 'cancel_url' | 'return_url' | 'customer' | 'metadata'
+>
 export type BillingConfigProps = Pick<
   IBillingActionProps,
   'customer' | 'return_url'
@@ -42,7 +46,10 @@ export type UpdateSubscriptionConfigProps = Pick<
   'customer'
 >
 
+export type CheckoutCallProps = ICheckoutProps | string
+
 export type ActionConfigProps =
+  | CheckoutConfigProps
   | BillingConfigProps
   | PreviewInvoiceConfigProps
   | UpdateSubscriptionConfigProps
@@ -75,7 +82,7 @@ export interface IFetchConfigData
   query?: IFetchConfigQueryParams
 }
 
-export interface IPrepareFetchConfigDataProps
+export interface FetchConfigProps
   extends Pick<ICustomerParams, 'customer' | 'customer_email' | 'email'> {
   prices: string[]
   query?: IFetchConfigQueryParams

@@ -1,9 +1,8 @@
 import {
   IAuthHeaders,
   ICheckoutData,
-  ICheckoutProps,
+  CheckoutConfigProps,
   IBillingData,
-  ICheckoutActionProps,
   ICustomerParams,
   ICustomer,
   IBillingProps,
@@ -12,12 +11,13 @@ import {
   IUpdateSubscriptionProps,
   IUpdateSubscriptionData,
   IFetchConfigData,
-  IPrepareFetchConfigDataProps,
+  FetchConfigProps,
   BillingConfigProps,
   PreviewInvoiceConfigProps,
   UpdateSubscriptionConfigProps,
   ActionConfigProps,
   ActionCallProps,
+  CheckoutCallProps,
 } from '../types'
 
 export const getAuthHeaders = (apiKey: string): IAuthHeaders => ({
@@ -36,54 +36,51 @@ export const getCustomerParams = (customer: ICustomer): ICustomerParams => {
   return result
 }
 
-export const prepareFetchConfigData = (
-  props: IPrepareFetchConfigDataProps
+export const getFetchConfigData = (
+  configProps: FetchConfigProps
 ): IFetchConfigData => {
   const result = {} as IFetchConfigData
 
-  if (props.customer) {
-    result.customer = props.customer
-  } else if (props.customer_email) {
-    result.customer_email = props.customer_email
-  } else if (props.email) {
-    result.email = props.email
+  if (configProps.customer) {
+    result.customer = configProps.customer
+  } else if (configProps.customer_email) {
+    result.customer_email = configProps.customer_email
+  } else if (configProps.email) {
+    result.email = configProps.email
   }
-  if (props.prices && props.prices.length > 0) {
-    result.prices = props.prices
+  if (configProps.prices && configProps.prices.length > 0) {
+    result.prices = configProps.prices
   }
-  if (props.query) {
-    result.query = props.query
+  if (configProps.query) {
+    result.query = configProps.query
   }
 
   return result
 }
 
-export const prepareCheckoutData = (
-  checkout: ICheckoutProps | string,
-  props: Pick<
-    ICheckoutActionProps,
-    'success_url' | 'cancel_url' | 'return_url' | 'customer' | 'metadata'
-  >
+export const getCheckoutData = (
+  callProps: CheckoutCallProps,
+  configProps: CheckoutConfigProps
 ): ICheckoutData => {
   const currentUrl = window.location.href
-  if (typeof checkout === 'string') {
+  if (typeof callProps === 'string') {
     const result = {
-      prices: [checkout],
+      prices: [callProps],
       cancel_url: currentUrl,
     } as ICheckoutData
 
-    if (props.success_url) {
-      result.success_url = props.success_url
+    if (configProps.success_url) {
+      result.success_url = configProps.success_url
     }
-    if (props.cancel_url) {
-      result.cancel_url = props.cancel_url
+    if (configProps.cancel_url) {
+      result.cancel_url = configProps.cancel_url
     }
-    const returnUrl = props.return_url || currentUrl
+    const returnUrl = configProps.return_url || currentUrl
     if (returnUrl) {
       result.return_url = returnUrl
     }
 
-    const customer = getCustomerParams(props.customer)
+    const customer = getCustomerParams(configProps.customer)
     for (const key in customer) {
       result[key] = customer[key]
     }
@@ -91,30 +88,33 @@ export const prepareCheckoutData = (
     return result
   } else {
     const result = {
-      prices: typeof checkout === 'string' ? [checkout] : checkout.prices,
+      prices: typeof callProps === 'string' ? [callProps] : callProps.prices,
       cancel_url: currentUrl,
     } as ICheckoutData
 
-    if (props.metadata && props.metadata.id) {
-      result.id = props.metadata.id
+    if (configProps.metadata && configProps.metadata.id) {
+      result.id = configProps.metadata.id
     }
 
-    const successUrl = checkout.success_url || props.success_url
+    const successUrl = callProps.success_url || configProps.success_url
     if (successUrl) {
       result.success_url = successUrl
     }
 
-    const cancelUrl = checkout.cancel_url || props.cancel_url
+    const cancelUrl = callProps.cancel_url || configProps.cancel_url
     if (cancelUrl) {
       result.cancel_url = cancelUrl
     }
 
-    const returnUrl = checkout.return_url || props.return_url || currentUrl
+    const returnUrl =
+      callProps.return_url || configProps.return_url || currentUrl
     if (returnUrl) {
       result.return_url = returnUrl
     }
 
-    const customer = getCustomerParams(checkout.customer || props.customer)
+    const customer = getCustomerParams(
+      callProps.customer || configProps.customer
+    )
     for (const key in customer) {
       result[key] = customer[key]
     }

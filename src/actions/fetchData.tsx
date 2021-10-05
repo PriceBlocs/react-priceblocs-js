@@ -1,16 +1,16 @@
 import { fetchConfig } from 'src/request'
-import { prepareFetchConfigData } from 'src/request/data'
+import { getFetchConfigData } from 'src/request/data'
 import { IFetchDataActionProps } from 'src/types'
 
-export default (props: IFetchDataActionProps) => {
+export default (configProps: IFetchDataActionProps) => {
   const { loading, setLoading, setValues, setMetadata, setError, api_key } =
-    props
+    configProps
 
   return async () => {
     if (!loading) {
       setLoading(true)
       try {
-        const configData = prepareFetchConfigData(props)
+        const configData = getFetchConfigData(configProps)
         const { data, ...metadata } = await fetchConfig(api_key, configData)
 
         setMetadata(metadata)

@@ -1,10 +1,10 @@
 import chai from 'chai'
 const { assert } = chai
 import {
-  prepareCheckoutData,
+  getCheckoutData,
   getAuthHeaders,
   getCustomerParams,
-  prepareFetchConfigData,
+  getFetchConfigData,
   getBillingData,
   getPreviewInvoiceData,
   getUpdateSubscriptionData,
@@ -54,9 +54,9 @@ describe('request/data', () => {
     })
   })
 
-  describe('prepareFetchConfigData', () => {
+  describe('getFetchConfigData', () => {
     it('returns customer with data when present when present', () => {
-      const result = prepareFetchConfigData({
+      const result = getFetchConfigData({
         customer: 'cus_123',
         email: 'customer@email.com',
         prices: ['p_A_1'],
@@ -71,7 +71,7 @@ describe('request/data', () => {
       assert.deepEqual(result, target)
     })
     it('returns customer_email with data when present', () => {
-      const result = prepareFetchConfigData({
+      const result = getFetchConfigData({
         customer_email: 'customer@email.com',
         email: 'customer@email.com',
         prices: ['p_A_1'],
@@ -87,7 +87,7 @@ describe('request/data', () => {
     })
 
     it('returns email with data when present', () => {
-      const result = prepareFetchConfigData({
+      const result = getFetchConfigData({
         email: 'customer@email.com',
         prices: ['p_A_1'],
         query: STUB_FETCH_QUERY,
@@ -102,11 +102,11 @@ describe('request/data', () => {
     })
   })
 
-  describe('prepareCheckoutData', () => {
+  describe('getCheckoutData', () => {
     describe('single price', () => {
       it('prepares data with fallback cancel_url', () => {
-        const checkout = 'price_123'
-        const props = {
+        const callProps = 'price_123'
+        const configProps = {
           api_key: 'api_key',
           success_url: 'success_url',
           return_url: 'return_url',
@@ -114,7 +114,7 @@ describe('request/data', () => {
             id: 'cus_123',
           },
         }
-        const result = prepareCheckoutData(checkout, props)
+        const result = getCheckoutData(callProps, configProps)
 
         const target = {
           prices: ['price_123'],
@@ -128,12 +128,12 @@ describe('request/data', () => {
       })
     })
 
-    describe('checkout config', () => {
+    describe('callProps config', () => {
       it('prepares data with fallback cancel_url', () => {
-        const checkout = {
+        const callProps = {
           prices: ['price_123', 'price_456'],
         }
-        const props = {
+        const configProps = {
           api_key: 'api_key',
           success_url: 'success_url',
           return_url: 'return_url',
@@ -141,7 +141,7 @@ describe('request/data', () => {
             id: 'cus_123',
           },
         }
-        const result = prepareCheckoutData(checkout, props)
+        const result = getCheckoutData(callProps, configProps)
 
         const target = {
           prices: ['price_123', 'price_456'],
