@@ -1,5 +1,5 @@
 import chai from 'chai'
-import { ISubscription } from '../../src/types'
+import { Subscription } from '../../src/types'
 import {
   getActiveProductPrice,
   getProductFeatures,
@@ -29,7 +29,7 @@ describe('utils', () => {
           id: '789',
           status: 'incomplete',
         },
-      ] as ISubscription[]
+      ] as Subscription[]
       const result = getGoodStandingSubscriptions(subscriptions)
 
       assert.deepEqual(result, goodStandingSubs)

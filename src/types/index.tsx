@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { Stripe } from '@stripe/stripe-js'
-import StripeNode from 'stripe'
 
 export enum StripeCustomerAssociation {
   Subscriptions = 'subscriptions',
@@ -414,7 +413,9 @@ export type ItemizedInvoicePreview = {
 
 export type PreviewInvoice = {
   preview: ItemizedInvoicePreview
-  invoice: StripeNode.Invoice
+  invoice: {
+    id: string
+  }
 }
 
 export interface PriceBlocsProviderValue {
@@ -437,7 +438,7 @@ export interface PriceBlocsProviderValue {
   previewInvoice: (props: PreviewInvoiceProps) => Promise<PreviewInvoice | void>
   updateSubscription: (
     props: UpdateSubscriptionProps
-  ) => Promise<StripeNode.Subscription | void>
+  ) => Promise<Subscription | void>
 }
 
 export interface PriceBlocsError {

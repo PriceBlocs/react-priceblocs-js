@@ -54,7 +54,6 @@
     "rollup-plugin-sass": "^1.2.7",
     "rollup-plugin-typescript2": "^0.25.3",
     "sinon": "^11.1.2",
-    "stripe": "^8.178.0",
     "ts-node": "^10.2.1",
     "typescript": "^2.8.3"
   },
