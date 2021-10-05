@@ -16,7 +16,7 @@ export default (configProps: FetchDataActionProps) => {
         setMetadata(metadata)
         setValues(data)
       } catch (err) {
-        setError({ message: err.message })
+        setError({ message: err.message, statusCode: err.statusCode })
       }
       setLoading(false)
     }

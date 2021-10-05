@@ -24,7 +24,7 @@ export default (configProps: PreviewInvoiceActionProps) => {
 
       return previewInvoice
     } catch (err) {
-      setError({ message: err.message })
+      setError({ message: err.message, statusCode: err.statusCode })
     }
 
     setIsSubmitting(false)

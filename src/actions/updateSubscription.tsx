@@ -23,7 +23,7 @@ export default (configProps: UpdateSubscriptionActionProps) => {
 
       return subscription
     } catch (err) {
-      setError({ message: err.message })
+      setError({ message: err.message, statusCode: err.statusCode })
     }
 
     setIsSubmitting(false)

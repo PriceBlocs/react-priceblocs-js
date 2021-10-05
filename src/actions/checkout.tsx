@@ -28,7 +28,7 @@ export default (configProps: CheckoutActionProps) => {
         sessionId: response.id,
       })
     } catch (err) {
-      setError({ message: err.message })
+      setError({ message: err.message, statusCode: err.statusCode })
     }
     setIsSubmitting(false)
   }

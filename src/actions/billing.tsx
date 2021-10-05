@@ -38,7 +38,7 @@ export default (configProps: BillingActionProps) => {
         }
       }
     } catch (err) {
-      setError({ message: err.message })
+      setError({ message: err.message, statusCode: err.statusCode })
     }
 
     setIsSubmitting(false)

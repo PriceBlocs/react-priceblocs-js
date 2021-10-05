@@ -258,7 +258,7 @@ export type Values = {
 }
 
 export type Error = {
-  statusCode?: number
+  statusCode: number
   message: string
 }
 
