@@ -5,9 +5,9 @@ import {
   getAuthHeaders,
   getCustomerParams,
   prepareFetchConfigData,
-  prepareBillingData,
-  preparePreviewInvoiceData,
-  prepareSubscriptionUpdateData,
+  getBillingData,
+  getPreviewInvoiceData,
+  getUpdateSubscriptionData,
 } from '../../src/request/data'
 import { STUB_FETCH_QUERY } from '../stubs'
 
@@ -156,7 +156,7 @@ describe('request/data', () => {
     })
   })
 
-  describe('prepareBillingData', () => {
+  describe('getBillingData', () => {
     it('billing props takes precendece over initial props', () => {
       const configProps = {
         customer: {
@@ -168,7 +168,7 @@ describe('request/data', () => {
         customer: 'cus_456',
         return_url: 'billing_props_return_url',
       }
-      const result = prepareBillingData(configProps, callProps)
+      const result = getBillingData(configProps, callProps)
       const target = {
         customer: 'cus_456',
         return_url: 'billing_props_return_url',
@@ -184,7 +184,7 @@ describe('request/data', () => {
         return_url: 'props_return_url',
       }
       const callProps = {}
-      const result = prepareBillingData(configProps, callProps)
+      const result = getBillingData(configProps, callProps)
       const target = {
         customer: 'cus_123',
         return_url: 'props_return_url',
@@ -200,7 +200,7 @@ describe('request/data', () => {
         },
       }
       const callProps = {}
-      const result = prepareBillingData(configProps, callProps)
+      const result = getBillingData(configProps, callProps)
       const target = {
         customer: 'cus_123',
         return_url: 'http://priceblocs.com',
@@ -213,13 +213,13 @@ describe('request/data', () => {
       const configProps = {}
       const callProps = {}
       assert.throws(
-        () => prepareBillingData(configProps, callProps),
+        () => getBillingData(configProps, callProps),
         'A valid customer must be provided to this action.'
       )
     })
   })
 
-  describe('preparePreviewInvoiceData', () => {
+  describe('getPreviewInvoiceData', () => {
     it('returns provided subscription and items', () => {
       const configProps = {
         customer: {
@@ -244,7 +244,7 @@ describe('request/data', () => {
           },
         ],
       }
-      const result = preparePreviewInvoiceData(configProps, callProps)
+      const result = getPreviewInvoiceData(configProps, callProps)
       const target = {
         customer: 'cus_456',
         items: [
@@ -282,7 +282,7 @@ describe('request/data', () => {
       const callProps = {
         subscription: '123',
       }
-      const result = preparePreviewInvoiceData(configProps, callProps)
+      const result = getPreviewInvoiceData(configProps, callProps)
       const target = {
         customer: 'cus_123',
         items: [
@@ -299,7 +299,7 @@ describe('request/data', () => {
     })
   })
 
-  describe('prepareSubscriptionUpdateData', () => {
+  describe('getUpdateSubscriptionData', () => {
     it('returns subscription update params for provided values', () => {
       const configProps = {
         customer: {
@@ -317,7 +317,7 @@ describe('request/data', () => {
           },
         ],
       }
-      const result = prepareSubscriptionUpdateData(configProps, callProps)
+      const result = getUpdateSubscriptionData(configProps, callProps)
 
       const target = {
         id: 'sub_123',
@@ -350,7 +350,7 @@ describe('request/data', () => {
           },
         ],
       }
-      const result = prepareSubscriptionUpdateData(configProps, callProps)
+      const result = getUpdateSubscriptionData(configProps, callProps)
 
       const target = {
         id: 'sub_123',

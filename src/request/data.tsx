@@ -9,13 +9,13 @@ import {
   IBillingProps,
   IPreviewInvoiceProps,
   IPreviewInvoiceData,
-  ISubscriptionUpdateProps,
-  ISubscriptionUpdateData,
+  IUpdateSubscriptionProps,
+  IUpdateSubscriptionData,
   IFetchConfigData,
   IPrepareFetchConfigDataProps,
   BillingConfigProps,
   PreviewInvoiceConfigProps,
-  SubscriptionUpdateConfigProps,
+  UpdateSubscriptionConfigProps,
   ActionConfigProps,
   ActionCallProps,
 } from '../types'
@@ -140,7 +140,7 @@ const getCallOrConfigCustomer = (
   return customer
 }
 
-export const prepareBillingData = (
+export const getBillingData = (
   configProps: BillingConfigProps,
   callProps: IBillingProps
 ): IBillingData => {
@@ -155,7 +155,7 @@ export const prepareBillingData = (
   }
 }
 
-export const preparePreviewInvoiceData = (
+export const getPreviewInvoiceData = (
   configProps: PreviewInvoiceConfigProps,
   callProps: IPreviewInvoiceProps
 ): IPreviewInvoiceData => {
@@ -174,10 +174,10 @@ export const preparePreviewInvoiceData = (
   }
 }
 
-export const prepareSubscriptionUpdateData = (
-  configProps: SubscriptionUpdateConfigProps,
-  callProps: ISubscriptionUpdateProps
-): ISubscriptionUpdateData => {
+export const getUpdateSubscriptionData = (
+  configProps: UpdateSubscriptionConfigProps,
+  callProps: IUpdateSubscriptionProps
+): IUpdateSubscriptionData => {
   const customer = getCallOrConfigCustomer(callProps, configProps)
 
   if (!callProps.id) {
@@ -192,7 +192,7 @@ export const prepareSubscriptionUpdateData = (
     id: callProps.id,
     customer,
     items: callProps.items,
-  } as ISubscriptionUpdateData
+  } as IUpdateSubscriptionData
 
   if (callProps.proration_date) {
     result.proration_date = callProps.proration_date

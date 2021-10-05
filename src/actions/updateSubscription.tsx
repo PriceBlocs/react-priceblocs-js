@@ -1,30 +1,27 @@
 import {
-  ISubscriptionUpdateProps,
-  ISubscriptionUpdateActionProps,
+  IUpdateSubscriptionProps,
+  IUpdateSubscriptionActionProps,
 } from 'src/types'
 import { updateSubscription } from 'src/request'
-import { prepareSubscriptionUpdateData } from '../request/data'
+import { getUpdateSubscriptionData } from '../request/data'
 
-export default (configProps: ISubscriptionUpdateActionProps) => {
+export default (configProps: IUpdateSubscriptionActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  return async (callProps: ISubscriptionUpdateProps) => {
+  return async (callProps: IUpdateSubscriptionProps) => {
     if (isSubmitting) {
       console.warn('Preview invoice in progress')
       return
     }
 
-    const { id, ...data } = prepareSubscriptionUpdateData(
-      configProps,
-      callProps
-    )
+    const { id, ...data } = getUpdateSubscriptionData(configProps, callProps)
 
     setIsSubmitting(true)
     try {
-      const subscriptionUpdate = await updateSubscription(api_key, id, data)
+      const subscription = await updateSubscription(api_key, id, data)
       setIsSubmitting(false)
 
-      return subscriptionUpdate
+      return subscription
     } catch (err) {
       setError({ message: err.message })
     }

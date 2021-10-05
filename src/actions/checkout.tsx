@@ -6,15 +6,15 @@ import { prepareCheckoutData } from '../request/data'
 export default (props: ICheckoutActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = props
 
-  return async (checkout: ICheckoutProps, stripe: Stripe) => {
+  return async (checkout: ICheckoutProps, stripe?: Stripe) => {
     if (!stripe) {
       console.error(
-        'Stripe is not initialized - ensure you have passed a valid API key'
+        'Stripe not present - ensure you have passed a valid API key within initialization or have passed your own Stripe instance to this call.'
       )
       return
     }
     if (isSubmitting) {
-      console.warn('Checkout in progress')
+      console.warn('Checkout request in progress')
       return
     }
 

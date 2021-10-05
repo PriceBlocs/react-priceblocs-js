@@ -1,6 +1,6 @@
 import { IPreviewInvoiceProps, IPreviewInvoiceActionProps } from 'src/types'
 import { fetchPreviewInvoice } from 'src/request'
-import { preparePreviewInvoiceData } from '../request/data'
+import { getPreviewInvoiceData } from '../request/data'
 
 // TODO: remame to config props
 export default (configProps: IPreviewInvoiceActionProps) => {
@@ -12,7 +12,7 @@ export default (configProps: IPreviewInvoiceActionProps) => {
       return
     }
 
-    const previewInvoiceData = preparePreviewInvoiceData(configProps, callProps)
+    const previewInvoiceData = getPreviewInvoiceData(configProps, callProps)
 
     setIsSubmitting(true)
     try {

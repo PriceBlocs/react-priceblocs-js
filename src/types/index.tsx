@@ -11,6 +11,16 @@ export enum StripeCustomerExpand {
   'invoice_settings.default_payment_method' = 'invoice_settings.default_payment_method',
 }
 
+export enum SubscriptionStatus {
+  active = 'active',
+  trialing = 'trialing',
+  incomplete = 'incomplete',
+  incomplete_expired = 'incomplete_expired',
+  past_due = 'past_due',
+  canceled = 'canceled',
+  unpaid = 'unpaid',
+}
+
 export type ValuesCheckoutItems = {
   form: {
     checkout: {
@@ -18,6 +28,29 @@ export type ValuesCheckoutItems = {
     }
   }
 }
+
+export type BillingConfigProps = Pick<
+  IBillingActionProps,
+  'customer' | 'return_url'
+>
+export type PreviewInvoiceConfigProps = {
+  customer?: ICustomer
+  values: ValuesCheckoutItems
+}
+export type UpdateSubscriptionConfigProps = Pick<
+  IUpdateSubscriptionActionProps,
+  'customer'
+>
+
+export type ActionConfigProps =
+  | BillingConfigProps
+  | PreviewInvoiceConfigProps
+  | UpdateSubscriptionConfigProps
+
+export type ActionCallProps =
+  | IBillingProps
+  | IPreviewInvoiceProps
+  | IUpdateSubscriptionProps
 
 export interface IFetchConfigQueryParams {
   customer?: {
@@ -269,7 +302,7 @@ export interface IPriceBlocsProviderValue {
   checkoutAdd: (props: ICheckoutAddData) => IValues
   checkoutRemove: (priceId: string) => IValues
   previewInvoice: (props: IPreviewInvoiceProps) => void
-  updateSubscription: (props: ISubscriptionUpdateProps) => void
+  updateSubscription: (props: IUpdateSubscriptionProps) => void
 }
 
 export interface IPriceBlocsContext {
@@ -376,7 +409,7 @@ export interface ISubscription {
   status: StripeSubscriptionStatus
 }
 
-export interface ISubscriptionUpdateActionProps {
+export interface IUpdateSubscriptionActionProps {
   api_key: string
   values: IValues
   customer?: ICustomer
@@ -392,49 +425,16 @@ export interface ISubscriptionItem {
   quantity?: string
 }
 
-export interface ISubscriptionUpdateProps {
+export interface IUpdateSubscriptionProps {
   id: string
   items: ISubscriptionItem[]
   customer?: string
   proration_date?: number
 }
 
-export interface ISubscriptionUpdateData {
+export interface IUpdateSubscriptionData {
   id: string
   customer: string
   proration_date: number
   items: ISubscriptionItem[]
 }
-
-export enum SubscriptionStatus {
-  active = 'active',
-  trialing = 'trialing',
-  incomplete = 'incomplete',
-  incomplete_expired = 'incomplete_expired',
-  past_due = 'past_due',
-  canceled = 'canceled',
-  unpaid = 'unpaid',
-}
-
-export type BillingConfigProps = Pick<
-  IBillingActionProps,
-  'customer' | 'return_url'
->
-export type PreviewInvoiceConfigProps = {
-  customer?: ICustomer
-  values: ValuesCheckoutItems
-}
-export type SubscriptionUpdateConfigProps = Pick<
-  ISubscriptionUpdateActionProps,
-  'customer'
->
-
-export type ActionConfigProps =
-  | BillingConfigProps
-  | PreviewInvoiceConfigProps
-  | SubscriptionUpdateConfigProps
-
-export type ActionCallProps =
-  | IBillingProps
-  | IPreviewInvoiceProps
-  | ISubscriptionUpdateProps

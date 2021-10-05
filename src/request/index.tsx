@@ -3,7 +3,7 @@ import {
   ICheckoutData,
   IBillingData,
   IPreviewInvoiceData,
-  ISubscriptionUpdateProps,
+  IUpdateSubscriptionProps,
 } from '../types'
 import { URLS, METHODS } from '../constants'
 import { stringify } from 'qs'
@@ -56,7 +56,7 @@ export const fetchPreviewInvoice = async (
 export const updateSubscription = async (
   apiKey: string,
   id: string,
-  data: Pick<ISubscriptionUpdateProps, 'items' | 'customer' | 'proration_date'>
+  data: Pick<IUpdateSubscriptionProps, 'items' | 'customer' | 'proration_date'>
 ) => {
   const response = await fetch(`${URLS.SUBSCRIPTIONS}/${id}`, {
     method: METHODS.PUT,

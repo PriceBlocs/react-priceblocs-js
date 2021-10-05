@@ -1,24 +1,24 @@
 import { IBillingActionProps, IBillingProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
 import { createBilling } from '../request'
-import { prepareBillingData } from '../request/data'
+import { getBillingData } from '../request/data'
 
 export default (configProps: IBillingActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  return async (callProps: IBillingProps, stripe: Stripe) => {
+  return async (callProps: IBillingProps, stripe?: Stripe) => {
     if (!stripe) {
       console.error(
-        'Stripe is not initialized - ensure you have passed a valid API key'
+        'Stripe not present - ensure you have passed a valid API key within initialization or have passed your own Stripe instance to this call.'
       )
       return
     }
     if (isSubmitting) {
-      console.warn('Billing in progress')
+      console.warn('Billing request in progress')
       return
     }
 
-    const billingData = prepareBillingData(configProps, callProps)
+    const billingData = getBillingData(configProps, callProps)
 
     if (!billingData.customer) {
       console.error(
