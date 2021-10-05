@@ -1,23 +1,23 @@
 import {
-  IPrice,
-  IProduct,
-  IFormData,
-  IFeature,
-  IFeatureGroup,
-  IFeatureTableGroupColumn,
-  IProductConfig,
-  IProductsFeatureTable,
-  ISubscription,
+  Price,
+  Product,
+  FormData,
+  Feature,
+  FeatureGroup,
+  FeatureTableGroupColumn,
+  ProductConfig,
+  ProductsFeatureTable,
+  Subscription,
   SubscriptionStatus,
 } from '../types'
 
-type QueryInput = Pick<IFormData, 'currency' | 'interval'>
+type QueryInput = Pick<FormData, 'currency' | 'interval'>
 
 export const getActiveProductPrice = (
-  product: IProduct,
+  product: Product,
   { currency, interval }: QueryInput
-): IPrice => {
-  return product.prices.find((price: IPrice) => {
+): Price => {
+  return product.prices.find((price: Price) => {
     let match = false
     const currencyMatch = price.currency === currency
     const intervalMatch = Boolean(
@@ -38,11 +38,11 @@ export const getActiveProductPrice = (
 
 export const getProductFeatures = (
   productId: string,
-  featureGroups: IFeatureGroup[]
-): IFeature[] =>
-  featureGroups.reduce((memo, featureGroup: IFeatureGroup) => {
+  featureGroups: FeatureGroup[]
+): Feature[] =>
+  featureGroups.reduce((memo, featureGroup: FeatureGroup) => {
     featureGroup.features &&
-      featureGroup.features.forEach((feature: IFeature) => {
+      featureGroup.features.forEach((feature: Feature) => {
         const productConfig =
           feature.product_config &&
           feature.product_config[productId] &&
@@ -59,9 +59,9 @@ export const getProductsFeaturesTable = ({
   products,
   featureGroups,
 }: {
-  products: IProduct[]
-  featureGroups: IFeatureGroup[]
-}): IProductsFeatureTable => {
+  products: Product[]
+  featureGroups: FeatureGroup[]
+}): ProductsFeatureTable => {
   return {
     header: products.map(({ name, id }) => ({
       id,
@@ -70,7 +70,7 @@ export const getProductsFeaturesTable = ({
     groups: featureGroups.map((featureGroup) => ({
       columns: products.reduce(
         (memo, product) => {
-          memo.push({ accessor: product.id } as IFeatureTableGroupColumn)
+          memo.push({ accessor: product.id } as FeatureTableGroupColumn)
           return memo
         },
         [
@@ -78,7 +78,7 @@ export const getProductsFeaturesTable = ({
             header: featureGroup.title,
             accessor: 'title',
           },
-        ] as IFeatureTableGroupColumn[]
+        ] as FeatureTableGroupColumn[]
       ),
       rows: featureGroup.features.map((feature) => {
         return {
@@ -90,7 +90,7 @@ export const getProductsFeaturesTable = ({
             const productConfig = feature.product_config[product.id]
             memo[product.id] = productConfig || null
             return memo
-          }, {} as IProductConfig),
+          }, {} as ProductConfig),
         }
       }),
     })),
@@ -98,10 +98,10 @@ export const getProductsFeaturesTable = ({
 }
 
 export const getGoodStandingSubscriptions = (
-  subscriptions: ISubscription[]
-): ISubscription[] =>
+  subscriptions: Subscription[]
+): Subscription[] =>
   subscriptions.filter(
-    ({ status }: ISubscription) =>
-      status === SubscriptionStatus.active.toString() ||
-      status === SubscriptionStatus.trialing.toString()
+    ({ status }: Subscription) =>
+      status === SubscriptionStatus.Active.toString() ||
+      status === SubscriptionStatus.Trialing.toString()
   )

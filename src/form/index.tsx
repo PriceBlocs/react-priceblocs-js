@@ -1,13 +1,13 @@
 import {
-  IValues,
-  ICheckoutItem,
-  ICheckoutAddProps,
-  ICheckoutAddData,
+  Values,
+  CheckoutItem,
+  CheckoutAddProps,
+  CheckoutAddData,
 } from '../types'
 import { clone, set } from 'lodash'
 
-export const checkoutAdd = (props: ICheckoutAddProps) => {
-  return (data: ICheckoutAddData) => {
+export const checkoutAdd = (props: CheckoutAddProps) => {
+  return (data: CheckoutAddData) => {
     const updatedValues = clone(props.values)
     const priceId = typeof data === 'string' ? data : data.price.id
 
@@ -19,10 +19,10 @@ export const checkoutAdd = (props: ICheckoutAddProps) => {
     if (priceIndex === -1) {
       checkoutItems.push(
         typeof data === 'string'
-          ? ({ price: { id: data } } as ICheckoutItem)
-          : (data as ICheckoutItem)
+          ? ({ price: { id: data } } as CheckoutItem)
+          : (data as CheckoutItem)
       )
-      set(updatedValues as IValues, 'form.checkout.items', checkoutItems)
+      set(updatedValues as Values, 'form.checkout.items', checkoutItems)
       props.setValues(updatedValues)
     } else {
       console.warn('Already present in checkout')
@@ -32,7 +32,7 @@ export const checkoutAdd = (props: ICheckoutAddProps) => {
   }
 }
 
-export const checkoutRemove = (props: ICheckoutAddProps) => {
+export const checkoutRemove = (props: CheckoutAddProps) => {
   return (priceId: string) => {
     const updatedValues = clone(props.values)
     const checkoutItems = updatedValues.form.checkout.items
@@ -43,7 +43,7 @@ export const checkoutRemove = (props: ICheckoutAddProps) => {
     if (priceIndex >= 0) {
       checkoutItems.splice(priceIndex, 1)
 
-      set(updatedValues as IValues, 'form.checkout.items', checkoutItems)
+      set(updatedValues as Values, 'form.checkout.items', checkoutItems)
       props.setValues(updatedValues)
     } else {
       console.warn('Not present in checkout')

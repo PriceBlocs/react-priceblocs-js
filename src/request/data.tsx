@@ -1,16 +1,16 @@
 import {
-  IAuthHeaders,
-  ICheckoutData,
+  AuthHeaders,
+  CheckoutData,
   CheckoutConfigProps,
-  IBillingData,
-  ICustomerParams,
-  ICustomer,
-  IBillingProps,
-  IPreviewInvoiceProps,
-  IPreviewInvoiceData,
-  IUpdateSubscriptionProps,
-  IUpdateSubscriptionData,
-  IFetchConfigData,
+  BillingData,
+  CustomerParams,
+  Customer,
+  BillingProps,
+  PreviewInvoiceProps,
+  PreviewInvoiceData,
+  UpdateSubscriptionProps,
+  UpdateSubscriptionData,
+  FetchConfigData,
   FetchConfigProps,
   BillingConfigProps,
   PreviewInvoiceConfigProps,
@@ -20,13 +20,13 @@ import {
   CheckoutCallProps,
 } from '../types'
 
-export const getAuthHeaders = (apiKey: string): IAuthHeaders => ({
+export const getAuthHeaders = (apiKey: string): AuthHeaders => ({
   'Content-Type': 'application/json',
   Authorization: `Bearer ${apiKey}`,
 })
 
-export const getCustomerParams = (customer: ICustomer): ICustomerParams => {
-  const result = {} as ICustomerParams
+export const getCustomerParams = (customer: Customer): CustomerParams => {
+  const result = {} as CustomerParams
   if (customer.id) {
     result.customer = customer.id
   } else if (customer.email) {
@@ -38,8 +38,8 @@ export const getCustomerParams = (customer: ICustomer): ICustomerParams => {
 
 export const getFetchConfigData = (
   configProps: FetchConfigProps
-): IFetchConfigData => {
-  const result = {} as IFetchConfigData
+): FetchConfigData => {
+  const result = {} as FetchConfigData
 
   if (configProps.customer) {
     result.customer = configProps.customer
@@ -61,13 +61,13 @@ export const getFetchConfigData = (
 export const getCheckoutData = (
   callProps: CheckoutCallProps,
   configProps: CheckoutConfigProps
-): ICheckoutData => {
+): CheckoutData => {
   const currentUrl = window.location.href
   if (typeof callProps === 'string') {
     const result = {
       prices: [callProps],
       cancel_url: currentUrl,
-    } as ICheckoutData
+    } as CheckoutData
 
     if (configProps.success_url) {
       result.success_url = configProps.success_url
@@ -90,7 +90,7 @@ export const getCheckoutData = (
     const result = {
       prices: typeof callProps === 'string' ? [callProps] : callProps.prices,
       cancel_url: currentUrl,
-    } as ICheckoutData
+    } as CheckoutData
 
     if (configProps.metadata && configProps.metadata.id) {
       result.id = configProps.metadata.id
@@ -142,8 +142,8 @@ const getCallOrConfigCustomer = (
 
 export const getBillingData = (
   configProps: BillingConfigProps,
-  callProps: IBillingProps
-): IBillingData => {
+  callProps: BillingProps
+): BillingData => {
   const customer = getCallOrConfigCustomer(callProps, configProps)
 
   return {
@@ -157,8 +157,8 @@ export const getBillingData = (
 
 export const getPreviewInvoiceData = (
   configProps: PreviewInvoiceConfigProps,
-  callProps: IPreviewInvoiceProps
-): IPreviewInvoiceData => {
+  callProps: PreviewInvoiceProps
+): PreviewInvoiceData => {
   const customer = getCallOrConfigCustomer(callProps, configProps)
 
   if (!callProps.subscription) {
@@ -176,8 +176,8 @@ export const getPreviewInvoiceData = (
 
 export const getUpdateSubscriptionData = (
   configProps: UpdateSubscriptionConfigProps,
-  callProps: IUpdateSubscriptionProps
-): IUpdateSubscriptionData => {
+  callProps: UpdateSubscriptionProps
+): UpdateSubscriptionData => {
   const customer = getCallOrConfigCustomer(callProps, configProps)
 
   if (!callProps.id) {
@@ -192,7 +192,7 @@ export const getUpdateSubscriptionData = (
     id: callProps.id,
     customer,
     items: callProps.items,
-  } as IUpdateSubscriptionData
+  } as UpdateSubscriptionData
 
   if (callProps.proration_date) {
     result.proration_date = callProps.proration_date

@@ -1,8 +1,8 @@
 import { fetchConfig } from 'src/request'
 import { getFetchConfigData } from 'src/request/data'
-import { IFetchDataActionProps } from 'src/types'
+import { FetchDataActionProps } from 'src/types'
 
-export default (configProps: IFetchDataActionProps) => {
+export default (configProps: FetchDataActionProps) => {
   const { loading, setLoading, setValues, setMetadata, setError, api_key } =
     configProps
 

@@ -1,12 +1,12 @@
-import { IBillingActionProps, IBillingProps } from 'src/types'
+import { BillingActionProps, BillingProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
 import { createBilling } from '../request'
 import { getBillingData } from '../request/data'
 
-export default (configProps: IBillingActionProps) => {
+export default (configProps: BillingActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  return async (callProps: IBillingProps, stripe?: Stripe) => {
+  return async (callProps: BillingProps, stripe?: Stripe) => {
     if (!stripe) {
       console.error(
         'Stripe not present - ensure you have passed a valid API key within initialization or have passed your own Stripe instance to this call.'

@@ -1,15 +1,15 @@
 import {
-  IFetchConfigData,
-  ICheckoutData,
-  IBillingData,
-  IPreviewInvoiceData,
-  IUpdateSubscriptionProps,
+  FetchConfigData,
+  CheckoutData,
+  BillingData,
+  PreviewInvoiceData,
+  UpdateSubscriptionProps,
 } from '../types'
 import { URLS, METHODS } from '../constants'
 import { stringify } from 'qs'
 import { getAuthHeaders } from './data'
 
-export const fetchConfig = async (apiKey: string, data: IFetchConfigData) => {
+export const fetchConfig = async (apiKey: string, data: FetchConfigData) => {
   const url = `${URLS.PRICING}?${stringify(data)}`
   const response = await fetch(url, {
     method: METHODS.GET,
@@ -19,7 +19,7 @@ export const fetchConfig = async (apiKey: string, data: IFetchConfigData) => {
   return response.json()
 }
 
-export const createSession = async (apiKey: string, data: ICheckoutData) => {
+export const createSession = async (apiKey: string, data: CheckoutData) => {
   const response = await fetch(URLS.CHECKOUT, {
     method: METHODS.POST,
     headers: getAuthHeaders(apiKey),
@@ -29,7 +29,7 @@ export const createSession = async (apiKey: string, data: ICheckoutData) => {
   return response.json()
 }
 
-export const createBilling = async (apiKey: string, data: IBillingData) => {
+export const createBilling = async (apiKey: string, data: BillingData) => {
   const response = await fetch(URLS.BILLING, {
     method: METHODS.POST,
     headers: getAuthHeaders(apiKey),
@@ -41,7 +41,7 @@ export const createBilling = async (apiKey: string, data: IBillingData) => {
 
 export const fetchPreviewInvoice = async (
   apiKey: string,
-  data: IPreviewInvoiceData
+  data: PreviewInvoiceData
 ) => {
   const url = `${URLS.INVOICE_PREVIEW}?${stringify(data)}`
 
@@ -56,7 +56,7 @@ export const fetchPreviewInvoice = async (
 export const updateSubscription = async (
   apiKey: string,
   id: string,
-  data: Pick<IUpdateSubscriptionProps, 'items' | 'customer' | 'proration_date'>
+  data: Pick<UpdateSubscriptionProps, 'items' | 'customer' | 'proration_date'>
 ) => {
   const response = await fetch(`${URLS.SUBSCRIPTIONS}/${id}`, {
     method: METHODS.PUT,

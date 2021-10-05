@@ -1,12 +1,12 @@
-import { ICheckoutProps, ICheckoutActionProps } from 'src/types'
+import { CheckoutProps, CheckoutActionProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
 import { createSession } from 'src/request'
 import { getCheckoutData } from '../request/data'
 
-export default (configProps: ICheckoutActionProps) => {
+export default (configProps: CheckoutActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  return async (callProps: ICheckoutProps, stripe?: Stripe) => {
+  return async (callProps: CheckoutProps, stripe?: Stripe) => {
     if (!stripe) {
       console.error(
         'Stripe not present - ensure you have passed a valid API key within initialization or have passed your own Stripe instance to this call.'
