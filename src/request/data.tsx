@@ -88,7 +88,7 @@ export const getCheckoutData = (
     return result
   } else {
     const result = {
-      prices: typeof callProps === 'string' ? [callProps] : callProps.prices,
+      prices: callProps.prices,
       cancel_url: currentUrl,
     } as CheckoutData
 

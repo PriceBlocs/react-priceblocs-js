@@ -290,10 +290,10 @@ const previewData = await previewInvoice({
 
 - The preview response will include an itemized preview for the invvoice and the raw invoice itself
 
-| Key                        | Description                                             |
-| -------------------------- | ------------------------------------------------------- |
-| [preview](invoice-preview) | Itemized invoice preview including confirmation payload |
-| invoice                    | Context hook                                            |
+| Key                                                      | Description                                             |
+| -------------------------------------------------------- | ------------------------------------------------------- |
+| [preview](invoice-preview)                               | Itemized invoice preview including confirmation payload |
+| [invoice](https://stripe.com/docs/api/invoices/upcoming) | The raw Stripe invoice which is being previewed         |
 
 #### Invoice preview
 
@@ -301,8 +301,8 @@ const previewData = await previewInvoice({
 
 | Key         | Description                                                                                   |
 | ----------- | --------------------------------------------------------------------------------------------- |
-| lineItems   | A collection of invoice line items describing the elements of invoice                         |
-| amountItems | A collection invoice amount items which describe the total amounts due / credited / paid etc. |
+| lineItems   | A collection which describing the elements of the invoice                                     |
+| amountItems | A collection which describes the total amounts due / credited / paid etc.                     |
 | confirm     | A payload which can be passed in a subscription update request to apply the previewed changes |
 
 ### updateSubscription
@@ -370,11 +370,12 @@ const {
 
 ### Utils
 
-| Key                      | Type     | Description                                                                      |
-| ------------------------ | -------- | -------------------------------------------------------------------------------- |
-| getActiveProductPrice    | Function | Get the product price based on the current form values for interval and currency |
-| getProductFeatures       | Function | Get all features for the provided product                                        |
-| getProductsFeaturesTable | Function | Generate a feature table representation for products in context                  |
+| Key                          | Type     | Description                                                                      |
+| ---------------------------- | -------- | -------------------------------------------------------------------------------- | --------------- |
+| getActiveProductPrice        | Function | Get the product price based on the current form values for interval and currency |
+| getProductFeatures           | Function | Get all features for the provided product                                        |
+| getProductsFeaturesTable     | Function | Generate a feature table representation for products in context                  |
+| getGoodStandingSubscriptions | Function | Filter subscriptions in context to ones with either an active                    | trialing status |
 
 ### Constants
 
@@ -407,7 +408,7 @@ This shape is closely aligned to the [Stripe products API](https://stripe.com/do
 
 ##### Price API
 
-- This shape is closely aligned to the [Stripe prices API](https://stripe.com/docs/api/pricess/object)
+This shape is closely aligned to the [Stripe prices API](https://stripe.com/docs/api/pricess/object)
 
 | Key                                | Description                                  |
 | ---------------------------------- | -------------------------------------------- |
@@ -444,13 +445,34 @@ This object will be extended with any additional expanded attributes or associat
 
 #### Form API
 
-| Key                                    | Description                                             | Example             |
-| -------------------------------------- | ------------------------------------------------------- | ------------------- |
-| interval                               | The default interval based on prices in config response | 'month'             |
-| intervals                              | Set of intervals for prices in response                 | ['month', 'year']   |
-| currency                               | The default currency based on prices in config response | 'usd'               |
-| currencies                             | Set of intervals for prices in response                 | ['usd','eur']       |
-| [presentation](#form-presentation-api) | Presentation values for ationform                       | {interval: "month"} |
+| Key                                    | Description                                             | Example                               |
+| -------------------------------------- | ------------------------------------------------------- | ------------------------------------- |
+| interval                               | The default interval based on prices in config response | 'month'                               |
+| intervals                              | Set of intervals for prices in response                 | ['month', 'year']                     |
+| currency                               | The default currency based on prices in config response | 'usd'                                 |
+| currencies                             | Set of intervals for prices in response                 | ['usd','eur']                         |
+| usage_types                            | Set of usage_types for prices in response               | ['licensed']                          |
+| [checkout](#form-checkout-api)         | The checkout object which contains purchasable prices   | {items: [{price: {id: 'price_123'}}]} |
+| [presentation](#form-presentation-api) | Presentation values for ationform                       | {interval: "month"}                   |
+
+##### Form checkout API
+
+- Object which can be used to store checkout related options like items for purchase.
+- These items can be passed along in any `checkout` call
+- These items will also be used as the default collection of prices for an preview invoice request
+
+| Key                             | Description             |
+| ------------------------------- | ----------------------- |
+| [items](form-checkout-item-api) | Array of checkout items |
+
+##### Form checkout item API
+
+- Closely aligned to the Stripe [SubscriptionItem API](https://stripe.com/docs/api/subscription_items/object)
+
+| Key      | Required | Description          |
+| -------- | -------- | -------------------- |
+| price    | yes      | Object with price id |
+| quantity | no       | Quantity of price    |
 
 #### Form presentation API
 
@@ -460,7 +482,7 @@ This object will be extended with any additional expanded attributes or associat
 
 #### Feature Groups API
 
-| Key                       | Present       | ationRequired                                   | Example                              |
+| Key                       | Present       | Description                                     | Example                              |
 | ------------------------- | ------------- | ----------------------------------------------- | ------------------------------------ |
 | uuid                      | always        | UUID for the feature group                      | 847169d9-05bf-485f-8d01-637189e9c9a1 |
 | title                     | always        | Title for the feature group                     | Analytics & Reports                  |
@@ -468,7 +490,7 @@ This object will be extended with any additional expanded attributes or associat
 
 ##### Feature API
 
-| Key                                   | Required                                                                      | Example                              |
+| Key                                   | Description                                                                   | Example                              |
 | ------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------ |
 | uuid                                  | UUID of the feature group                                                     | f0ecdee3-579f-4a9f-aeba-92ff9dbaa767 |
 | title                                 | Report generator                                                              | Analytics & Reports                  |
@@ -477,7 +499,7 @@ This object will be extended with any additional expanded attributes or associat
 
 ##### Product Config API
 
-| Key     | Type    | Required                     | Example                   |
+| Key     | Type    | Description                  | Example                   |
 | ------- | ------- | ---------------------------- | ------------------------- |
 | enabled | boolean | UUID of the feature group    | true                      |
 | value   | string  | Value for the config         | Limit 100 runs a month    |
