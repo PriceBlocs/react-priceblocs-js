@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Stripe } from '@stripe/stripe-js'
+import StripeNode from 'stripe'
 
 export enum StripeCustomerAssociation {
   Subscriptions = 'subscriptions',
@@ -369,9 +370,17 @@ export type StripeSubscriptionItem = {
   quantity?: string
 }
 
+export type UpdateStripeSubscriptionItem = {
+  id?: string
+  clear_usage?: boolean
+  price?: string
+  quantity?: string
+  deleted?: true
+}
+
 export type UpdateSubscriptionProps = {
   id: string
-  items: StripeSubscriptionItem[]
+  items: UpdateStripeSubscriptionItem[]
   customer?: string
   proration_date?: number
 }
@@ -381,6 +390,31 @@ export type UpdateSubscriptionData = {
   items: StripeSubscriptionItem[]
   customer: string
   proration_date: number
+}
+
+export type ItemizedInvoicePreview = {
+  lineItems: {
+    uuid: string
+    description: string
+    quantity: number
+    unitAmount: string
+    amount: string
+  }
+  amountItems: {
+    uuid: string
+    label: string
+    amount: string
+  }
+  confirm: {
+    id: string
+    items: UpdateStripeSubscriptionItem[]
+    proration_date: number
+  }
+}
+
+export type PreviewInvoice = {
+  preview: ItemizedInvoicePreview
+  invoice: StripeNode.Invoice
 }
 
 export interface PriceBlocsProviderValue {
@@ -400,8 +434,10 @@ export interface PriceBlocsProviderValue {
   ) => void
   checkoutAdd: (props: CheckoutAddData) => Values
   checkoutRemove: (priceId: string) => Values
-  previewInvoice: (props: PreviewInvoiceProps) => void
-  updateSubscription: (props: UpdateSubscriptionProps) => void
+  previewInvoice: (props: PreviewInvoiceProps) => Promise<PreviewInvoice | void>
+  updateSubscription: (
+    props: UpdateSubscriptionProps
+  ) => Promise<StripeNode.Subscription | void>
 }
 
 export interface PriceBlocsError {
