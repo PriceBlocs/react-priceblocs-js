@@ -3,8 +3,8 @@ import { Stripe } from '@stripe/stripe-js'
 import { createBilling } from '../request'
 import { prepareBillingData } from '../request/data'
 
-export default (initialProps: IBillingActionProps) => {
-  const { api_key, isSubmitting, setIsSubmitting, setError } = initialProps
+export default (configProps: IBillingActionProps) => {
+  const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
   return async (callProps: IBillingProps, stripe: Stripe) => {
     if (!stripe) {
@@ -18,7 +18,7 @@ export default (initialProps: IBillingActionProps) => {
       return
     }
 
-    const billingData = prepareBillingData(initialProps, callProps)
+    const billingData = prepareBillingData(configProps, callProps)
 
     if (!billingData.customer) {
       console.error(

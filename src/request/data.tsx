@@ -119,28 +119,39 @@ export const prepareCheckoutData = (
   }
 }
 
-export const prepareBillingData = (
-  initialProps: Pick<IBillingActionProps, 'customer' | 'return_url'>,
-  callProps: IBillingProps
-): IBillingData => {
+type BillingConfigProps = Pick<IBillingActionProps, 'customer' | 'return_url'>
+type CallProps = IBillingProps
+type ConfigProps = BillingConfigProps
+
+const getCallOrConfigCustomer = (
+  callProps: CallProps,
+  configProps: ConfigProps
+) => {
   let customer
   if (callProps && callProps.customer) {
     customer = callProps.customer
-  } else if (initialProps.customer && initialProps.customer.id) {
-    customer = initialProps.customer.id
+  } else if (configProps.customer && configProps.customer.id) {
+    customer = configProps.customer.id
   }
   if (!customer) {
-    throw new Error(
-      'A valid customer must be provided to start a billing portal session.'
-    )
+    throw new Error('A valid customer must be provided to this action.')
   }
+
+  return customer
+}
+
+export const prepareBillingData = (
+  configProps: BillingConfigProps,
+  callProps: IBillingProps
+): IBillingData => {
+  const customer = getCallOrConfigCustomer(callProps, configProps)
 
   return {
     customer,
     return_url:
       callProps && callProps.return_url
         ? callProps.return_url
-        : initialProps.return_url || window.location.href,
+        : configProps.return_url || window.location.href,
   }
 }
 

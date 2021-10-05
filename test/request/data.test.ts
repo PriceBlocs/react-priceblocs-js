@@ -158,7 +158,7 @@ describe('request/data', () => {
 
   describe('prepareBillingData', () => {
     it('billing props takes precendece over initial props', () => {
-      const initialProps = {
+      const configProps = {
         customer: {
           id: 'cus_123',
         },
@@ -168,7 +168,7 @@ describe('request/data', () => {
         customer: 'cus_456',
         return_url: 'billing_props_return_url',
       }
-      const result = prepareBillingData(initialProps, callProps)
+      const result = prepareBillingData(configProps, callProps)
       const target = {
         customer: 'cus_456',
         return_url: 'billing_props_return_url',
@@ -177,14 +177,14 @@ describe('request/data', () => {
       assert.deepEqual(result, target)
     })
     it('fallback to initial props', () => {
-      const initialProps = {
+      const configProps = {
         customer: {
           id: 'cus_123',
         },
         return_url: 'props_return_url',
       }
       const callProps = {}
-      const result = prepareBillingData(initialProps, callProps)
+      const result = prepareBillingData(configProps, callProps)
       const target = {
         customer: 'cus_123',
         return_url: 'props_return_url',
@@ -194,13 +194,13 @@ describe('request/data', () => {
     })
 
     it('return url falls back to current location', () => {
-      const initialProps = {
+      const configProps = {
         customer: {
           id: 'cus_123',
         },
       }
       const callProps = {}
-      const result = prepareBillingData(initialProps, callProps)
+      const result = prepareBillingData(configProps, callProps)
       const target = {
         customer: 'cus_123',
         return_url: 'http://priceblocs.com',
@@ -210,11 +210,11 @@ describe('request/data', () => {
     })
 
     it('throws an error when customer is null', () => {
-      const initialProps = {}
+      const configProps = {}
       const callProps = {}
       assert.throws(
-        () => prepareBillingData(initialProps, callProps),
-        'A valid customer must be provided to start a billing portal session.'
+        () => prepareBillingData(configProps, callProps),
+        'A valid customer must be provided to this action.'
       )
     })
   })
