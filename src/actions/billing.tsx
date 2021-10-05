@@ -1,13 +1,11 @@
 import { IBillingActionProps, IBillingProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
-import { createBilling, prepareBillingData } from 'src/request'
+import { createBilling } from '../request'
+import { prepareBillingData } from '../request/data'
 
 export default (props: IBillingActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = props
 
-  /**
-   * Should allow for optional override of checkout input props here
-   */
   return async (billingProps: IBillingProps, stripe: Stripe) => {
     if (!stripe) {
       console.error(
@@ -21,16 +19,8 @@ export default (props: IBillingActionProps) => {
     }
 
     const billingData = prepareBillingData({
-      customer:
-        billingProps && billingProps.customer
-          ? billingProps.customer
-          : props.customer && props.customer.id
-          ? props.customer.id
-          : null,
-      return_url:
-        billingProps && billingProps.return_url
-          ? billingProps.return_url
-          : props.return_url,
+      props,
+      billingProps,
     })
 
     if (!billingData.customer) {

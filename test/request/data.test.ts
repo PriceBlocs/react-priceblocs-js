@@ -9,13 +9,7 @@ import {
   preparePreviewInvoiceData,
   prepareSubscriptionUpdateData,
 } from '../../src/request/data'
-import { StripeCustomerAssociation } from '../../src/types'
-
-const STUB_FETCH_QUERY = {
-  customer: {
-    associations: ['subscriptions'] as StripeCustomerAssociation[],
-  },
-}
+import { STUB_FETCH_QUERY } from '../stubs'
 
 describe('request/data', () => {
   beforeEach(() => {

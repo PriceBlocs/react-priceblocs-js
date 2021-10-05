@@ -1,10 +1,30 @@
 import * as React from 'react'
 import { Stripe } from '@stripe/stripe-js'
 
-type StripeCustomerAssociation = 'subscriptions' | 'cards'
-type StripeCustomerExpand =
-  | 'default_source'
-  | 'invoice_settings.default_payment_method'
+export enum StripeCustomerAssociation {
+  subscriptions = 'subscriptions',
+  cards = 'cards',
+}
+
+export enum StripeCustomerExpand {
+  default_source = 'default_source',
+  'invoice_settings.default_payment_method' = 'invoice_settings.default_payment_method',
+}
+
+type ValuesCheckoutItems = {
+  form: {
+    checkout: {
+      items?: ICheckoutItem[] | string[]
+    }
+  }
+}
+
+export interface IFetchConfigQueryParams {
+  customer?: {
+    associations?: StripeCustomerAssociation[]
+    expand?: StripeCustomerExpand[]
+  }
+}
 
 export interface ICustomerParams {
   [key: string]: string
@@ -13,7 +33,7 @@ export interface ICustomerParams {
   email?: string
 }
 
-export interface IFetchConfigParams
+export interface IFetchConfigData
   extends Pick<ICustomerParams, 'customer' | 'customer_email' | 'email'> {
   [key: string]: string | string[] | IFetchConfigQueryParams
   prices?: string[]
@@ -22,11 +42,19 @@ export interface IFetchConfigParams
   query?: IFetchConfigQueryParams
 }
 
-export interface IFetchConfigQueryParams {
-  customer?: {
-    associations?: StripeCustomerAssociation[]
-    expand?: StripeCustomerExpand[]
-  }
+export interface IPrepareFetchConfigDataProps
+  extends Pick<ICustomerParams, 'customer' | 'customer_email' | 'email'> {
+  prices: string[]
+  query?: IFetchConfigQueryParams
+}
+
+export interface IFetchPreviewInvoiceParams
+  extends Pick<ICustomerParams, 'customer' | 'customer_email' | 'email'> {
+  [key: string]: string | string[] | IFetchConfigQueryParams
+  prices?: string[]
+  id?: string
+  session?: string
+  query?: IFetchConfigQueryParams
 }
 
 export interface IFetchDataActionProps
@@ -48,6 +76,15 @@ export interface ICheckoutActionProps {
   return_url?: string
   customer?: ICustomer
   metadata?: IMetadata
+  isSubmitting: boolean
+  setIsSubmitting: (isSubmiting: boolean) => void
+  setError: (error: IPriceBlocsError | IError) => void
+}
+
+export interface IPreviewInvoiceActionProps {
+  api_key: string
+  values: IValues
+  customer?: ICustomer
   isSubmitting: boolean
   setIsSubmitting: (isSubmiting: boolean) => void
   setError: (error: IPriceBlocsError | IError) => void
@@ -118,8 +155,8 @@ export interface IRecurring {
 
 export interface IPrice {
   id: string
-  currency: string
-  recurring: IRecurring | null
+  currency?: string
+  recurring?: IRecurring | null
 }
 
 export interface IProduct {
@@ -150,9 +187,28 @@ export interface ITheme {
   license?: string
 }
 
+export interface ICheckoutItem {
+  price: IPrice
+  quantity?: number
+  subscription?: string
+}
+
+export type ICheckoutAddData = string | ICheckoutItem
+
+export interface ICheckoutAddProps {
+  values?: IValues
+  setValues: (values: IValues) => void
+}
+
+export interface ICheckout {
+  items: ICheckoutItem[]
+  preview?: any
+}
+
 export interface IFormData {
   currencies: string[]
   currency: string
+  checkout: ICheckout
   intervals: string[]
   interval: string
   highlight: IHighlight
@@ -210,6 +266,10 @@ export interface IPriceBlocsProviderValue {
     { customer, return_url }: IBillingProps,
     stripe: Stripe | null
   ) => void
+  checkoutAdd: (props: ICheckoutAddData) => IValues
+  checkoutRemove: (priceId: string) => IValues
+  previewInvoice: (props: IPreviewInvoiceProps) => void
+  updateSubscription: (props: ISubscriptionUpdateProps) => void
 }
 
 export interface IPriceBlocsContext {
@@ -269,8 +329,8 @@ export interface IFeatureTableHeader {
 }
 
 export interface IFeatureTableGroupColumn {
-  header: string
-  accessor?: string
+  header?: string
+  accessor: string
 }
 
 export interface IFeatureTableGroupRowTitle {
@@ -279,7 +339,12 @@ export interface IFeatureTableGroupRowTitle {
 }
 
 export interface IFeatureTableGroupRow {
-  [key: string]: IProductConfig | null | IFeatureTableGroupRowTitle | boolean
+  [key: string]:
+    | IProductConfig
+    | null
+    | IFeatureTableGroupRowTitle
+    | boolean
+    | { enabled: boolean }
 }
 
 export interface IFeatureTableGroup {
@@ -290,4 +355,81 @@ export interface IFeatureTableGroup {
 export interface IProductsFeatureTable {
   header: IFeatureTableHeader[]
   groups: IFeatureTableGroup[]
+}
+
+export interface IPrepareBillingDataProps {
+  props: Pick<IBillingActionProps, 'customer' | 'return_url'>
+  billingProps: IBillingProps
+}
+
+export interface IPreviewInvoiceData {
+  customer?: string
+  items?: ICheckoutItem[] | string[]
+  subscription?: string
+}
+
+export interface IPreviewInvoiceProps {
+  customer?: string
+  subscription?: string
+  items?: ICheckoutItem[] | string[]
+}
+
+export interface IPreparePreviewInvoiceDataProps {
+  props: {
+    customer?: ICustomer
+    values: ValuesCheckoutItems
+  }
+  previewInvoiceProps: IPreviewInvoiceProps
+}
+
+type StripeSubscriptionStatus = 'active'
+
+export interface ISubscription {
+  id: string
+  status: StripeSubscriptionStatus
+}
+
+export interface ISubscriptionUpdateActionProps {
+  api_key: string
+  values: IValues
+  customer?: ICustomer
+  isSubmitting: boolean
+  setIsSubmitting: (isSubmiting: boolean) => void
+  setError: (error: IPriceBlocsError | IError) => void
+}
+
+export interface ISubscriptionItem {
+  id?: string
+  clear_usage?: boolean
+  price?: string
+  quantity?: string
+}
+
+export interface ISubscriptionUpdateProps {
+  id: string
+  items: ISubscriptionItem[]
+  customer?: string
+  proration_date?: number
+}
+
+export interface IPrepareSubscriptionUpdateDataProps {
+  props: Pick<ISubscriptionUpdateActionProps, 'customer'>
+  subscriptionUpdateProps: ISubscriptionUpdateProps
+}
+
+export interface ISubscriptionUpdateData {
+  id: string
+  customer: string
+  proration_date: number
+  items: ISubscriptionItem[]
+}
+
+export enum SubscriptionStatus {
+  active = 'active',
+  trialing = 'trialing',
+  incomplete = 'incomplete',
+  incomplete_expired = 'incomplete_expired',
+  past_due = 'past_due',
+  canceled = 'canceled',
+  unpaid = 'unpaid',
 }

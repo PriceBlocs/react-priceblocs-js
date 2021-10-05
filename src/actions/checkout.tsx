@@ -1,13 +1,11 @@
 import { ICheckoutProps, ICheckoutActionProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
-import { createSession, prepareCheckoutData } from 'src/request'
+import { createSession } from 'src/request'
+import { prepareCheckoutData } from '../request/data'
 
 export default (props: ICheckoutActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = props
 
-  /**
-   * Should allow for optional override of checkout input props here
-   */
   return async (checkout: ICheckoutProps, stripe: Stripe) => {
     if (!stripe) {
       console.error(
