@@ -219,7 +219,7 @@ describe('request/data', () => {
     })
   })
 
-  describe.only('preparePreviewInvoiceData', () => {
+  describe('preparePreviewInvoiceData', () => {
     it('returns provided subscription and items', () => {
       const configProps = {
         customer: {
@@ -301,24 +301,23 @@ describe('request/data', () => {
 
   describe('prepareSubscriptionUpdateData', () => {
     it('returns subscription update params for provided values', () => {
-      const result = prepareSubscriptionUpdateData({
-        props: {
-          customer: {
-            id: 'cus_123',
+      const configProps = {
+        customer: {
+          id: 'cus_123',
+        },
+      }
+      const callProps = {
+        id: 'sub_123',
+        customer: 'cus_456',
+        proration_date: 1234567,
+        items: [
+          {
+            id: 'si_123',
+            price: 'p_A_1',
           },
-        },
-        subscriptionUpdateProps: {
-          id: 'sub_123',
-          customer: 'cus_456',
-          proration_date: 1234567,
-          items: [
-            {
-              id: 'si_123',
-              price: 'p_A_1',
-            },
-          ],
-        },
-      })
+        ],
+      }
+      const result = prepareSubscriptionUpdateData(configProps, callProps)
 
       const target = {
         id: 'sub_123',
@@ -336,23 +335,22 @@ describe('request/data', () => {
     })
 
     it('returns subscription update params for initial values', () => {
-      const result = prepareSubscriptionUpdateData({
-        props: {
-          customer: {
-            id: 'cus_123',
+      const configProps = {
+        customer: {
+          id: 'cus_123',
+        },
+      }
+      const callProps = {
+        id: 'sub_123',
+        proration_date: 1234567,
+        items: [
+          {
+            id: 'si_123',
+            price: 'p_A_1',
           },
-        },
-        subscriptionUpdateProps: {
-          id: 'sub_123',
-          proration_date: 1234567,
-          items: [
-            {
-              id: 'si_123',
-              price: 'p_A_1',
-            },
-          ],
-        },
-      })
+        ],
+      }
+      const result = prepareSubscriptionUpdateData(configProps, callProps)
 
       const target = {
         id: 'sub_123',

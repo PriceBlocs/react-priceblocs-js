@@ -7,14 +7,17 @@ import {
   ICustomerParams,
   ICustomer,
   IBillingProps,
-  IBillingActionProps,
   IPreviewInvoiceProps,
-  ValuesCheckoutItems,
   IPreviewInvoiceData,
-  IPrepareSubscriptionUpdateDataProps,
+  ISubscriptionUpdateProps,
   ISubscriptionUpdateData,
   IFetchConfigData,
   IPrepareFetchConfigDataProps,
+  BillingConfigProps,
+  PreviewInvoiceConfigProps,
+  SubscriptionUpdateConfigProps,
+  ActionConfigProps,
+  ActionCallProps,
 } from '../types'
 
 export const getAuthHeaders = (apiKey: string): IAuthHeaders => ({
@@ -120,17 +123,9 @@ export const prepareCheckoutData = (
   }
 }
 
-type BillingConfigProps = Pick<IBillingActionProps, 'customer' | 'return_url'>
-type PreviewInvoiceConfigProps = {
-  customer?: ICustomer
-  values: ValuesCheckoutItems
-}
-type ConfigProps = BillingConfigProps | PreviewInvoiceConfigProps
-type CallProps = IBillingProps | IPreviewInvoiceProps
-
 const getCallOrConfigCustomer = (
-  callProps: CallProps,
-  configProps: ConfigProps
+  callProps: ActionCallProps,
+  configProps: ActionConfigProps
 ) => {
   let customer
   if (callProps && callProps.customer) {
@@ -179,38 +174,28 @@ export const preparePreviewInvoiceData = (
   }
 }
 
-export const prepareSubscriptionUpdateData = ({
-  props,
-  subscriptionUpdateProps,
-}: IPrepareSubscriptionUpdateDataProps): ISubscriptionUpdateData => {
-  let customer
-  if (subscriptionUpdateProps && subscriptionUpdateProps.customer) {
-    customer = subscriptionUpdateProps.customer
-  } else if (props.customer && props.customer.id) {
-    customer = props.customer.id
-  }
-  if (!customer) {
-    throw new Error(
-      'A valid customer must be provided to update a subscription.'
-    )
-  }
+export const prepareSubscriptionUpdateData = (
+  configProps: SubscriptionUpdateConfigProps,
+  callProps: ISubscriptionUpdateProps
+): ISubscriptionUpdateData => {
+  const customer = getCallOrConfigCustomer(callProps, configProps)
 
-  if (!subscriptionUpdateProps.id) {
+  if (!callProps.id) {
     throw new Error('A valid subscription must be provided to update.')
   }
 
-  if (!subscriptionUpdateProps.items || !subscriptionUpdateProps.items.length) {
+  if (!callProps.items || !callProps.items.length) {
     throw new Error('Subscription items must be provided to update.')
   }
 
   const result = {
-    id: subscriptionUpdateProps.id,
+    id: callProps.id,
     customer,
-    items: subscriptionUpdateProps.items,
+    items: callProps.items,
   } as ISubscriptionUpdateData
 
-  if (subscriptionUpdateProps.proration_date) {
-    result.proration_date = subscriptionUpdateProps.proration_date
+  if (callProps.proration_date) {
+    result.proration_date = callProps.proration_date
   }
 
   return result

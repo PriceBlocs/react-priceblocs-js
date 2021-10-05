@@ -5,19 +5,19 @@ import {
 import { updateSubscription } from 'src/request'
 import { prepareSubscriptionUpdateData } from '../request/data'
 
-export default (props: ISubscriptionUpdateActionProps) => {
-  const { api_key, isSubmitting, setIsSubmitting, setError } = props
+export default (configProps: ISubscriptionUpdateActionProps) => {
+  const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  return async (subscriptionUpdateProps: ISubscriptionUpdateProps) => {
+  return async (callProps: ISubscriptionUpdateProps) => {
     if (isSubmitting) {
       console.warn('Preview invoice in progress')
       return
     }
 
-    const { id, ...data } = prepareSubscriptionUpdateData({
-      props,
-      subscriptionUpdateProps,
-    })
+    const { id, ...data } = prepareSubscriptionUpdateData(
+      configProps,
+      callProps
+    )
 
     setIsSubmitting(true)
     try {

@@ -399,11 +399,6 @@ export interface ISubscriptionUpdateProps {
   proration_date?: number
 }
 
-export interface IPrepareSubscriptionUpdateDataProps {
-  props: Pick<ISubscriptionUpdateActionProps, 'customer'>
-  subscriptionUpdateProps: ISubscriptionUpdateProps
-}
-
 export interface ISubscriptionUpdateData {
   id: string
   customer: string
@@ -420,3 +415,26 @@ export enum SubscriptionStatus {
   canceled = 'canceled',
   unpaid = 'unpaid',
 }
+
+export type BillingConfigProps = Pick<
+  IBillingActionProps,
+  'customer' | 'return_url'
+>
+export type PreviewInvoiceConfigProps = {
+  customer?: ICustomer
+  values: ValuesCheckoutItems
+}
+export type SubscriptionUpdateConfigProps = Pick<
+  ISubscriptionUpdateActionProps,
+  'customer'
+>
+
+export type ActionConfigProps =
+  | BillingConfigProps
+  | PreviewInvoiceConfigProps
+  | SubscriptionUpdateConfigProps
+
+export type ActionCallProps =
+  | IBillingProps
+  | IPreviewInvoiceProps
+  | ISubscriptionUpdateProps
