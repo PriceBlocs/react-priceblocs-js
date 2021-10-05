@@ -1,6 +1,6 @@
 import chai from 'chai'
 const { assert } = chai
-import { ICheckoutItem } from '../../src/types'
+import { CheckoutItem } from '../../src/types'
 import { checkoutAdd, checkoutRemove } from '../../src/form'
 import * as sinon from 'sinon'
 import { STUB_VALUES } from '../stubs'
@@ -77,7 +77,7 @@ describe('form', () => {
       }
       checkoutRemove(props)('p_A_1')
       const touchedResult = setValuesSpy.getCall(0).args[0]
-      const target = [] as ICheckoutItem[]
+      const target = [] as CheckoutItem[]
       assert.deepEqual(touchedResult.form.checkout.items, target)
     })
   })
