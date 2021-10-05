@@ -158,18 +158,17 @@ describe('request/data', () => {
 
   describe('prepareBillingData', () => {
     it('billing props takes precendece over initial props', () => {
-      const result = prepareBillingData({
-        props: {
-          customer: {
-            id: 'cus_123',
-          },
-          return_url: 'props_return_url',
+      const initialProps = {
+        customer: {
+          id: 'cus_123',
         },
-        billingProps: {
-          customer: 'cus_456',
-          return_url: 'billing_props_return_url',
-        },
-      })
+        return_url: 'props_return_url',
+      }
+      const callProps = {
+        customer: 'cus_456',
+        return_url: 'billing_props_return_url',
+      }
+      const result = prepareBillingData(initialProps, callProps)
       const target = {
         customer: 'cus_456',
         return_url: 'billing_props_return_url',
@@ -178,15 +177,14 @@ describe('request/data', () => {
       assert.deepEqual(result, target)
     })
     it('fallback to initial props', () => {
-      const result = prepareBillingData({
-        props: {
-          customer: {
-            id: 'cus_123',
-          },
-          return_url: 'props_return_url',
+      const initialProps = {
+        customer: {
+          id: 'cus_123',
         },
-        billingProps: {},
-      })
+        return_url: 'props_return_url',
+      }
+      const callProps = {}
+      const result = prepareBillingData(initialProps, callProps)
       const target = {
         customer: 'cus_123',
         return_url: 'props_return_url',
@@ -196,14 +194,13 @@ describe('request/data', () => {
     })
 
     it('return url falls back to current location', () => {
-      const result = prepareBillingData({
-        props: {
-          customer: {
-            id: 'cus_123',
-          },
+      const initialProps = {
+        customer: {
+          id: 'cus_123',
         },
-        billingProps: {},
-      })
+      }
+      const callProps = {}
+      const result = prepareBillingData(initialProps, callProps)
       const target = {
         customer: 'cus_123',
         return_url: 'http://priceblocs.com',
@@ -213,12 +210,10 @@ describe('request/data', () => {
     })
 
     it('throws an error when customer is null', () => {
+      const initialProps = {}
+      const callProps = {}
       assert.throws(
-        () =>
-          prepareBillingData({
-            props: {},
-            billingProps: {},
-          }),
+        () => prepareBillingData(initialProps, callProps),
         'A valid customer must be provided to start a billing portal session.'
       )
     })

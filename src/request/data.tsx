@@ -6,7 +6,8 @@ import {
   ICheckoutActionProps,
   ICustomerParams,
   ICustomer,
-  IPrepareBillingDataProps,
+  IBillingProps,
+  IBillingActionProps,
   IPreparePreviewInvoiceDataProps,
   IPreviewInvoiceData,
   IPrepareSubscriptionUpdateDataProps,
@@ -118,15 +119,15 @@ export const prepareCheckoutData = (
   }
 }
 
-export const prepareBillingData = ({
-  props,
-  billingProps,
-}: IPrepareBillingDataProps): IBillingData => {
+export const prepareBillingData = (
+  initialProps: Pick<IBillingActionProps, 'customer' | 'return_url'>,
+  callProps: IBillingProps
+): IBillingData => {
   let customer
-  if (billingProps && billingProps.customer) {
-    customer = billingProps.customer
-  } else if (props.customer && props.customer.id) {
-    customer = props.customer.id
+  if (callProps && callProps.customer) {
+    customer = callProps.customer
+  } else if (initialProps.customer && initialProps.customer.id) {
+    customer = initialProps.customer.id
   }
   if (!customer) {
     throw new Error(
@@ -137,9 +138,9 @@ export const prepareBillingData = ({
   return {
     customer,
     return_url:
-      billingProps && billingProps.return_url
-        ? billingProps.return_url
-        : props.return_url || window.location.href,
+      callProps && callProps.return_url
+        ? callProps.return_url
+        : initialProps.return_url || window.location.href,
   }
 }
 

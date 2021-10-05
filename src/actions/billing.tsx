@@ -3,10 +3,10 @@ import { Stripe } from '@stripe/stripe-js'
 import { createBilling } from '../request'
 import { prepareBillingData } from '../request/data'
 
-export default (props: IBillingActionProps) => {
-  const { api_key, isSubmitting, setIsSubmitting, setError } = props
+export default (initialProps: IBillingActionProps) => {
+  const { api_key, isSubmitting, setIsSubmitting, setError } = initialProps
 
-  return async (billingProps: IBillingProps, stripe: Stripe) => {
+  return async (callProps: IBillingProps, stripe: Stripe) => {
     if (!stripe) {
       console.error(
         'Stripe is not initialized - ensure you have passed a valid API key'
@@ -18,10 +18,7 @@ export default (props: IBillingActionProps) => {
       return
     }
 
-    const billingData = prepareBillingData({
-      props,
-      billingProps,
-    })
+    const billingData = prepareBillingData(initialProps, callProps)
 
     if (!billingData.customer) {
       console.error(
