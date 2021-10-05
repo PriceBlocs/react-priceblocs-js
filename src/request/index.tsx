@@ -9,11 +9,8 @@ import { URLS, METHODS } from '../constants'
 import { stringify } from 'qs'
 import { getAuthHeaders } from './data'
 
-export const fetchConfig = async (apiKey: string, params: IFetchConfigData) => {
-  const queryString = stringify(params)
-
-  const url = queryString ? `${URLS.PRICING}?${queryString}` : URLS.PRICING
-
+export const fetchConfig = async (apiKey: string, data: IFetchConfigData) => {
+  const url = `${URLS.PRICING}?${stringify(data)}`
   const response = await fetch(url, {
     method: METHODS.GET,
     headers: getAuthHeaders(apiKey),
@@ -46,11 +43,7 @@ export const fetchPreviewInvoice = async (
   apiKey: string,
   data: IPreviewInvoiceData
 ) => {
-  const queryString = stringify(data)
-
-  const url = queryString
-    ? `${URLS.INVOICE_PREVIEW}?${queryString}`
-    : URLS.INVOICE_PREVIEW
+  const url = `${URLS.INVOICE_PREVIEW}?${stringify(data)}`
 
   const response = await fetch(url, {
     method: METHODS.GET,
