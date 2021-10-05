@@ -1,72 +1,14 @@
 import chai from 'chai'
 import { ISubscription } from '../../src/types'
-const { assert } = chai
 import {
-  getGoodStandingSubscriptions,
-  getProductsFeaturesTable,
-  getProductFeatures,
   getActiveProductPrice,
+  getProductFeatures,
+  getProductsFeaturesTable,
+  getGoodStandingSubscriptions,
 } from '../../src/utils'
+import { STUB_FEATURE_GROUPS, STUB_PRODUCTS } from '../stubs'
 
-const STUB_PRODUCTS = [
-  {
-    name: 'Product A',
-    id: 'p_A',
-    prices: [
-      {
-        id: 'p_A_1',
-        currency: 'usd',
-        recurring: {
-          interval: 'month',
-        },
-      },
-      {
-        id: 'p_A_2',
-        currency: 'usd',
-        recurring: {
-          interval: 'year',
-        },
-      },
-      {
-        id: 'p_A_3',
-        currency: 'gbp',
-        recurring: {
-          interval: 'year',
-        },
-      },
-    ],
-  },
-]
-const STUB_FEATURE_GROUPS = [
-  {
-    title: 'Payments infrastructure',
-    features: [
-      {
-        title: 'Billing plans',
-        tooltip: 'Customizable',
-        product_config: {
-          p_A: {
-            enabled: true,
-          },
-        },
-      },
-    ],
-  },
-  {
-    title: 'Security',
-    features: [
-      {
-        title: 'SSO',
-        tooltip: 'Google auth',
-        product_config: {
-          p_A: {
-            enabled: true,
-          },
-        },
-      },
-    ],
-  },
-]
+const { assert } = chai
 
 describe('utils', () => {
   describe('getGoodStandingSubscriptions', () => {
