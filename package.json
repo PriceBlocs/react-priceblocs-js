@@ -39,6 +39,7 @@
     "@types/qs": "^6.9.7",
     "@types/react": "^16.3.13",
     "@types/react-dom": "^16.0.5",
+    "@types/sinon": "^10.0.4",
     "babel-core": "^6.26.3",
     "babel-runtime": "^6.26.0",
     "chai": "^4.3.4",
@@ -52,6 +53,7 @@
     "rollup": "^1.29.0",
     "rollup-plugin-sass": "^1.2.7",
     "rollup-plugin-typescript2": "^0.25.3",
+    "sinon": "^11.1.2",
     "ts-node": "^10.2.1",
     "typescript": "^2.8.3"
   },
