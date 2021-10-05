@@ -292,7 +292,7 @@ const previewData = await previewInvoice({
 
 | Key                                                      | Description                                             |
 | -------------------------------------------------------- | ------------------------------------------------------- |
-| [preview](invoice-preview)                               | Itemized invoice preview including confirmation payload |
+| [preview](#invoice-preview)                              | Itemized invoice preview including confirmation payload |
 | [invoice](https://stripe.com/docs/api/invoices/upcoming) | The raw Stripe invoice which is being previewed         |
 
 #### Invoice preview
@@ -461,13 +461,13 @@ This object will be extended with any additional expanded attributes or associat
 - These items can be passed along in any `checkout` call
 - These items will also be used as the default collection of prices for an preview invoice request
 
-| Key                             | Description             |
-| ------------------------------- | ----------------------- |
-| [items](form-checkout-item-api) | Array of checkout items |
+| Key                              | Description             |
+| -------------------------------- | ----------------------- |
+| [items](#form-checkout-item-api) | Array of checkout items |
 
 ##### Form checkout item API
 
-- Closely aligned to the Stripe [SubscriptionItem API](https://stripe.com/docs/api/subscription_items/object)
+- Closely aligned to the [Stripe SubscriptionItem API](https://stripe.com/docs/api/subscription_items/object)
 
 | Key      | Required | Description          |
 | -------- | -------- | -------------------- |
