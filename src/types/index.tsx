@@ -11,7 +11,7 @@ export enum StripeCustomerExpand {
   'invoice_settings.default_payment_method' = 'invoice_settings.default_payment_method',
 }
 
-type ValuesCheckoutItems = {
+export type ValuesCheckoutItems = {
   form: {
     checkout: {
       items?: ICheckoutItem[] | string[]
@@ -357,11 +357,6 @@ export interface IProductsFeatureTable {
   groups: IFeatureTableGroup[]
 }
 
-export interface IPrepareBillingDataProps {
-  props: Pick<IBillingActionProps, 'customer' | 'return_url'>
-  billingProps: IBillingProps
-}
-
 export interface IPreviewInvoiceData {
   customer?: string
   items?: ICheckoutItem[] | string[]
@@ -372,14 +367,6 @@ export interface IPreviewInvoiceProps {
   customer?: string
   subscription?: string
   items?: ICheckoutItem[] | string[]
-}
-
-export interface IPreparePreviewInvoiceDataProps {
-  props: {
-    customer?: ICustomer
-    values: ValuesCheckoutItems
-  }
-  previewInvoiceProps: IPreviewInvoiceProps
 }
 
 type StripeSubscriptionStatus = 'active'

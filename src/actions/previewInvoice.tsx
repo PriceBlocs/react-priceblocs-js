@@ -2,19 +2,17 @@ import { IPreviewInvoiceProps, IPreviewInvoiceActionProps } from 'src/types'
 import { fetchPreviewInvoice } from 'src/request'
 import { preparePreviewInvoiceData } from '../request/data'
 
-export default (props: IPreviewInvoiceActionProps) => {
-  const { api_key, isSubmitting, setIsSubmitting, setError } = props
+// TODO: remame to config props
+export default (configProps: IPreviewInvoiceActionProps) => {
+  const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
 
-  return async (previewInvoiceProps: IPreviewInvoiceProps) => {
+  return async (callProps: IPreviewInvoiceProps) => {
     if (isSubmitting) {
       console.warn('Preview invoice in progress')
       return
     }
 
-    const previewInvoiceData = preparePreviewInvoiceData({
-      props,
-      previewInvoiceProps,
-    })
+    const previewInvoiceData = preparePreviewInvoiceData(configProps, callProps)
 
     setIsSubmitting(true)
     try {

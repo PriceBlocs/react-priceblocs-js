@@ -8,7 +8,8 @@ import {
   ICustomer,
   IBillingProps,
   IBillingActionProps,
-  IPreparePreviewInvoiceDataProps,
+  IPreviewInvoiceProps,
+  ValuesCheckoutItems,
   IPreviewInvoiceData,
   IPrepareSubscriptionUpdateDataProps,
   ISubscriptionUpdateData,
@@ -120,8 +121,12 @@ export const prepareCheckoutData = (
 }
 
 type BillingConfigProps = Pick<IBillingActionProps, 'customer' | 'return_url'>
-type CallProps = IBillingProps
-type ConfigProps = BillingConfigProps
+type PreviewInvoiceConfigProps = {
+  customer?: ICustomer
+  values: ValuesCheckoutItems
+}
+type ConfigProps = BillingConfigProps | PreviewInvoiceConfigProps
+type CallProps = IBillingProps | IPreviewInvoiceProps
 
 const getCallOrConfigCustomer = (
   callProps: CallProps,
@@ -155,21 +160,13 @@ export const prepareBillingData = (
   }
 }
 
-export const preparePreviewInvoiceData = ({
-  props,
-  previewInvoiceProps,
-}: IPreparePreviewInvoiceDataProps): IPreviewInvoiceData => {
-  let customer
-  if (previewInvoiceProps && previewInvoiceProps.customer) {
-    customer = previewInvoiceProps.customer
-  } else if (props.customer && props.customer.id) {
-    customer = props.customer.id
-  }
-  if (!customer) {
-    throw new Error('A valid customer must be provided to preview an invoice.')
-  }
+export const preparePreviewInvoiceData = (
+  configProps: PreviewInvoiceConfigProps,
+  callProps: IPreviewInvoiceProps
+): IPreviewInvoiceData => {
+  const customer = getCallOrConfigCustomer(callProps, configProps)
 
-  if (!previewInvoiceProps.subscription) {
+  if (!callProps.subscription) {
     throw new Error(
       'A valid subscription must be provided to preview an invoice.'
     )
@@ -177,8 +174,8 @@ export const preparePreviewInvoiceData = ({
 
   return {
     customer,
-    subscription: previewInvoiceProps.subscription,
-    items: previewInvoiceProps.items || props.values.form.checkout.items || [],
+    subscription: callProps.subscription,
+    items: callProps.items || configProps.values.form.checkout.items || [],
   }
 }
 

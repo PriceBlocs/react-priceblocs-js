@@ -219,33 +219,32 @@ describe('request/data', () => {
     })
   })
 
-  describe('preparePreviewInvoiceData', () => {
+  describe.only('preparePreviewInvoiceData', () => {
     it('returns provided subscription and items', () => {
-      const result = preparePreviewInvoiceData({
-        props: {
-          customer: {
-            id: 'cus_123',
-          },
-          values: {
-            form: {
-              checkout: {
-                items: [],
-              },
+      const configProps = {
+        customer: {
+          id: 'cus_123',
+        },
+        values: {
+          form: {
+            checkout: {
+              items: [] as string[],
             },
           },
         },
-        previewInvoiceProps: {
-          customer: 'cus_456',
-          subscription: '123',
-          items: [
-            {
-              price: {
-                id: 'p_A_1',
-              },
+      }
+      const callProps = {
+        customer: 'cus_456',
+        subscription: '123',
+        items: [
+          {
+            price: {
+              id: 'p_A_1',
             },
-          ],
-        },
-      })
+          },
+        ],
+      }
+      const result = preparePreviewInvoiceData(configProps, callProps)
       const target = {
         customer: 'cus_456',
         items: [
@@ -262,29 +261,28 @@ describe('request/data', () => {
     })
 
     it('returns initial props customer and checkout items', () => {
-      const result = preparePreviewInvoiceData({
-        props: {
-          customer: {
-            id: 'cus_123',
-          },
-          values: {
-            form: {
-              checkout: {
-                items: [
-                  {
-                    price: {
-                      id: 'p_A_1',
-                    },
+      const configProps = {
+        customer: {
+          id: 'cus_123',
+        },
+        values: {
+          form: {
+            checkout: {
+              items: [
+                {
+                  price: {
+                    id: 'p_A_1',
                   },
-                ],
-              },
+                },
+              ],
             },
           },
         },
-        previewInvoiceProps: {
-          subscription: '123',
-        },
-      })
+      }
+      const callProps = {
+        subscription: '123',
+      }
+      const result = preparePreviewInvoiceData(configProps, callProps)
       const target = {
         customer: 'cus_123',
         items: [
