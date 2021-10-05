@@ -19,7 +19,14 @@ import {
 import * as Hooks from './hooks'
 import * as Utils from './utils'
 import * as Constants from './constants'
-import { checkout, billing, fetchData } from './actions'
+import {
+  checkout,
+  previewInvoice,
+  updateSubscription,
+  billing,
+  fetchData,
+} from './actions'
+import { checkoutAdd, checkoutRemove } from './form'
 
 const createUseContext = (
   contextProviderWrapperCreator: (
@@ -170,6 +177,24 @@ export const {
           setIsSubmitting,
           setError,
         }),
+        checkoutAdd: checkoutAdd({ setValues, values }),
+        checkoutRemove: checkoutRemove({ setValues, values }),
+        previewInvoice: previewInvoice({
+          api_key,
+          customer,
+          values,
+          isSubmitting,
+          setIsSubmitting,
+          setError,
+        }),
+        updateSubscription: updateSubscription({
+          api_key,
+          customer,
+          values,
+          isSubmitting,
+          setIsSubmitting,
+          setError,
+        }),
       }
 
       if (values) {
@@ -212,6 +237,7 @@ export const useActiveProductPrice = Hooks.useActiveProductPrice
 export const getActiveProductPrice = Utils.getActiveProductPrice
 export const getProductFeatures = Utils.getProductFeatures
 export const getProductsFeaturesTable = Utils.getProductsFeaturesTable
+export const getGoodStandingSubscriptions = Utils.getGoodStandingSubscriptions
 
 /**
  * Constants
