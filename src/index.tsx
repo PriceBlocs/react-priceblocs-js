@@ -33,9 +33,6 @@ const createUseContext = (
     provider: IPriceBlocsProvider
   ) => IPriceBlocsProvider
 ): IPriceBlocsContext => {
-  /**
-   * Test out option argument
-   */
   const Context = React.createContext<null>(null)
   const useContext = () => React.useContext(Context)
   let ContextProvider
@@ -63,6 +60,9 @@ const WithStripeContext = ({
 }: IWithStripeContextProps) => {
   const stripe = useStripe()
 
+  /**
+   * Once Stripe is initialized set ready: true
+   */
   React.useEffect(() => {
     if (stripe && !ready) {
       setReady(true)
@@ -74,6 +74,10 @@ const WithStripeContext = ({
 
   const value = {
     ...providerValue,
+    /**
+     * Proxy checkout and billing calls through this function
+     * so that the Stripe instance doesn't need to be exposed / managed by the consumer
+     */
     checkout: async (props: ICheckoutProps) => initialCheckout(props, stripe),
     billing: async (props: IBillingProps) => initialBilling(props, stripe),
   }
@@ -151,6 +155,14 @@ export const {
         refetch()
       }, [])
 
+      const commonProps = {
+        api_key,
+        customer,
+        isSubmitting,
+        setIsSubmitting,
+        setError,
+      }
+
       const providerValue: IPriceBlocsProviderValue = {
         ready,
         loading,
@@ -159,41 +171,25 @@ export const {
         setFieldValue,
         refetch: refetch,
         checkout: checkout({
-          api_key,
-          customer,
+          ...commonProps,
           success_url,
           cancel_url,
           return_url,
           metadata,
-          isSubmitting,
-          setIsSubmitting,
-          setError,
         }),
         billing: billing({
-          api_key,
-          customer,
+          ...commonProps,
           return_url,
-          isSubmitting,
-          setIsSubmitting,
-          setError,
         }),
         checkoutAdd: checkoutAdd({ setValues, values }),
         checkoutRemove: checkoutRemove({ setValues, values }),
         previewInvoice: previewInvoice({
-          api_key,
-          customer,
+          ...commonProps,
           values,
-          isSubmitting,
-          setIsSubmitting,
-          setError,
         }),
         updateSubscription: updateSubscription({
-          api_key,
-          customer,
+          ...commonProps,
           values,
-          isSubmitting,
-          setIsSubmitting,
-          setError,
         }),
       }
 
@@ -210,6 +206,9 @@ export const {
       const content =
         typeof children === 'function' ? children(providerValue) : children
 
+      /**
+       * Client key is required to initialize the Stripe container
+       */
       return clientKey ? (
         <StripeElementContainer
           ready={ready}
