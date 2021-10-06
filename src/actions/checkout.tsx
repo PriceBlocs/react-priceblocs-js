@@ -23,12 +23,13 @@ export default (configProps: CheckoutActionProps) => {
     setIsSubmitting(true)
     try {
       const response = await createSession(api_key, data)
-
-      stripe.redirectToCheckout({
-        sessionId: response.id,
-      })
+      if ('id' in response) {
+        stripe.redirectToCheckout({
+          sessionId: response.id,
+        })
+      }
     } catch (err) {
-      setError({ message: err.message, statusCode: err.statusCode })
+      setError(err)
     }
     setIsSubmitting(false)
   }

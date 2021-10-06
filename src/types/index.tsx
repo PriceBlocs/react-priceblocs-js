@@ -88,6 +88,35 @@ export interface FetchConfigProps
   query?: FetchConfigQueryParams
 }
 
+export interface FetchConfigResponseData extends Metadata {
+  data: Values
+}
+
+type CreateSessionResponseData = {
+  id: string
+}
+
+type CreateBillingResponseData = {
+  id: string
+}
+
+export type FetchPreviewInvoiceResponseData = Pick<
+  PreviewInvoice,
+  'preview' | 'invoice'
+>
+
+export type UpdateSubscriptionResponseData = Pick<Subscription, 'id' | 'status'>
+
+export type FetchConfigResponse = FetchConfigResponseData | PriceBlocsError
+export type CreateSessionResponse = CreateSessionResponseData | PriceBlocsError
+export type CreateBillingResponse = CreateBillingResponseData | PriceBlocsError
+export type FetchPreviewInvoiceResponse =
+  | FetchPreviewInvoiceResponseData
+  | PriceBlocsError
+export type UpdateSubscriptionResponse =
+  | UpdateSubscriptionResponseData
+  | PriceBlocsError
+
 export interface FetchPreviewInvoiceParams
   extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
   [key: string]: string | string[] | FetchConfigQueryParams
@@ -435,10 +464,12 @@ export interface PriceBlocsProviderValue {
   ) => void
   checkoutAdd: (props: CheckoutAddData) => Values
   checkoutRemove: (priceId: string) => Values
-  previewInvoice: (props: PreviewInvoiceProps) => Promise<PreviewInvoice | void>
+  previewInvoice: (
+    props: PreviewInvoiceProps
+  ) => Promise<FetchPreviewInvoiceResponse | void>
   updateSubscription: (
     props: UpdateSubscriptionProps
-  ) => Promise<Subscription | void>
+  ) => Promise<UpdateSubscriptionResponse | void>
 }
 
 export interface PriceBlocsError {

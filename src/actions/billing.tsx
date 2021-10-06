@@ -30,15 +30,11 @@ export default (configProps: BillingActionProps) => {
     setIsSubmitting(true)
     try {
       const billingSession = await createBilling(api_key, billingData)
-      if (billingSession) {
-        if (billingSession.statusCode === 400) {
-          setError(billingSession)
-        } else if (billingSession.url) {
-          window.location.href = billingSession.url
-        }
+      if ('url' in billingSession) {
+        window.location.href = billingSession.url
       }
     } catch (err) {
-      setError({ message: err.message, statusCode: err.statusCode })
+      setError(err)
     }
 
     setIsSubmitting(false)
