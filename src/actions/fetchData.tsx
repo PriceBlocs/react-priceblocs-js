@@ -11,12 +11,14 @@ export default (configProps: FetchDataActionProps) => {
       setLoading(true)
       try {
         const configData = getFetchConfigData(configProps)
-        const { data, ...metadata } = await fetchConfig(api_key, configData)
-
-        setMetadata(metadata)
-        setValues(data)
+        const response = await fetchConfig(api_key, configData)
+        if ('data' in response) {
+          const { data, ...metadata } = response
+          setValues(data)
+          setMetadata(metadata)
+        }
       } catch (err) {
-        setError({ message: err.message, statusCode: err.statusCode })
+        setError(err)
       }
       setLoading(false)
     }
