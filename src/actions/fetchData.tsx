@@ -14,7 +14,7 @@ export default (configProps: FetchDataActionProps) => {
         const response = await fetchConfig(api_key, configData)
         if ('data' in response) {
           const { data, ...metadata } = response
-          setValues(response.data)
+          setValues(data)
           setMetadata(metadata)
         }
       } catch (err) {

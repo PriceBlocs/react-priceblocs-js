@@ -97,7 +97,7 @@ type CreateSessionResponseData = {
 }
 
 type CreateBillingResponseData = {
-  id: string
+  url: string
 }
 
 export type FetchPreviewInvoiceResponseData = Pick<
