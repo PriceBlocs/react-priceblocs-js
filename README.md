@@ -90,17 +90,15 @@ There are 3 steps to adding prices and checkout to your app:
   - `api_key`: your PriceBlocs publishable API key
     - Use your `PB_pk_live_*` API key for live Stripe resources and checkout
     - Use your `PB_pk_test_*` API key for test Stripe resources and checkout
-  - `prices`: set of prices you want to show to customers (live)
+  - `prices`: set of prices you want to show to customers
 - You can also pass additional checkout configuration options like a customer id / email
 
 ##### API keys
 
 - Your PriceBlocs account can have both live and test API key sets
 - Each set of API keys has both a public and secret key
-- Only public keys should be used for client side requests - they can perform read but not write operations to Stripe
+- Only public keys should be used for client side requests
 - Only `livemode: true` keys can initiate live Stripe checkout charges
-- Your connected Stripe account must have `charges_enabled` in order to initiate a checkout session
-  - To achieve this, you will need to go throught the Stripe onboarding prompts within the app
 
 | Key name       | Livemode | Audience |
 | -------------- | -------- | -------- |
@@ -108,6 +106,9 @@ There are 3 steps to adding prices and checkout to your app:
 | `PB_pk_live_*` | true     | Public   |
 | `PB_sk_test_*` | false    | Secret   |
 | `PB_pk_test_*` | false    | Public   |
+
+- Your connected Stripe account must have `charges_enabled` in order to initiate a checkout session
+  - To achieve this, you will need to complete Stripe's business verification onboarding process
 
 ```javascript
 import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
@@ -128,9 +129,9 @@ export default () => {
     <PriceBlocs {...props}>
       {({ loading, values }) => {
         if (loading) {
-          return <Loader />
+          return <YourLoader />
         } else if (values && values.products && values.products.length > 0) {
-          return <PricingTable />
+          return <YourPricingTable />
         }
         return null
       }}
@@ -193,7 +194,11 @@ const {
 ### Presentation
 
 - Once initialized, you will be able to access your fetched data via the `usePriceBlocsContext` context hook
-- There are a variety of fields to help you present, update and initiate checkout
+- There are a variety of fields to help you:
+  - present price options
+  - update context values
+  - initiate checkout and billing sessions
+  - preview and confirm subscription updates
 
 | Key                                       | Type     | Description                                                               |
 | ----------------------------------------- | -------- | ------------------------------------------------------------------------- |
@@ -245,7 +250,7 @@ const PricingTable = () => {
 ### checkout
 
 - Use the `checkout` function from context to start a checkout session
-- `checkout` accepts wither a single price or a collection or resources as an argument
+- `checkout` accepts either a single price or a collection or resources as an argument
 
 ```javascript
 const { checkout } = usePriceBlocsContext()
@@ -258,10 +263,11 @@ const { checkout } = usePriceBlocsContext()
 
 ### billing
 
-- Use the `billing` function from context to start a new Stripe billing portal session
+- Use the `billing` function from context to start a new Stripe billing portal session for one of your customers
 - A valid customer id is required to start a new session
 - By default, we will use the customer in context if you have initiated PriceBlocs with a valid customer
   - Otherwise you can pass a specific customer id parameter into the billing call
+- Your Stripe billing portal can be confiugred within Stripe [here](https://dashboard.stripe.com/settings/billing/portal)
 
 ```javascript
 const { billing } = usePriceBlocsContext()
@@ -274,8 +280,8 @@ const { billing } = usePriceBlocsContext()
 
 ### previewInvoice
 
-- Use the `previewInvoice` function from context to preview the effects of changed subscription items
-- To preview changes against a specific subscription, pass its `id` as well as a collection of `prices` to preview on its upcoming invoice
+- Use the `previewInvoice` function from context to preview what an upcoming invoice for a subscription will look like based on the items passed in the request
+- To preview changes against a specific subscription, pass its `id` as well as a collection of `items` to preview
 
 ```javascript
 const previewData = await previewInvoice({
@@ -288,7 +294,7 @@ const previewData = await previewInvoice({
 })
 ```
 
-- The preview response will include an itemized preview for the invvoice and the raw invoice itself
+- The preview response will include an itemized preview for the upcoming invoice and the raw invoice itself.
 
 | Key                                                      | Description                                             |
 | -------------------------------------------------------- | ------------------------------------------------------- |
@@ -297,7 +303,7 @@ const previewData = await previewInvoice({
 
 #### Invoice preview
 
-- The preview response will inclide an itemized list for rendering the invoice preview as well as a `confirm` payload which can be used to pass along in a subscription update request to confirm the previewed invoice
+- The preview response includes `lineItems`, `amountItems` which describe the invoices details as well as a `confirm` object which can be passed in a subsequent `updateSubscription` request to update the associated subscription.
 
 | Key         | Description                                                                                   |
 | ----------- | --------------------------------------------------------------------------------------------- |
@@ -330,7 +336,7 @@ const previewData = await updateSubscription({
 })
 ```
 
-- For convenience you can pick the `confirm` object from the `invoicePreview` response and use it when calling `updateSubscription` e.g.
+- For convenience you can pick the `confirm` object from the `invoicePreview` response and use it when calling `updateSubscription`.
 - A `proration_date` timestamp is included in the preview response so that it too is available to be passed along in the request.
 
 ```javascript
@@ -370,11 +376,11 @@ const {
 
 ### Utils
 
-| Key                          | Type     | Description                                                                      |
+| Key                          | Type     | Description                                                                      |                 |
 | ---------------------------- | -------- | -------------------------------------------------------------------------------- | --------------- |
-| getActiveProductPrice        | Function | Get the product price based on the current form values for interval and currency |
-| getProductFeatures           | Function | Get all features for the provided product                                        |
-| getProductsFeaturesTable     | Function | Generate a feature table representation for products in context                  |
+| getActiveProductPrice        | Function | Get the product price based on the current form values for interval and currency |                 |
+| getProductFeatures           | Function | Get all features for the provided product                                        |                 |
+| getProductsFeaturesTable     | Function | Generate a feature table representation for products in context                  |                 |
 | getGoodStandingSubscriptions | Function | Filter subscriptions in context to ones with either an active                    | trialing status |
 
 ### Constants
@@ -421,8 +427,8 @@ This shape is closely aligned to the [Stripe prices API](https://stripe.com/docs
 
 ###### Price formatting API
 
-- We format the unit_amount of each price so you don't have to.
-- This also includes formatting them for a variery of different intervals (day, week, month, year)
+- We format the `unit_amount` of each price so you don't have to.
+- This also includes formatting them for a variery of different intervals `day | week | month | year`
 - Each formatted interval is accessible under the `intervals` key
 
 | Key         | Description                                                                                                        | Example                                                          |
