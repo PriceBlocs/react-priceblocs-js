@@ -38,6 +38,8 @@ export type BillingConfigProps = Pick<
   BillingActionProps,
   'customer' | 'return_url'
 >
+export type ReportUsageConfigProps = Pick<ReportUsageActionProps, 'customer'>
+export type FetchUsageConfigProps = Pick<FetchUsageActionProps, 'customer'>
 export type PreviewInvoiceConfigProps = {
   customer?: Customer
   values: ValuesCheckoutItems
@@ -54,11 +56,13 @@ export type ActionConfigProps =
   | BillingConfigProps
   | PreviewInvoiceConfigProps
   | UpdateSubscriptionConfigProps
+  | ReportUsageConfigProps
 
 export type ActionCallProps =
   | BillingProps
   | PreviewInvoiceProps
   | UpdateSubscriptionProps
+  | ReportUsageProps
 
 export interface FetchConfigQueryParams {
   customer?: {
@@ -101,6 +105,9 @@ type CreateBillingResponseData = {
   url: string
 }
 
+type ReportUsageResponseData = StripeNode.UsageRecord
+type FetchUsageResponseData = StripeNode.UsageRecordSummary[]
+
 export type FetchPreviewInvoiceResponseData = Pick<
   PreviewInvoice,
   'preview' | 'invoice'
@@ -111,6 +118,9 @@ export type UpdateSubscriptionResponseData = Pick<Subscription, 'id' | 'status'>
 export type FetchConfigResponse = FetchConfigResponseData | PriceBlocsError
 export type CreateSessionResponse = CreateSessionResponseData | PriceBlocsError
 export type CreateBillingResponse = CreateBillingResponseData | PriceBlocsError
+export type ReportUsageResponse = ReportUsageResponseData | PriceBlocsError
+export type FetchUsageResponse = FetchUsageResponseData | PriceBlocsError
+
 export type FetchPreviewInvoiceResponse =
   | FetchPreviewInvoiceResponseData
   | PriceBlocsError
@@ -169,13 +179,57 @@ export type BillingActionProps = {
   setError: (error: PriceBlocsError | Error) => void
 }
 
+export type ReportUsageActionProps = {
+  api_key: string
+  customer?: Customer
+  isSubmitting: boolean
+  setIsSubmitting: (isSubmiting: boolean) => void
+  setError: (error: PriceBlocsError | Error) => void
+}
+
+export type FetchUsageActionProps = {
+  api_key: string
+  customer?: Customer
+  isSubmitting: boolean
+  setIsSubmitting: (isSubmiting: boolean) => void
+  setError: (error: PriceBlocsError | Error) => void
+}
+
 export interface BillingProps extends Pick<CustomerParams, 'customer'> {
   return_url?: string
+}
+
+export interface ReportUsageProps extends Pick<CustomerParams, 'customer'> {
+  subscription_item: string
+  quantity?: number
+  timestamp?: number
+  action?: 'set' | 'increment'
+}
+
+export interface FetchUsageProps extends Pick<CustomerParams, 'customer'> {
+  subscription_item: string
+  timestamp?: number
 }
 
 export type BillingData = {
   customer: string
   return_url: string
+}
+
+export type ReportUsageData = {
+  customer: string
+  subscription_item: string
+  quantity?: number
+  timestamp?: number
+  action?: 'set' | 'increment'
+}
+
+/**
+ * What query args are here?
+ */
+export type FetchUsageData = {
+  customer: string
+  subscription_item: string
 }
 
 export type Metadata = {
@@ -458,6 +512,7 @@ export interface PriceBlocsProviderValue {
   error?: PriceBlocsError | Error
   setValues: (values: Values) => void
   setFieldValue: (path: string, value: any) => any
+  setError: (value: Error) => any
   refetch: () => void
   checkout: ({ prices }: CheckoutProps, stripe: Stripe | null) => void
   billing: (
@@ -472,6 +527,8 @@ export interface PriceBlocsProviderValue {
   updateSubscription: (
     props: UpdateSubscriptionProps
   ) => Promise<UpdateSubscriptionResponse | void>
+  reportUsage: (props: ReportUsageProps, stripe: Stripe | null) => void
+  fetchUsage: (props: FetchUsageProps, stripe: Stripe | null) => void
 }
 
 export interface PriceBlocsError {

@@ -18,7 +18,7 @@ export default (configProps: CheckoutActionProps) => {
       return
     }
 
-    const data = getCheckoutData(callProps, configProps)
+    const data = getCheckoutData(configProps, callProps)
 
     setIsSubmitting(true)
     try {

@@ -4,6 +4,7 @@ export const URLS = {
   INVOICE_PREVIEW: `${process.env.API_ROOT}/v1/config/invoice/preview`,
   SUBSCRIPTIONS: `${process.env.API_ROOT}/v1/config/subscriptions`,
   BILLING: `${process.env.API_ROOT}/v1/config/billing`,
+  USAGE: `${process.env.API_ROOT}/v1/config/usage`,
 }
 
 const POST = 'POST'

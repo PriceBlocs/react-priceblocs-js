@@ -114,7 +114,7 @@ describe('request/data', () => {
             id: 'cus_123',
           },
         }
-        const result = getCheckoutData(callProps, configProps)
+        const result = getCheckoutData(configProps, callProps)
 
         const target = {
           prices: ['price_123'],
@@ -141,7 +141,7 @@ describe('request/data', () => {
             id: 'cus_123',
           },
         }
-        const result = getCheckoutData(callProps, configProps)
+        const result = getCheckoutData(configProps, callProps)
 
         const target = {
           prices: ['price_123', 'price_456'],
