@@ -13,7 +13,7 @@ export default (configProps: ReportUsageActionProps) => {
     callProps: ReportUsageProps
   ): Promise<ReportUsageResponse | void> => {
     if (isSubmitting) {
-      console.warn('Usage report in progress')
+      console.warn('Report usage in progress')
       return
     }
 

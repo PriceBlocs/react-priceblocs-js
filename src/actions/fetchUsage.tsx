@@ -13,7 +13,7 @@ export default (configProps: FetchUsageActionProps) => {
     callProps: FetchUsageProps
   ): Promise<FetchUsageResponse | void> => {
     if (isSubmitting) {
-      console.warn('Usage report in progress')
+      console.warn('Fetch usage in progress')
       return
     }
 
