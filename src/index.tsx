@@ -23,8 +23,10 @@ import {
   checkout,
   previewInvoice,
   updateSubscription,
+  reportUsage,
   billing,
   fetchData,
+  fetchUsage,
 } from './actions'
 import { checkoutAdd, checkoutRemove } from './form'
 
@@ -169,6 +171,7 @@ export const {
         isSubmitting,
         setValues,
         setFieldValue,
+        setError,
         refetch: refetch,
         checkout: checkout({
           ...commonProps,
@@ -191,6 +194,8 @@ export const {
           ...commonProps,
           values,
         }),
+        reportUsage: reportUsage(commonProps),
+        fetchUsage: fetchUsage(commonProps),
       }
 
       if (values) {
@@ -229,6 +234,7 @@ export const {
  * Hooks
  */
 export const useActiveProductPrice = Hooks.useActiveProductPrice
+export const useSubscriptionItemForPrice = Hooks.useSubscriptionItemForPrice
 
 /**
  * Utils

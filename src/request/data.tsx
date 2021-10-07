@@ -18,6 +18,12 @@ import {
   ActionConfigProps,
   ActionCallProps,
   CheckoutCallProps,
+  ReportUsageConfigProps,
+  ReportUsageProps,
+  ReportUsageData,
+  FetchUsageConfigProps,
+  FetchUsageProps,
+  FetchUsageData,
 } from '../types'
 
 export const getAuthHeaders = (apiKey: string): AuthHeaders => ({
@@ -59,8 +65,8 @@ export const getFetchConfigData = (
 }
 
 export const getCheckoutData = (
-  callProps: CheckoutCallProps,
-  configProps: CheckoutConfigProps
+  configProps: CheckoutConfigProps,
+  callProps: CheckoutCallProps
 ): CheckoutData => {
   const currentUrl = window.location.href
   if (typeof callProps === 'string') {
@@ -153,6 +159,34 @@ export const getBillingData = (
         ? callProps.return_url
         : configProps.return_url || window.location.href,
   }
+}
+
+export const getReportUsageData = (
+  configProps: ReportUsageConfigProps,
+  callProps: ReportUsageProps
+): ReportUsageData => {
+  const customer = getCallOrConfigCustomer(callProps, configProps)
+
+  const result = {
+    customer,
+    subscription_item: callProps.subscription_item,
+  } as ReportUsageData
+
+  return result
+}
+
+export const getFetchUsageData = (
+  configProps: FetchUsageConfigProps,
+  callProps: FetchUsageProps
+): FetchUsageData => {
+  const customer = getCallOrConfigCustomer(callProps, configProps)
+
+  const result = {
+    customer,
+    subscription_item: callProps.subscription_item,
+  } as FetchUsageData
+
+  return result
 }
 
 export const getPreviewInvoiceData = (

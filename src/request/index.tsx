@@ -5,10 +5,14 @@ import {
   CreateBillingResponse,
   CheckoutData,
   BillingData,
+  ReportUsageData,
   PreviewInvoiceData,
   UpdateSubscriptionProps,
   UpdateSubscriptionResponse,
   FetchPreviewInvoiceResponse,
+  ReportUsageResponse,
+  FetchUsageData,
+  FetchUsageResponse,
 } from '../types'
 import { URLS, METHODS } from '../constants'
 import { stringify } from 'qs'
@@ -39,7 +43,7 @@ export const createSession = async (
   const response = await fetch(URLS.CHECKOUT, {
     method: METHODS.POST,
     headers: getAuthHeaders(apiKey),
-    body: stringify(data),
+    body: JSON.stringify(data),
   })
 
   const result: CreateSessionResponse = await response.json()
@@ -57,7 +61,7 @@ export const createBilling = async (
   const response = await fetch(URLS.BILLING, {
     method: METHODS.POST,
     headers: getAuthHeaders(apiKey),
-    body: stringify(data),
+    body: JSON.stringify(data),
   })
   const result: CreateBillingResponse = await response.json()
   if ('statusCode' in result && result.statusCode !== 200) {
@@ -98,6 +102,40 @@ export const updateSubscription = async (
   })
 
   const result: UpdateSubscriptionResponse = await response.json()
+  if ('statusCode' in result && result.statusCode !== 200) {
+    throw result
+  }
+
+  return result
+}
+
+export const reportUsage = async (
+  apiKey: string,
+  data: ReportUsageData
+): Promise<ReportUsageResponse> => {
+  const response = await fetch(URLS.USAGE, {
+    method: METHODS.POST,
+    headers: getAuthHeaders(apiKey),
+    body: JSON.stringify(data),
+  })
+  const result: ReportUsageResponse = await response.json()
+  if ('statusCode' in result && result.statusCode !== 200) {
+    throw result
+  }
+
+  return result
+}
+
+export const fetchUsage = async (
+  apiKey: string,
+  data: FetchUsageData
+): Promise<FetchUsageResponse> => {
+  const url = `${URLS.USAGE}?${stringify(data)}`
+  const response = await fetch(url, {
+    method: METHODS.GET,
+    headers: getAuthHeaders(apiKey),
+  })
+  const result: FetchUsageResponse = await response.json()
   if ('statusCode' in result && result.statusCode !== 200) {
     throw result
   }
