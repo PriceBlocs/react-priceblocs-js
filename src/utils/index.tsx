@@ -7,9 +7,9 @@ import {
   FeatureTableGroupColumn,
   ProductConfig,
   ProductsFeatureTable,
-  Subscription,
   SubscriptionStatus,
 } from '../types'
+import Stripe from 'stripe'
 
 type QueryInput = Pick<FormData, 'currency' | 'interval'>
 
@@ -35,6 +35,11 @@ export const getActiveProductPrice = (
     return match
   })
 }
+
+export const getSubscriptionItemForPrice = (
+  price: string,
+  subscription: Stripe.Subscription
+) => subscription.items.data.find((item) => item.price.id === price)
 
 export const getProductFeatures = (
   productId: string,
@@ -98,10 +103,10 @@ export const getProductsFeaturesTable = ({
 }
 
 export const getGoodStandingSubscriptions = (
-  subscriptions: Subscription[]
-): Subscription[] =>
+  subscriptions: Stripe.Subscription[]
+): Stripe.Subscription[] =>
   subscriptions.filter(
-    ({ status }: Subscription) =>
+    ({ status }: Stripe.Subscription) =>
       status === SubscriptionStatus.Active.toString() ||
       status === SubscriptionStatus.Trialing.toString()
   )
