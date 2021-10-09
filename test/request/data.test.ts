@@ -8,7 +8,9 @@ import {
   getBillingData,
   getPreviewInvoiceData,
   getUpdateSubscriptionData,
+  getReportUsageData,
 } from '../../src/request/data'
+import { UsageAction } from '../../src/types'
 import { STUB_FETCH_QUERY } from '../stubs'
 
 describe('request/data', () => {
@@ -153,6 +155,30 @@ describe('request/data', () => {
 
         assert.deepEqual(result, target)
       })
+    })
+  })
+
+  describe('getReportUsageData', () => {
+    it('prepares the report usage data ', () => {
+      const configProps = {
+        customer: {
+          id: 'cus_123',
+        },
+      }
+      const callProps = {
+        subscription_item: 'si_123',
+        quantity: 100,
+        action: 'increment' as UsageAction,
+      }
+      const result = getReportUsageData(configProps, callProps)
+      const target = {
+        customer: 'cus_123',
+        subscription_item: 'si_123',
+        quantity: 100,
+        action: 'increment' as UsageAction,
+      }
+
+      assert.deepEqual(result, target)
     })
   })
 

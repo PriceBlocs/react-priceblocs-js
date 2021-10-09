@@ -171,6 +171,15 @@ export const getReportUsageData = (
     customer,
     subscription_item: callProps.subscription_item,
   } as ReportUsageData
+  if (callProps.quantity) {
+    result.quantity = callProps.quantity
+  }
+  if (callProps.timestamp) {
+    result.timestamp = callProps.timestamp
+  }
+  if (callProps.action) {
+    result.action = callProps.action
+  }
 
   return result
 }
