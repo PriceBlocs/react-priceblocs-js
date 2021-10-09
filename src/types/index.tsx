@@ -106,7 +106,56 @@ type CreateBillingResponseData = {
 }
 
 type ReportUsageResponseData = StripeNode.UsageRecord
-type FetchUsageResponseData = StripeNode.UsageRecordSummary[]
+
+type UsageRecordSummary = {
+  /**
+   * Unique identifier for the object.
+   */
+  id: string
+
+  /**
+   * String representing the object's type. Objects of the same type share the same value.
+   */
+  object: 'usage_record_summary'
+
+  /**
+   * The invoice in which this usage period has been billed for.
+   */
+  invoice: string | null
+
+  /**
+   * Has the value `true` if the object exists in live mode or the value `false` if the object exists in test mode.
+   */
+  livemode: boolean
+
+  period: {
+    label: string | null
+    end: number | null
+    start: number | null
+  }
+
+  /**
+   * The ID of the subscription item this summary is describing.
+   */
+  subscription_item: string
+
+  /**
+   * The total usage within this usage period.
+   */
+  total_usage: number
+  /**
+   * The total cost for this usage period if aggregate usage is sum
+   */
+  total_cost: string | null
+}
+
+type FetchUsageResponseData = {
+  total_usage: number
+  total_cost: string | null
+  unit_cost: string
+  unit_amount: number
+  data: UsageRecordSummary[]
+}
 
 export type FetchPreviewInvoiceResponseData = Pick<
   PreviewInvoice,
@@ -199,11 +248,13 @@ export interface BillingProps extends Pick<CustomerParams, 'customer'> {
   return_url?: string
 }
 
+export type UsageAction = 'set' | 'increment'
+
 export interface ReportUsageProps extends Pick<CustomerParams, 'customer'> {
   subscription_item: string
   quantity?: number
   timestamp?: number
-  action?: 'set' | 'increment'
+  action?: UsageAction
 }
 
 export interface FetchUsageProps extends Pick<CustomerParams, 'customer'> {
@@ -221,7 +272,7 @@ export type ReportUsageData = {
   subscription_item: string
   quantity?: number
   timestamp?: number
-  action?: 'set' | 'increment'
+  action?: UsageAction
 }
 
 /**
