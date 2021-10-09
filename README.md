@@ -376,18 +376,7 @@ const previewData = await fetchUsage({
 
 #### Usage data
 
-- Each usage summary record describes the period and amount of usage between its start and end date
-
-object
-invoice
-livemode
-period
-label
-end
-start
-},
-subscription_item
-total_usage
+- Each usage summary record describes the amount of usage between the priod start and end date
 
 | Key               | Description                                       |
 | ----------------- | ------------------------------------------------- |
