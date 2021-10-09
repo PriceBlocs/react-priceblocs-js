@@ -208,6 +208,8 @@ const {
 | [addCheckout](#addcheckout)               | Function | Add a price to the form checkout items                                    |
 | [removeCheckout](#removecheckout)         | Function | Remove a price from the form checkout items                               |
 | [previewInvoice](#previewInvoice)         | Function | Request a preview of the next invoice for the subscription                |
+| [fetchUsage](#fetchUsage)                 | Function | Fetch usage summary for a subscription line item                          |
+| [reportUsage](#reportUsage)               | Function | Report usage summary for a subscription line item                         |
 | [updateSubscription](#updateSubscription) | Function | Update a subscription with the a collection of updated subscription items |
 | [setFieldValue](#setfieldvalue)           | Function | Update any of the context values                                          |
 
@@ -350,6 +352,81 @@ const response = await previewInvoice({
 })
 await updateSubscription(response.preview.confirm)
 ```
+
+### fetchUsage
+
+- Use the `fetchUsage` function from context to fetch all of the usage summaries for a subscription item
+- Each summary represents multiple usage records over a subscription billing period (e.g., 15 usage records in the month of September).
+
+```javascript
+const previewData = await fetchUsage({
+  subscription_item: 'sub-item-123',
+})
+```
+
+- The response will include a collection of summary records as well as some aggregate totals.
+
+| Key                 | Description                                   |
+| ------------------- | --------------------------------------------- |
+| total_usage         | Sum total of all the summary records          |
+| total_cost          | Total usage multiplied by the cost per unit   |
+| unit_amount         | Unit amount for the subscription item         |
+| unit_cost           | Formatted cost amount for a unit amount value |
+| [data](#usage-data) | Collection of usage summaries                 |
+
+#### Usage data
+
+- Each usage summary record describes the period and amount of usage between its start and end date
+
+object
+invoice
+livemode
+period
+label
+end
+start
+},
+subscription_item
+total_usage
+
+| Key               | Description                                       |
+| ----------------- | ------------------------------------------------- |
+| id                | Summary usage record id                           |
+| invoice           | Id of the invoice the summary belongs to          |
+| livemode          | Whether its a live or test Stripe record          |
+| [period](#period) | Timestamp info for the summary                    |
+| subscription_item | Subscription item id the usage summary belongs to |
+| total_usage       | Sum count of the total usage for that period      |
+
+##### Period
+
+- Describes the timeframe for the usage summary
+
+| Key   | Description                        |
+| ----- | ---------------------------------- |
+| label | Formatted timestamp for the period |
+| start | Unix timestamp for period start    |
+| end   | Unix timestamp for period end      |
+
+### reportUsage
+
+- Use the `reportUsage` function from context to report usage for a particular `subscription_item`
+- e.g. this could be used for counting restricted API calls
+- You can specify additional fields like `quantity`, `timestamp`, and `action`
+
+```javascript
+const previewData = await fetchUsage({
+  subscription_item: 'sub-item-123',
+})
+```
+
+- Each additional field has default values if not specified
+
+| Key       | Description                                    | Default               |
+| --------- | ---------------------------------------------- | --------------------- |
+| quantity  | Formatted timestamp for the period             | 1                     |
+| timestamp | Unix timestamp usage recording                 | Now as unix timestamp |
+| action    | Usage action type, can be 'increment' or 'set' | increment             |
 
 ### setFieldValue
 
