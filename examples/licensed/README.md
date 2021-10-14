@@ -73,10 +73,10 @@ export default () => {
 }
 ```
 
-## Use your own Stripe resources
+## Use your Stripe prices
 
-- Replace the sandbox `api_key` within this example with your own PriceBlocs API key.
-- You can sign up for PriceBlocs [here](https://priceblocs.com/signup) to get a set of API keys.
+- To use your own Stripe prices you will need a PriceBlocs account and a PriceBlocs publishable API key.
+- You can sign up for PriceBlocs [here](https://priceblocs.com/signup) and then access your API keys within your app settings.
 - Your PriceBlocs account will have both live and test API key sets
 - Only public keys should be used for client side requests
 - Only `livemode: true` keys can initiate live Stripe checkout charges
@@ -88,7 +88,5 @@ export default () => {
 | `PB_pk_live_*` | true     | Public   |
 | `PB_pk_test_*` | false    | Public   |
 
-- You can then pass the appropriate references for the API key you're using.
-- e.g. only pass test price ids when using the `PB_pk_test_*` key and live price ids when using `PB_pk_live_*`
-
-## Use your own Stripe resources
+- Replace the sandbox `api_key` within this example repo with your PriceBlocs API key.
+- You can then pass the appropriate references for the API key you're using. Only pass test price ids when using the `PB_pk_test_*` key and live price ids when using `PB_pk_live_*`
