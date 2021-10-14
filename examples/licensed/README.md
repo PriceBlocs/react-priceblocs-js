@@ -1,10 +1,12 @@
 # Licensed - React PriceBlocs JS
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fhello-world)
-[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/dferber90/githubbox)
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2FPriceBlocs%2Freact-priceblocs-js%2Ftree%2Fmain%2Fexamples%2Flicensed&demo-title=PriceBlocs%20-%20Licensed%20Billing%20Plan&demo-description=Example%20react%20app%20for%20setting%20up%20a%20licensed%20billing%20plan%2C%20complete%20with%20checkout%20via%20PriceBlocs%20and%20Stripe&demo-url=https%3A%2F%2Fpriceblocs.com%2Fplay%3Fplan%3Dlicensed)
+
+[![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/PriceBlocs/react-priceblocs-js/tree/main/examples/licensed)
 
 - This is a full example of a licensed billing plan page powered by PriceBlocs.
 - We provide a set of payments building blocks to help you add pricing, billing and more to your applications.
+- This example and more can be used within the PriceBlocs playground [here](https://priceblocs.com/play)
 
 ## Local development
 
