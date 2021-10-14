@@ -15,6 +15,7 @@ Everything you need to get started with in-app payments, with less server side c
 - [Getting Started](#getting-started)
 - [Workflow](#workflow)
 - [API](#api)
+- [Examples](examples/index.md)
 
 ## Getting started
 
