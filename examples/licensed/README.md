@@ -4,6 +4,8 @@
 
 [![Open in CodeSandbox](https://img.shields.io/badge/Open%20in-CodeSandbox-blue?style=flat-square&logo=codesandbox)](https://githubbox.com/PriceBlocs/react-priceblocs-js/tree/main/examples/licensed)
 
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label=Get%20support%20on)](https://discord.gg/PhFdFD2HvU)
+
 - This is a full example of a licensed billing plan page powered by PriceBlocs.
 - We provide a set of payments building blocks to help you add pricing, billing and more to your applications.
 - This example and more can be used within the PriceBlocs playground [here](https://priceblocs.com/play)
@@ -16,6 +18,12 @@ Install and run to get started with the local development server
 ```
 npm i && npm run start
 ```
+
+### App setup
+
+This app was generated with a standard `create-react-app` template.
+We use `craco` to extend the standard webpack config with path aliases.
+Postcss and Tailwind are used for stylesheet generation.
 
 ## Quick start
 

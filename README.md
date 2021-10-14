@@ -1,5 +1,7 @@
 # React PriceBlocs JS [beta]
 
+[![Discord](https://badgen.net/badge/icon/discord?icon=discord&label=Get%20support%20on)](https://discord.gg/PhFdFD2HvU)
+
 PriceBlocs makes it easy for developers to get started with in-app payments and billing through a set of functional components.
 
 In just a few lines of code you'll be able to:
