@@ -7,6 +7,7 @@
 - This is a full example of a licensed billing plan page powered by PriceBlocs.
 - We provide a set of payments building blocks to help you add pricing, billing and more to your applications.
 - This example and more can be used within the PriceBlocs playground [here](https://priceblocs.com/play)
+- We use [tailwindcss](https://tailwindcss.com/) to make sure it looks good out of the box but the PriceBlocs functional components can be used to power any of your own react UI.
 
 ## Local development
 
@@ -81,3 +82,5 @@ export default () => {
 
 - You can then pass the appropriate references for the API key you're using.
 - e.g. only pass test price ids when using the `PB_pk_test_*` key and live price ids when using `PB_pk_live_*`
+
+## Use your own Stripe resources
