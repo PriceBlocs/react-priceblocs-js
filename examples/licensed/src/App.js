@@ -2,8 +2,8 @@ import React from "react";
 import { PriceBlocs } from "@priceblocs/react-priceblocs-js";
 import PageControls from "@components/PageControls";
 import HeaderControls from "@components/HeaderControls";
-import PricingTable from "@/components/PricingTable";
-import FeatureComparison from "@/components/FeatureComparison";
+import PricingTable from "@components/PricingTable";
+import FeatureComparison from "@components/FeatureComparison";
 import Billing from "@components/Billing";
 
 const HEADER_PROPS = {
