@@ -13,9 +13,20 @@ const HEADER_PROPS = {
   showToggle: true
 };
 
-const pbProps = {
+const PRICE_BLOCS_SANDBOX_PROPS = {
+  /**
+   * The api_key used here is a special sandbox key
+   * - it is locked to a demo Stripe account and as such has limited access to the API
+   * - it's included here so that you can get to play with PriceBlocs in a limited capacity
+   * - When you're ready, head over to https://priceblocs.com/play to get your own API keys so that you can use your own pricing
+   */
   api_key:
     "PB_pk_sandbox_HXIxnXgK0Qzl80J6NrdtaqdjxXWv2tnM7QHek6k6WxszsgVRF3XS8d29HI7Pd3r6BF52WrAWmtYcsb5QLaPFewa5157oSbwJoLz4",
+  /**
+   * We've setup some demo prices so that you can see how a standard licensed billing plan works by example
+   * - Just pass in the prices and PriceBlocs will figure out the rest
+   * - You can optionally pass a customer reference so that the components are initialized within the context of that customer
+   */
   prices: [
     // ============================
     // Pro
@@ -35,8 +46,7 @@ const pbProps = {
   customer: "cus_KE8BRZ5EBnbzni",
   query: {
     customer: {
-      associations: ["subscriptions", "cards", "invoices"],
-      expand: ["default_source", "invoice_settings.default_payment_method"]
+      associations: ["invoices"]
     }
   }
 };
@@ -44,18 +54,16 @@ const pbProps = {
 function App() {
   return (
     <div className="flex flex-col items-start min-h-screen py-2 bg-gradient-to-r from-blue-200 to-purple-100 pt-8 sm:pt-16">
-      <PriceBlocs {...pbProps}>
-        {({ loading }) => {
-          return loading ? null : (
-            <div className="w-full pb-28">
-              <PageControls />
-              <HeaderControls {...HEADER_PROPS} />
-              <PricingTable />
-              <FeatureComparison />
-              <Billing />
-            </div>
-          );
-        }}
+      <PriceBlocs {...PRICE_BLOCS_SANDBOX_PROPS}>
+        {() => (
+          <div className="w-full pb-28">
+          <PageControls />
+          <HeaderControls {...HEADER_PROPS} />
+          <PricingTable />
+          <FeatureComparison />
+          <Billing />
+        </div>
+        )}
       </PriceBlocs>
     </div>
   );
