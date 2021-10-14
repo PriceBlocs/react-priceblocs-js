@@ -1,4 +1,4 @@
-# PriceBlocs [beta]
+# React PriceBlocs JS [beta]
 
 PriceBlocs makes it easy for developers to get started with in-app payments and billing through a set of functional components.
 

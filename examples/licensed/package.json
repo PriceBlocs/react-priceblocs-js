@@ -1,0 +1,58 @@
+{
+  "name": "priceblocs-react-js-licensed",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@craco/craco": "6.3.0",
+    "@headlessui/react": "1.4.1",
+    "@heroicons/react": "1.0.4",
+    "@priceblocs/react-priceblocs-js": "0.3.1",
+    "@testing-library/jest-dom": "5.14.1",
+    "@testing-library/react": "12.1.1",
+    "@testing-library/user-event": "13.2.1",
+    "autoprefixer": "10.3.6",
+    "cross-env": "7.0.3",
+    "date-fns": "2.25.0",
+    "date-fns-tz": "1.1.6",
+    "lodash": "4.17.21",
+    "npm-run-all": "4.1.5",
+    "postcss": "8.3.8",
+    "postcss-cli": "9.0.1",
+    "purgecss": "4.0.3",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-hot-toast": "2.1.1",
+    "react-scripts": "4.0.3",
+    "react-tooltip": "4.2.21",
+    "tailwindcss": "2.2.16"
+  },
+  "scripts": {
+    "build:css": "cross-env TAILWIND_MODE=build NODE_ENV=production postcss src/styles/tailwind.css -o src/styles/index.css",
+    "watch:css": "cross-env TAILWIND_MODE=watch NODE_ENV=development postcss src/styles/tailwind.css -o src/styles/index.css --watch",
+    "env:dev": "cross-env NODE_ENV=development",
+    "env:prod": "cross-env NODE_ENV=production",
+    "craco:start": "sleep 5 && craco start",
+    "craco:build": "craco build",
+    "start": "run-p env:dev watch:css craco:start",
+    "build": "run-s env:prod build:css craco:build",
+    "test": "craco test",
+    "eject": "craco eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "keywords": [],
+  "description": ""
+}
