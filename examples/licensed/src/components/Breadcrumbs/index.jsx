@@ -1,6 +1,5 @@
-import React from "react";
-import { ArrowSmLeftIcon } from "@heroicons/react/solid";
-const NO_OP = () => {};
+import React from 'react'
+import { ArrowSmLeftIcon } from '@heroicons/react/solid'
 
 const Breadcrumbs = ({ onClickRoot, steps }) => {
   return (
@@ -20,31 +19,38 @@ const Breadcrumbs = ({ onClickRoot, steps }) => {
             </span>
           </div>
         </li>
-        {steps.map((step) => (
-          <li key={step.name}>
-            <div className="flex items-center">
-              <svg
-                className="flex-shrink-0 h-5 w-5 text-gray-300"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                aria-hidden="true"
-              >
-                <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
-              </svg>
-              <span
-                onClick={step.onClick || NO_OP}
-                className="ml-4 text-sm font-medium text-gray-500 hover:text-gray-700"
-                aria-current={step.current ? "step" : undefined}
-              >
-                {step.name}
-              </span>
-            </div>
-          </li>
-        ))}
+        {steps.map((step) => {
+          const nameProps = {
+            className:
+              'ml-4 text-sm font-medium text-gray-500 hover:text-gray-700',
+          }
+          if (step.current) {
+            nameProps['aria-current'] = 'step'
+          }
+          if (step.onClick) {
+            nameProps.onClick = step.onClick
+          }
+
+          return (
+            <li key={step.name}>
+              <div className="flex items-center">
+                <svg
+                  className="flex-shrink-0 h-5 w-5 text-gray-300"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="currentColor"
+                  viewBox="0 0 20 20"
+                  aria-hidden="true"
+                >
+                  <path d="M5.555 17.776l8-16 .894.448-8 16-.894-.448z" />
+                </svg>
+                <span {...nameProps}>{step.name}</span>
+              </div>
+            </li>
+          )
+        })}
       </ol>
     </nav>
-  );
-};
+  )
+}
 
-export default Breadcrumbs;
+export default Breadcrumbs
