@@ -1,6 +1,6 @@
-import React from "react";
-import Toggle from "../Toggle";
-import { usePriceBlocsContext } from "@priceblocs/react-priceblocs-js";
+import React from 'react'
+import Toggle from '@components/Toggle'
+import { usePriceBlocsContext } from '@priceblocs/react-priceblocs-js'
 
 const Loader = () => (
   <div className="max-w-sm w-full mx-auto">
@@ -19,7 +19,7 @@ const Loader = () => (
       </div>
     </div>
   </div>
-);
+)
 
 const Content = ({ title, header, subheader, showToggle }) => (
   <div className="flex flex-col text-center space-y-2">
@@ -36,12 +36,12 @@ const Content = ({ title, header, subheader, showToggle }) => (
       </div>
     )}
   </div>
-);
+)
 
 const HeaderControls = (props) => {
-  const { loading, values } = usePriceBlocsContext();
+  const { loading, values } = usePriceBlocsContext()
 
-  return loading ? <Loader /> : values ? <Content {...props} /> : null;
-};
+  return loading ? <Loader /> : values ? <Content {...props} /> : null
+}
 
-export default HeaderControls;
+export default HeaderControls
