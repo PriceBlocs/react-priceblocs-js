@@ -1,5 +1,5 @@
 import React from 'react'
-import ActionButton from 'components/ActionButton'
+import ActionButton from '@components/ActionButton'
 import { usePriceBlocsContext } from '@priceblocs/react-priceblocs-js'
 
 const Wrapper = ({ children }) => (
