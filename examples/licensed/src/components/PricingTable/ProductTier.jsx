@@ -1,15 +1,15 @@
-import React from "react";
-import classNames from "../../utils/classNames";
+import React from 'react'
+import classNames from '@utils/classNames'
 import {
   usePriceBlocsContext,
   getActiveProductPrice,
   getProductFeatures,
-  getGoodStandingSubscriptions
-} from "@priceblocs/react-priceblocs-js";
-import FormattedPriceHeader from "../FormattedPriceHeader";
-import CheckoutButton from "../CheckoutButton";
-import { CheckCircleIcon } from "@heroicons/react/solid";
-import BillingLabel from "../BillingLabel";
+  getGoodStandingSubscriptions,
+} from '@priceblocs/react-priceblocs-js'
+import FormattedPriceHeader from '@components/FormattedPriceHeader'
+import CheckoutButton from '@components/CheckoutButton'
+import { CheckCircleIcon } from '@heroicons/react/solid'
+import BillingLabel from '@components/BillingLabel'
 
 const ProductTier = (product) => {
   const {
@@ -17,39 +17,39 @@ const ProductTier = (product) => {
       products,
       customer,
       featureGroups,
-      form: { theme, highlight, currency, interval }
-    }
-  } = usePriceBlocsContext();
+      form: { theme, highlight, currency, interval },
+    },
+  } = usePriceBlocsContext()
 
   const subscription =
     customer && customer.subscriptions
       ? getGoodStandingSubscriptions(customer.subscriptions)[0]
-      : null;
+      : null
 
-  const primaryColor = theme.colors.primary;
-  const features = getProductFeatures(product.id, featureGroups);
-  const price = getActiveProductPrice(product, { currency, interval });
+  const primaryColor = theme.colors.primary
+  const features = getProductFeatures(product.id, featureGroups)
+  const price = getActiveProductPrice(product, { currency, interval })
   const isSubscribed =
-    price && product && product.subscription && price.subscription;
+    price && product && product.subscription && price.subscription
 
-  const highlighted = highlight.product === product.id;
-  const showHighlight = highlighted && !subscription;
+  const highlighted = highlight.product === product.id
+  const showHighlight = highlighted && !subscription
 
-  const hasFeatures = features && features.length > 0;
+  const hasFeatures = features && features.length > 0
   return (
     <div
       className={classNames(
         `h-full p-4 shadow-xl flex flex-col relative bg-white rounded-lg xl:w-1/${products.length} md:w-1/${products.length} w-full shrink-0`,
         {
-          [`border-${primaryColor}-600`]: showHighlight
+          [`border-${primaryColor}-600`]: showHighlight,
         }
       )}
     >
       <div
         className={classNames(
-          "pointer-events-none absolute inset-0 rounded-lg",
+          'pointer-events-none absolute inset-0 rounded-lg',
           {
-            [`border-${primaryColor}-600 border-2`]: showHighlight
+            [`border-${primaryColor}-600 border-2`]: showHighlight,
           }
         )}
       ></div>
@@ -78,10 +78,10 @@ const ProductTier = (product) => {
       </div>
       <div
         className={classNames(`text-sm text-gray-500 font-medium`, {
-          invisible: !product.description
+          invisible: !product.description,
         })}
       >
-        {product.description || "_"}
+        {product.description || '_'}
       </div>
       <FormattedPriceHeader price={price} />
       <BillingLabel price={price} />
@@ -98,7 +98,7 @@ const ProductTier = (product) => {
                 />
                 <div className="pl-2">{feature.title}</div>
               </li>
-            );
+            )
           })}
         </ul>
       )}
@@ -110,7 +110,7 @@ const ProductTier = (product) => {
         />
       )}
     </div>
-  );
-};
+  )
+}
 
-export default ProductTier;
+export default ProductTier

@@ -1,77 +1,90 @@
-import React, { useEffect, useState } from "react";
-import { usePriceBlocsContext } from "@priceblocs/react-priceblocs-js";
-import Summary from "../Invoices/Summary";
-import { Dialog } from "@headlessui/react";
-import { XIcon } from "@heroicons/react/outline";
-import Loader from "./Loader";
-import classNames from "../../utils/classNames";
+import React, { useEffect, useState, useMemo, useCallback } from 'react'
+import { usePriceBlocsContext } from '@priceblocs/react-priceblocs-js'
+import Summary from '@components/Invoices/Summary'
+import ActionButton from '@components/ActionButton'
+import { Dialog } from '@headlessui/react'
+import { XIcon } from '@heroicons/react/outline'
+import Loader from './Loader'
+import classNames from '@utils/classNames'
 
 const PreviewInvoice = ({
   prices,
   subscription,
   afterConfirm,
   title,
-  setOpen
+  setOpen,
 }) => {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState(null)
+  const [previewing, setPreviewing] = useState(false)
+  const [confirming, setConfirming] = useState(false)
   const {
     previewInvoice,
     updateSubscription,
     values: {
       form: {
         theme: {
-          colors: { primary: primaryColor }
+          colors: { primary: primaryColor },
         },
-        checkout: { items }
-      }
-    }
-  } = usePriceBlocsContext();
+        checkout: { items },
+      },
+    },
+  } = usePriceBlocsContext()
 
-  const getPreview = async () => {
-    const itemPrices = items.map(({ price: { id } }) => id);
-    const inputItems =
-      Array.isArray(prices) && prices.length > 0 ? prices : itemPrices;
-    setLoading(true);
+  const subId = subscription.id
+  const itemPrices = useMemo(
+    () => items.map(({ price: { id } }) => id),
+    [items]
+  )
+  const previewItems = useMemo(
+    () => (Array.isArray(prices) && prices.length > 0 ? prices : itemPrices),
+    [prices, itemPrices]
+  )
+
+  const getPreview = useCallback(async () => {
+    setPreviewing(true)
     const previewData = await previewInvoice({
-      items: inputItems,
-      subscription: subscription.id
-    });
-    setData(previewData);
-    setLoading(false);
-  };
+      items: previewItems,
+      subscription: subId,
+    })
+    setData(previewData)
+    setPreviewing(false)
+  }, [previewItems, subId, previewInvoice])
 
   const confirm = async () => {
-    setLoading(true);
-    const updateInput = {
-      id: subscription.id,
-      ...data.preview.confirm
-    };
-    const updatedSub = await updateSubscription(updateInput);
-    if (updatedSub && updatedSub.statusCode !== 400) {
-      setLoading(false);
-      afterConfirm();
-    } else {
-      setLoading(false);
+    if (!confirming) {
+      setConfirming(true)
+      const updateInput = {
+        id: subscription.id,
+        ...data.preview.confirm,
+      }
+      const updatedSub = await updateSubscription(updateInput)
+      if (updatedSub && updatedSub.statusCode !== 400) {
+        setConfirming(false)
+        afterConfirm()
+      } else {
+        setConfirming(false)
+      }
     }
-  };
+  }
 
   useEffect(() => {
-    getPreview();
-  });
+    if (!data && !previewing) {
+      getPreview()
+    }
+  }, [data, previewing, previewItems, subId, getPreview])
 
-  let content;
-  const disabled = Boolean(loading);
-  if (loading) {
-    content = <Loader />;
+  let content
+  const disabled = Boolean(previewing)
+  if (previewing) {
+    content = <Loader />
   } else if (
     data &&
     data.preview &&
     data.preview.lineItems &&
     data.preview.amountItems
   ) {
-    const { lineItems, amountItems } = data.preview;
-    content = <Summary lineItems={lineItems} amountItems={amountItems} />;
+    const { lineItems, amountItems } = data.preview
+    content = <Summary lineItems={lineItems} amountItems={amountItems} />
   }
 
   return (
@@ -108,20 +121,21 @@ const PreviewInvoice = ({
         >
           Cancel
         </button>
-        <button
-          type="submit"
-          disabled={disabled}
+        <ActionButton
+          customClasses={{
+            button: classNames(
+              `ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-${primaryColor}-600 hover:bg-${primaryColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${primaryColor}-500 disabled:opacity-50`,
+              !disabled ? `hover:bg-${primaryColor}-600` : ''
+            ),
+          }}
+          loading={confirming}
           onClick={confirm}
-          className={classNames(
-            `ml-4 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-${primaryColor}-600 hover:bg-${primaryColor}-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-${primaryColor}-500 disabled:opacity-50`,
-            !disabled ? `hover:bg-${primaryColor}-600` : ""
-          )}
-        >
-          Update
-        </button>
+          disabled={disabled || confirming}
+          copy={{ value: 'Update' }}
+        />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default PreviewInvoice;
+export default PreviewInvoice
