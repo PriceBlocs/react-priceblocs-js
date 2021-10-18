@@ -5,6 +5,7 @@ import HeaderControls from "@components/HeaderControls";
 import PricingTable from "@components/PricingTable";
 import FeatureComparison from "@components/FeatureComparison";
 import Billing from "@components/Billing";
+import { Toaster } from 'react-hot-toast';
 
 const HEADER_PROPS = {
   title: "Licensed",
@@ -65,6 +66,7 @@ function App() {
         </div>
         )}
       </PriceBlocs>
+      <Toaster />
     </div>
   );
 }
