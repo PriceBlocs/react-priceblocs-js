@@ -7,10 +7,9 @@ import Billing from "@components/Billing";
 import { Toaster } from 'react-hot-toast';
 
 const HEADER_PROPS = {
-  title: "Licensed",
-  header: "Pick the right plan for your team",
-  subheader: "Try for free",
-  showToggle: true
+  title: "Metered",
+  header: "Pick which APIs to enable",
+  subheader: "Pay as you go pricing based on usage"
 };
 
 const PRICE_BLOCS_SANDBOX_PROPS = {
