@@ -475,11 +475,12 @@ const {
 
 This shape is closely aligned to the [Stripe products API](https://stripe.com/docs/api/products/object)
 
-| Key                  | Description                |
-| -------------------- | -------------------------- |
-| name                 | Name of the product        |
-| description          | Description of the product |
-| [prices](#price-api) | Array of Stripe prices     |
+| Key                       | Description                                   |
+| ------------------------- | --------------------------------------------- |
+| name                      | Name of the product                           |
+| description               | Description of the product                    |
+| [prices](#price-api)      | Array of Stripe prices                        |
+| [features](#features-api) | Array of features associated with the product |
 
 ##### Price API
 
