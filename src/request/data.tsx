@@ -86,9 +86,11 @@ export const getCheckoutData = (
       result.return_url = returnUrl
     }
 
-    const customer = getCustomerParams(configProps.customer)
-    for (const key in customer) {
-      result[key] = customer[key]
+    if (configProps.customer) {
+      const customer = getCustomerParams(configProps.customer)
+      for (const key in customer) {
+        result[key] = customer[key]
+      }
     }
 
     return result
@@ -117,12 +119,14 @@ export const getCheckoutData = (
     if (returnUrl) {
       result.return_url = returnUrl
     }
-
-    const customer = getCustomerParams(
-      callProps.customer || configProps.customer
-    )
-    for (const key in customer) {
-      result[key] = customer[key]
+    const customerProp = callProps.customer || configProps.customer
+    if (customerProp) {
+      const customer = getCustomerParams(
+        callProps.customer || configProps.customer
+      )
+      for (const key in customer) {
+        result[key] = customer[key]
+      }
     }
 
     return result
