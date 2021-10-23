@@ -29,3 +29,30 @@ export const useSubscriptionItemForPrice = (price: string) => {
 
   return subscription ? getSubscriptionItemForPrice(price, subscription) : null
 }
+
+export const useEntitlement = (featureUid: string) => {
+  const {
+    values: { entitlements },
+  } = usePriceBlocsContext()
+  return entitlements[featureUid]
+}
+
+export const useFeature = (featureUid: string) => {
+  const {
+    values: { featureGroups },
+  } = usePriceBlocsContext()
+  let feature
+  for (
+    let featureGroupIx = 0;
+    featureGroupIx < featureGroups.length;
+    featureGroupIx++
+  ) {
+    const group = featureGroups[featureGroupIx]
+    feature = group.features.find(({ uid }) => uid === featureUid)
+    if (feature) {
+      break
+    }
+  }
+
+  return feature
+}

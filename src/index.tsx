@@ -235,6 +235,8 @@ export const {
  */
 export const useActiveProductPrice = Hooks.useActiveProductPrice
 export const useSubscriptionItemForPrice = Hooks.useSubscriptionItemForPrice
+export const useEntitlement = Hooks.useEntitlement
+export const useFeature = Hooks.useFeature
 
 /**
  * Utils

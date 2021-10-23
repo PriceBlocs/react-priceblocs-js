@@ -388,11 +388,29 @@ export type Customer = {
   cards?: StripeNode.Card[]
 }
 
+type Upgrade = {
+  product: string
+  price: string
+}
+
+export type Entitlement = {
+  enabled: boolean
+  subscription?: string
+  subscriptionItem?: string
+  upgrade?: Upgrade
+}
+
+type Entitlements = {
+  [key: string]: Entitlement
+}
+
 export type Values = {
   admin: Admin
   customer: Customer
   form: FormData
   products: Product[]
+  entitlements: Entitlements
+  featureGroups: FeatureGroup[]
 }
 
 export type Error = {
@@ -429,6 +447,7 @@ export type ProductConfig = {
 
 export type Feature = {
   title: string
+  uid: string
   tooltip: string | null
   product_config: ProductConfig
 }
