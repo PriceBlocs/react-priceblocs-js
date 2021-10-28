@@ -34,7 +34,10 @@ export const useEntitlement = (featureUid: string) => {
   const {
     values: { entitlements },
   } = usePriceBlocsContext()
+
   return entitlements[featureUid]
+    ? entitlements[featureUid]
+    : { enabled: false }
 }
 
 export const useFeature = (featureUid: string) => {
