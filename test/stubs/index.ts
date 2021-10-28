@@ -1,36 +1,4 @@
 import { StripeCustomerAssociation } from '../../src/types'
-export const STUB_VALUES = {
-  admin: {
-    clientKey: 'clientKey',
-  },
-  customer: {
-    id: 'cus_123',
-  },
-  products: [
-    {
-      id: 'p_A',
-      name: 'Product A',
-    },
-  ],
-  form: {
-    currencies: ['usd'],
-    currency: 'usd',
-    intervals: ['month'],
-    interval: 'month',
-    highlight: {},
-    theme: {},
-    presentation: {},
-    checkout: {
-      items: [
-        {
-          price: {
-            id: 'p_A_1',
-          },
-        },
-      ],
-    },
-  },
-}
 
 export const STUB_FETCH_QUERY = {
   customer: {
@@ -75,6 +43,8 @@ export const STUB_FEATURE_GROUPS = [
       {
         title: 'Billing plans',
         tooltip: 'Customizable',
+        description: 'description',
+        uid: 'billing-plans',
         product_config: {
           p_A: {
             enabled: true,
@@ -88,6 +58,8 @@ export const STUB_FEATURE_GROUPS = [
     features: [
       {
         title: 'SSO',
+        uid: 'sso',
+        description: 'description',
         tooltip: 'Google auth',
         product_config: {
           p_A: {
@@ -98,3 +70,42 @@ export const STUB_FEATURE_GROUPS = [
     ],
   },
 ]
+
+export const STUB_VALUES = {
+  admin: {
+    clientKey: 'clientKey',
+  },
+  customer: {
+    id: 'cus_123',
+  },
+  products: [
+    {
+      id: 'p_A',
+      name: 'Product A',
+    },
+  ],
+  entitlements: {
+    sso: {
+      enabled: true,
+    },
+  },
+  featureGroups: STUB_FEATURE_GROUPS,
+  form: {
+    currencies: ['usd'],
+    currency: 'usd',
+    intervals: ['month'],
+    interval: 'month',
+    highlight: {},
+    theme: {},
+    presentation: {},
+    checkout: {
+      items: [
+        {
+          price: {
+            id: 'p_A_1',
+          },
+        },
+      ],
+    },
+  },
+}
