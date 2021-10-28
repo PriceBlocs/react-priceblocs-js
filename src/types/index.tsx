@@ -448,6 +448,7 @@ export type ProductConfig = {
 export type Feature = {
   title: string
   uid: string
+  description: string
   tooltip: string | null
   product_config: ProductConfig
 }
