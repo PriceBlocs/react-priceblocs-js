@@ -63,6 +63,8 @@ describe('utils', () => {
         {
           title: 'Billing plans',
           tooltip: 'Customizable',
+          description: 'description',
+          uid: 'billing-plans',
           product_config: {
             p_A: {
               enabled: true,
@@ -71,6 +73,8 @@ describe('utils', () => {
         },
         {
           title: 'SSO',
+          uid: 'sso',
+          description: 'description',
           tooltip: 'Google auth',
           product_config: {
             p_A: {
