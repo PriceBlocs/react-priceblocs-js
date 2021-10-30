@@ -1,4 +1,9 @@
-import { StripeCustomerAssociation } from '../../src/types'
+import {
+  Entitlement,
+  EntitlementsConfig,
+  StripeCustomerAssociation,
+  UserEntitlement,
+} from '../../src/types'
 
 export const STUB_FETCH_QUERY = {
   customer: {
@@ -36,40 +41,58 @@ export const STUB_PRODUCTS = [
   },
 ]
 
+const FEATURE_BILLING_PLANS = {
+  title: 'Billing plans',
+  tooltip: 'Customizable',
+  description: 'description',
+  uid: 'billing-plans',
+}
+
+const FEATURE_SSO = {
+  title: 'SSO',
+  uid: 'sso',
+  description: 'description',
+  tooltip: 'Google auth',
+}
+
 export const STUB_FEATURE_GROUPS = [
   {
     title: 'Payments infrastructure',
-    features: [
-      {
-        title: 'Billing plans',
-        tooltip: 'Customizable',
-        description: 'description',
-        uid: 'billing-plans',
-        product_config: {
-          p_A: {
-            enabled: true,
-          },
-        },
-      },
-    ],
+    features: [FEATURE_BILLING_PLANS],
   },
   {
     title: 'Security',
-    features: [
-      {
-        title: 'SSO',
-        uid: 'sso',
-        description: 'description',
-        tooltip: 'Google auth',
-        product_config: {
-          p_A: {
-            enabled: true,
-          },
-        },
-      },
-    ],
+    features: [FEATURE_SSO],
   },
 ]
+
+export const STUB_ENTITLEMENTS_CONFIG = {
+  [FEATURE_BILLING_PLANS.uid]: {
+    p_A: {
+      enabled: true,
+      value: 'value',
+      description: null,
+      limit: null,
+    } as Entitlement,
+  },
+  [FEATURE_SSO.uid]: {
+    p_A: {
+      enabled: true,
+      value: 'value',
+      description: null,
+      limit: null,
+    } as Entitlement,
+  },
+} as EntitlementsConfig
+
+export const STUB_USER_ENTITLEMENTS = {
+  sso: {
+    enabled: true,
+    subscription: null,
+    subscriptionItem: null,
+    upgrade: null,
+  } as UserEntitlement,
+}
 
 export const STUB_VALUES = {
   admin: {
@@ -84,10 +107,9 @@ export const STUB_VALUES = {
       name: 'Product A',
     },
   ],
-  entitlements: {
-    sso: {
-      enabled: true,
-    },
+  entitlements: STUB_USER_ENTITLEMENTS,
+  config: {
+    entitlements: STUB_ENTITLEMENTS_CONFIG,
   },
   featureGroups: STUB_FEATURE_GROUPS,
   form: {

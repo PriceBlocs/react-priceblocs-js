@@ -359,7 +359,7 @@ export type CheckoutItem = {
 
 export type CheckoutAddData = string | CheckoutItem
 
-export type CheckoutAddProps = {
+export type SetCheckoutProps = {
   values?: Values
   setValues: (values: Values) => void
 }
@@ -393,15 +393,55 @@ type Upgrade = {
   price: string
 }
 
-export type Entitlement = {
+export type UserEntitlement = {
+  [key: string]: boolean | string | Upgrade | null
   enabled: boolean
-  subscription?: string
-  subscriptionItem?: string
-  upgrade?: Upgrade
+  subscription: string | null
+  subscriptionItem: string | null
+  upgrade: Upgrade | null
 }
 
-type Entitlements = {
-  [key: string]: Entitlement
+export type UserEntitlements = {
+  [key: string]: UserEntitlement
+}
+
+type EntitlementLimit = {
+  max: number
+  unit: string
+  subunit: string | null
+}
+
+export type Entitlement = {
+  [key: string]: boolean | string | EntitlementLimit | null
+  enabled: boolean
+  value: string | null
+  description: string | null
+  limit: EntitlementLimit | null
+}
+
+/**
+ * # EntitlementsConfig
+ * - Describes the per feature limitations across products
+ * - The config object is keyed by feature.uid then product.id
+ * - {
+ *  dashboards: {
+ *   product_id: {
+ *     enabled: true,
+ *     title: "3 public dashboards"
+ *     limit: {
+ *       max: 3
+ *       unit: 'number'
+ *       subunit: null
+ *     }
+ *   }
+ *  }
+ * }
+ *
+ */
+export type EntitlementsConfig = {
+  [key: string]: {
+    [key: string]: Entitlement
+  }
 }
 
 export type Values = {
@@ -409,8 +449,11 @@ export type Values = {
   customer: Customer
   form: FormData
   products: Product[]
-  entitlements: Entitlements
+  entitlements: UserEntitlements
   featureGroups: FeatureGroup[]
+  config: {
+    entitlements: EntitlementsConfig
+  }
 }
 
 export type Error = {
@@ -439,18 +482,11 @@ export type AuthHeaders = {
   [key: string]: string
 }
 
-export type ProductConfig = {
-  [key: string]: {
-    enabled: boolean
-  } | null
-}
-
 export type Feature = {
   title: string
   uid: string
   description: string
   tooltip: string | null
-  product_config: ProductConfig
 }
 
 export type FeatureGroup = {
@@ -475,7 +511,7 @@ export type FeatureTableGroupRowTitle = {
 
 export type FeatureTableGroupRow = {
   [key: string]:
-    | ProductConfig
+    | Entitlement
     | null
     | FeatureTableGroupRowTitle
     | boolean

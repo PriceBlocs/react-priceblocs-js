@@ -1,12 +1,17 @@
 import chai from 'chai'
 import Stripe from 'stripe'
+import { Entitlement } from '../../src/types'
 import {
   getActiveProductPrice,
   getProductFeatures,
   getProductsFeaturesTable,
   getGoodStandingSubscriptions,
 } from '../../src/utils'
-import { STUB_FEATURE_GROUPS, STUB_PRODUCTS } from '../stubs'
+import {
+  STUB_FEATURE_GROUPS,
+  STUB_PRODUCTS,
+  STUB_ENTITLEMENTS_CONFIG,
+} from '../stubs'
 
 const { assert } = chai
 
@@ -57,7 +62,11 @@ describe('utils', () => {
 
   describe('getProductFeatures', () => {
     it('get all products included in a feature', () => {
-      const result = getProductFeatures('p_A', STUB_FEATURE_GROUPS)
+      const result = getProductFeatures(
+        'p_A',
+        STUB_FEATURE_GROUPS,
+        STUB_ENTITLEMENTS_CONFIG
+      )
 
       const target = [
         {
@@ -65,22 +74,12 @@ describe('utils', () => {
           tooltip: 'Customizable',
           description: 'description',
           uid: 'billing-plans',
-          product_config: {
-            p_A: {
-              enabled: true,
-            },
-          },
         },
         {
           title: 'SSO',
           uid: 'sso',
           description: 'description',
           tooltip: 'Google auth',
-          product_config: {
-            p_A: {
-              enabled: true,
-            },
-          },
         },
       ]
       assert.deepEqual(result, target)
@@ -90,6 +89,7 @@ describe('utils', () => {
   describe('getProductsFeaturesTable', () => {
     it('prepares features table', () => {
       const result = getProductsFeaturesTable({
+        entitlementsConfig: STUB_ENTITLEMENTS_CONFIG,
         products: STUB_PRODUCTS,
         featureGroups: STUB_FEATURE_GROUPS,
       })
@@ -120,7 +120,10 @@ describe('utils', () => {
                 },
                 p_A: {
                   enabled: true,
-                },
+                  description: null,
+                  limit: null,
+                  value: 'value',
+                } as Entitlement,
               },
             ],
           },
@@ -142,7 +145,10 @@ describe('utils', () => {
                 },
                 p_A: {
                   enabled: true,
-                },
+                  description: null,
+                  limit: null,
+                  value: 'value',
+                } as Entitlement,
               },
             ],
           },

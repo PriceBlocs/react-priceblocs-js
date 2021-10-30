@@ -1,12 +1,12 @@
 import {
   Values,
   CheckoutItem,
-  CheckoutAddProps,
+  SetCheckoutProps,
   CheckoutAddData,
 } from '../types'
 import { clone, set } from 'lodash'
 
-export const checkoutAdd = (props: CheckoutAddProps) => {
+export const checkoutAdd = (props: SetCheckoutProps) => {
   return (data: CheckoutAddData) => {
     const updatedValues = clone(props.values)
     const priceId = typeof data === 'string' ? data : data.price.id
@@ -32,7 +32,7 @@ export const checkoutAdd = (props: CheckoutAddProps) => {
   }
 }
 
-export const checkoutRemove = (props: CheckoutAddProps) => {
+export const checkoutRemove = (props: SetCheckoutProps) => {
   return (priceId: string) => {
     const updatedValues = clone(props.values)
     const checkoutItems = updatedValues.form.checkout.items

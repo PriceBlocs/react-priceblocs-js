@@ -5,9 +5,10 @@ import {
   Feature,
   FeatureGroup,
   FeatureTableGroupColumn,
-  ProductConfig,
   ProductsFeatureTable,
   SubscriptionStatus,
+  EntitlementsConfig,
+  Entitlement,
 } from '../types'
 import Stripe from 'stripe'
 
@@ -43,16 +44,17 @@ export const getSubscriptionItemForPrice = (
 
 export const getProductFeatures = (
   productId: string,
-  featureGroups: FeatureGroup[]
+  featureGroups: FeatureGroup[],
+  entitlementsConfig: EntitlementsConfig
 ): Feature[] =>
   featureGroups.reduce((memo, featureGroup: FeatureGroup) => {
     featureGroup.features &&
       featureGroup.features.forEach((feature: Feature) => {
-        const productConfig =
-          feature.product_config &&
-          feature.product_config[productId] &&
-          feature.product_config[productId].enabled
-        if (productConfig) {
+        entitlementsConfig[feature.uid]
+        const entitled =
+          entitlementsConfig[feature.uid] &&
+          entitlementsConfig[feature.uid][productId]
+        if (entitled) {
           memo.push(feature)
         }
       })
@@ -61,9 +63,11 @@ export const getProductFeatures = (
   }, [])
 
 export const getProductsFeaturesTable = ({
+  entitlementsConfig,
   products,
   featureGroups,
 }: {
+  entitlementsConfig: EntitlementsConfig
   products: Product[]
   featureGroups: FeatureGroup[]
 }): ProductsFeatureTable => {
@@ -91,11 +95,19 @@ export const getProductsFeaturesTable = ({
             value: feature.title,
             tooltip: feature.tooltip || null,
           },
-          ...products.reduce((memo, product) => {
-            const productConfig = feature.product_config[product.id]
-            memo[product.id] = productConfig || null
-            return memo
-          }, {} as ProductConfig),
+          ...products.reduce(
+            (memo, product) => {
+              const entitlement =
+                entitlementsConfig &&
+                entitlementsConfig[feature.uid] &&
+                entitlementsConfig[feature.uid][product.id]
+              memo[product.id] = entitlement || null
+              return memo
+            },
+            {} as {
+              [key: string]: Entitlement
+            }
+          ),
         }
       }),
     })),
