@@ -2,6 +2,7 @@ import {
   Entitlement,
   EntitlementsConfig,
   StripeCustomerAssociation,
+  UserEntitlement,
 } from '../../src/types'
 
 export const STUB_FETCH_QUERY = {
@@ -87,7 +88,10 @@ export const STUB_ENTITLEMENTS_CONFIG = {
 export const STUB_USER_ENTITLEMENTS = {
   sso: {
     enabled: true,
-  },
+    subscription: null,
+    subscriptionItem: null,
+    upgrade: null,
+  } as UserEntitlement,
 }
 
 export const STUB_VALUES = {

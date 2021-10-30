@@ -359,7 +359,7 @@ export type CheckoutItem = {
 
 export type CheckoutAddData = string | CheckoutItem
 
-export type CheckoutAddProps = {
+export type SetCheckoutProps = {
   values?: Values
   setValues: (values: Values) => void
 }
