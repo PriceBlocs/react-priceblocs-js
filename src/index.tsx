@@ -128,6 +128,7 @@ export const {
         initialValues
       )
       const [loading, setLoading] = React.useState(false)
+      const [initialFetch, setInitialFetch] = React.useState(false)
       const [ready, setReady] = React.useState(false)
       const [isSubmitting, setIsSubmitting] = React.useState(false)
       const [error, setError] = React.useState<PriceBlocsError | Error | null>(
@@ -158,14 +159,17 @@ export const {
 
       /**
        * Fetch values on mount if
-       * - no initial values are present
+       * - no values
        * - not loading
+       * - no error
+       * - initial fetch has not happened
        */
       React.useEffect(() => {
-        if (!values && !loading) {
+        if (!values && !loading && !error && !initialFetch) {
+          setInitialFetch(true)
           refetch()
         }
-      }, [values, loading])
+      }, [values, loading, error, initialFetch])
 
       const commonProps = {
         api_key,
