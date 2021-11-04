@@ -271,10 +271,10 @@ export const useFeature = Hooks.useFeature
 /**
  * Utils
  */
+export const getGoodStandingSubscriptions = Utils.getGoodStandingSubscriptions
 export const getActiveProductPrice = Utils.getActiveProductPrice
 export const getProductFeatures = Utils.getProductFeatures
 export const getProductsFeaturesTable = Utils.getProductsFeaturesTable
-export const getGoodStandingSubscriptions = Utils.getGoodStandingSubscriptions
 
 /**
  * Constants
