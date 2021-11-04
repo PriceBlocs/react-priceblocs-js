@@ -50,12 +50,12 @@ export const getProductFeatures = (
   featureGroups.reduce((memo, featureGroup: FeatureGroup) => {
     featureGroup.features &&
       featureGroup.features.forEach((feature: Feature) => {
-        const entitled =
+        const enabled =
           entitlementsConfig &&
           entitlementsConfig[feature.uid] &&
           entitlementsConfig[feature.uid][productId] &&
           entitlementsConfig[feature.uid][productId].enabled
-        if (entitled) {
+        if (enabled) {
           memo.push(feature)
         }
       })
