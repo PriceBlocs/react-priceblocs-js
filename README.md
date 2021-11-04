@@ -155,6 +155,7 @@ export default () => {
 | email                 | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com                                                  |
 | presentation          | No       | Object | Control the presentation of the response                                                                                                                                       | {order: 'desc'}                                                     |
 | [query](#query-props) | No       | Object | Fetch associations or expand responses                                                                                                                                         | {customer: {expand: ['default_source'], associations: ['invoices']} |
+| [values](#values-api) | No       | Object | Values to initialize context with and prevent fetch on mount                                                                                                                   | {products: [...], ...}                                              |
 
 ##### Query props
 
