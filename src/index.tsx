@@ -157,7 +157,9 @@ export const {
       })
 
       /**
-       * Fetch values on mount if no initial values are present
+       * Fetch values on mount if
+       * - no initial values are present
+       * - not loading
        */
       React.useEffect(() => {
         if (!values && !loading) {
