@@ -69,7 +69,7 @@ const WithStripeContext = ({
     if (stripe && !ready) {
       setReady(true)
     }
-  }, [stripe])
+  }, [stripe, ready])
 
   const initialCheckout = providerValue.checkout
   const initialBilling = providerValue.billing
