@@ -53,7 +53,8 @@ export const getProductFeatures = (
         const entitled =
           entitlementsConfig &&
           entitlementsConfig[feature.uid] &&
-          entitlementsConfig[feature.uid][productId]
+          entitlementsConfig[feature.uid][productId] &&
+          entitlementsConfig[feature.uid][productId].enabled
         if (entitled) {
           memo.push(feature)
         }

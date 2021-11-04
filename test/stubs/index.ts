@@ -77,7 +77,7 @@ export const STUB_ENTITLEMENTS_CONFIG = {
   },
   [FEATURE_SSO.uid]: {
     p_A: {
-      enabled: true,
+      enabled: false,
       value: 'value',
       description: null,
       limit: null,

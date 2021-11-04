@@ -61,7 +61,7 @@ describe('utils', () => {
   })
 
   describe('getProductFeatures', () => {
-    it('get all products included in a feature', () => {
+    it('get all enabled features for a product', () => {
       const result = getProductFeatures(
         'p_A',
         STUB_FEATURE_GROUPS,
@@ -74,12 +74,6 @@ describe('utils', () => {
           tooltip: 'Customizable',
           description: 'description',
           uid: 'billing-plans',
-        },
-        {
-          title: 'SSO',
-          uid: 'sso',
-          description: 'description',
-          tooltip: 'Google auth',
         },
       ]
       assert.deepEqual(result, target)
@@ -144,7 +138,7 @@ describe('utils', () => {
                   tooltip: 'Google auth',
                 },
                 p_A: {
-                  enabled: true,
+                  enabled: false,
                   description: null,
                   limit: null,
                   value: 'value',
