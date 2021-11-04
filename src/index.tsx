@@ -142,12 +142,15 @@ export const {
         setValues(updatedValues)
       }
       const customer = values ? values.customer : null
+      const customerId = contextProps.customer
+      const customerEmail = contextProps.customer_email
+      const email = contextProps.email
 
       const refetch = fetchData({
         api_key,
-        customer: contextProps.customer,
-        customer_email: contextProps.customer_email,
-        email: contextProps.email,
+        customer: customerId,
+        customer_email: customerEmail,
+        email: email,
         prices,
         query,
         loading,
@@ -164,12 +167,25 @@ export const {
        * - no error
        * - initial fetch has not happened
        */
+      const preventRequest = Boolean(loading || error)
       React.useEffect(() => {
-        if (!values && !loading && !error && !initialFetch) {
+        if (!values && !preventRequest && !initialFetch) {
           setInitialFetch(true)
           refetch()
         }
       }, [values, loading, error, initialFetch])
+
+      /**
+       * Auto-refetch if
+       * - any of the customer references have changed
+       * - at least one is present
+       */
+      React.useEffect(() => {
+        const hasCustomerRef = Boolean(customerId || customerEmail || email)
+        if (hasCustomerRef && !preventRequest) {
+          refetch()
+        }
+      }, [customerId, customerEmail, email])
 
       const commonProps = {
         api_key,
