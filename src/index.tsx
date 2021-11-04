@@ -69,7 +69,7 @@ const WithStripeContext = ({
     if (stripe && !ready) {
       setReady(true)
     }
-  }, [stripe])
+  }, [stripe, ready])
 
   const initialCheckout = providerValue.checkout
   const initialBilling = providerValue.billing
@@ -120,10 +120,13 @@ export const {
         return_url,
         prices,
         query,
+        values: initialValues,
       } = contextProps
 
       const [metadata, setMetadata] = React.useState<Metadata | undefined>()
-      const [values, setValues] = React.useState<Values | undefined>()
+      const [values, setValues] = React.useState<Values | undefined>(
+        initialValues
+      )
       const [loading, setLoading] = React.useState(false)
       const [ready, setReady] = React.useState(false)
       const [isSubmitting, setIsSubmitting] = React.useState(false)
@@ -153,9 +156,16 @@ export const {
         setError,
       })
 
+      /**
+       * Fetch values on mount if
+       * - no initial values are present
+       * - not loading
+       */
       React.useEffect(() => {
-        refetch()
-      }, [])
+        if (!values && !loading) {
+          refetch()
+        }
+      }, [values, loading])
 
       const commonProps = {
         api_key,

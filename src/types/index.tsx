@@ -665,6 +665,7 @@ export interface PriceBlocsContextProps
   success_url?: string
   cancel_url?: string
   return_url?: string
+  values?: Values
 }
 
 export interface PriceBlocsContextType {
