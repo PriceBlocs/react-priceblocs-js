@@ -172,11 +172,6 @@ export const {
         const makeInitialFetch = !values && !preventRequest && !initialFetch
 
         if (makeInitialFetch) {
-          console.log('initial - error', error)
-          console.log('initial - values', values)
-          console.log('initial - initialFetch', initialFetch)
-          console.log('initial - loading', loading)
-          console.log('*** INITIAL REFRESH')
           setInitialFetch(true)
           refetch()
         }
@@ -191,11 +186,6 @@ export const {
       React.useEffect(() => {
         const hasCustomerRef = Boolean(customerId || customerEmail || email)
         if (hasCustomerRef && !error) {
-          console.log('customer - error', error)
-          console.log('customer - values', values)
-          console.log('customer - initialFetch', initialFetch)
-          console.log('customer - loading', loading)
-          console.log('*** CUSTOMER REFRESH')
           refetch({ force: true })
         }
       }, [customerId, customerEmail, email])
