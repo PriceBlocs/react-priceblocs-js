@@ -1,6 +1,6 @@
 {
   "name": "@priceblocs/react-priceblocs-js",
-  "version": "0.6.5",
+  "version": "0.6.6-beta.0",
   "description": "React components for PriceBlocs",
   "author": "phoenixbox",
   "license": "MIT",
@@ -17,7 +17,10 @@
     "build": "rollup -c",
     "start": "rollup -c -w",
     "test": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx",
-    "test:watch": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx --watch"
+    "test:watch": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx --watch",
+    "prerelease:patch:beta": "npm version prepatch --preid beta",
+    "prerelease:minor:beta": "npm version preminor --preid beta",
+    "prerelease:major:beta": "npm version premajor --preid beta"
   },
   "dependencies": {
     "@stripe/react-stripe-js": "^1.1.2",
