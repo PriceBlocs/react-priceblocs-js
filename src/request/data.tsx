@@ -121,9 +121,7 @@ export const getCheckoutData = (
     }
     const customerProp = callProps.customer || configProps.customer
     if (customerProp) {
-      const customer = getCustomerParams(
-        callProps.customer || configProps.customer
-      )
+      const customer = getCustomerParams(customerProp)
       for (const key in customer) {
         result[key] = customer[key]
       }
