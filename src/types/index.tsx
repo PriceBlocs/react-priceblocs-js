@@ -58,6 +58,10 @@ export type ActionConfigProps =
   | UpdateSubscriptionConfigProps
   | ReportUsageConfigProps
 
+export interface FetchCallProps {
+  force: boolean
+}
+
 export type ActionCallProps =
   | BillingProps
   | PreviewInvoiceProps
@@ -620,7 +624,7 @@ export interface PriceBlocsProviderValue {
   setValues: (values: Values) => void
   setFieldValue: (path: string, value: any) => any
   setError: (value: Error) => any
-  refetch: () => void
+  refetch: (props?: FetchCallProps) => Promise<void>
   checkout: ({ prices }: CheckoutProps, stripe: Stripe | null) => void
   billing: (
     { customer, return_url }: BillingProps,

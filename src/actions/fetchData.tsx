@@ -1,13 +1,13 @@
 import { fetchConfig } from 'src/request'
 import { getFetchConfigData } from 'src/request/data'
-import { FetchDataActionProps } from 'src/types'
+import { FetchCallProps, FetchDataActionProps } from 'src/types'
 
 export default (configProps: FetchDataActionProps) => {
   const { loading, setLoading, setValues, setMetadata, setError, api_key } =
     configProps
 
-  return async () => {
-    if (!loading) {
+  return async (props?: FetchCallProps): Promise<void> => {
+    if (!loading || (props && props.force)) {
       setLoading(true)
       try {
         const configData = getFetchConfigData(configProps)

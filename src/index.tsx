@@ -167,7 +167,6 @@ export const {
        * - no error
        * - initial fetch has not happened
        */
-
       React.useEffect(() => {
         const preventRequest = Boolean(loading || error)
         const makeInitialFetch = !values && !preventRequest && !initialFetch
@@ -183,20 +182,21 @@ export const {
         }
       }, [values, loading, error, initialFetch])
 
+      /**
+       * Auto-refetch if
+       * - any of the customer references have changed
+       * - at least one is present
+       * - no errors
+       */
       React.useEffect(() => {
         const hasCustomerRef = Boolean(customerId || customerEmail || email)
         if (hasCustomerRef && !error) {
-          /**
-           * Auto-refetch if
-           * - any of the customer references have changed
-           * - at least one is present
-           */
           console.log('customer - error', error)
           console.log('customer - values', values)
           console.log('customer - initialFetch', initialFetch)
           console.log('customer - loading', loading)
           console.log('*** CUSTOMER REFRESH')
-          refetch()
+          refetch({ force: true })
         }
       }, [customerId, customerEmail, email])
 
