@@ -182,7 +182,7 @@ export const {
        */
       React.useEffect(() => {
         const hasCustomerRef = Boolean(customerId || customerEmail || email)
-        if (hasCustomerRef && !preventRequest) {
+        if (hasCustomerRef && !error) {
           refetch()
         }
       }, [customerId, customerEmail, email])
