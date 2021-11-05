@@ -6,54 +6,51 @@ import {
 } from 'src/utils'
 
 export const useActiveProductPrice = (productId: string) => {
-  const {
-    values: {
-      products,
-      form: { currency, interval },
-    },
-  } = usePriceBlocsContext()
-  const product = products.find(({ id }) => id === productId)
+  const { values } = usePriceBlocsContext()
+  const product = values && values.products.find(({ id }) => id === productId)
 
-  return product && getActiveProductPrice(product, { currency, interval })
+  return (
+    product &&
+    getActiveProductPrice(product, {
+      currency: values.form.currency,
+      interval: values.form.interval,
+    })
+  )
 }
 
 export const useSubscriptionItemForPrice = (price: string) => {
-  const {
-    values: { customer },
-  } = usePriceBlocsContext()
+  const { values } = usePriceBlocsContext()
 
   const subscription =
-    customer && customer.subscriptions
-      ? getGoodStandingSubscriptions(customer.subscriptions)[0]
+    values && values.customer && values.customer.subscriptions
+      ? getGoodStandingSubscriptions(values.customer.subscriptions)[0]
       : null
 
   return subscription ? getSubscriptionItemForPrice(price, subscription) : null
 }
 
 export const useEntitlement = (featureUid: string) => {
-  const {
-    values: { entitlements },
-  } = usePriceBlocsContext()
+  const { values } = usePriceBlocsContext()
 
-  return entitlements[featureUid]
-    ? entitlements[featureUid]
+  return values && values.entitlements && values.entitlements[featureUid]
+    ? values.entitlements[featureUid]
     : { enabled: false }
 }
 
 export const useFeature = (featureUid: string) => {
-  const {
-    values: { featureGroups },
-  } = usePriceBlocsContext()
+  const { values } = usePriceBlocsContext()
   let feature
-  for (
-    let featureGroupIx = 0;
-    featureGroupIx < featureGroups.length;
-    featureGroupIx++
-  ) {
-    const group = featureGroups[featureGroupIx]
-    feature = group.features.find(({ uid }) => uid === featureUid)
-    if (feature) {
-      break
+  if (values && values.featureGroups) {
+    for (
+      let featureGroupIx = 0;
+      featureGroupIx < values.featureGroups.length;
+      featureGroupIx++
+    ) {
+      const group = values.featureGroups[featureGroupIx]
+      feature = group.features.find(({ uid }) => uid === featureUid)
+      if (feature) {
+        break
+      }
     }
   }
 
