@@ -690,9 +690,7 @@ export interface PriceBlocsProvider
   }> {}
 
 export type UseCheckoutCartProps = {
-  checkout: {
-    prices: string[]
-  }
+  prices: string[]
 }
 
 export type UsePreviewInvoiceProps = {

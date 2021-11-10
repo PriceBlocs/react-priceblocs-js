@@ -81,7 +81,6 @@ export const useFeature = (featureUid: string) => {
  * Else will create a new one
  */
 export const useCheckoutCart = (props: UseCheckoutCartProps) => {
-  const { checkout } = props
   const result = {
     previewable: false,
     subscriptions: [],
@@ -89,22 +88,18 @@ export const useCheckoutCart = (props: UseCheckoutCartProps) => {
     disabled: true,
   } as UseCheckoutCart
 
-  const {
-    values: {
-      customer,
-      form: {
-        checkout: { items },
-      },
-    },
-  } = usePriceBlocsContext()
+  const { values } = usePriceBlocsContext()
+  const customer = values && values.customer && values.customer
+  const items =
+    values && values.form && values.form.checkout && values.form.checkout.items
 
   /**
    * Price usage hierarchy
    * 1. prices provided via checkout props
    * 2. prices within context i.e. values.form.checkout.items
    */
-  const checkoutPrices = items.map(({ price: { id } }) => id)
-  const prices = checkout && checkout.prices ? checkout.prices : checkoutPrices
+  const checkoutPrices = items ? items.map(({ price: { id } }) => id) : []
+  const prices = props.prices ? props.prices : checkoutPrices
   result.checkout = {
     prices,
   }
@@ -159,20 +154,15 @@ export const useCheckoutCart = (props: UseCheckoutCartProps) => {
 
 export const usePreviewInvoice = (props: UsePreviewInvoiceProps) => {
   const { subscription, prices } = props
-  const {
-    previewInvoice,
-    values: {
-      form: {
-        checkout: { items },
-      },
-    },
-  } = usePriceBlocsContext()
+  const { previewInvoice, values } = usePriceBlocsContext()
   const [data, setData] = useState(null)
   const [previewed, setPreviewed] = useState(null)
   const [loading, setLoading] = useState(false)
+  const items =
+    values && values.form && values.form.checkout && values.form.checkout.items
 
   const itemPrices = useMemo(
-    () => items.map(({ price: { id } }) => id),
+    () => (Array.isArray(items) ? items.map(({ price: { id } }) => id) : []),
     [items]
   )
   const previewItems = useMemo(

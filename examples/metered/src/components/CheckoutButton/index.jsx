@@ -30,9 +30,7 @@ const CheckoutButton = ({ checkout: checkoutInput, copy: copyProps }) => {
     previewable,
     subscriptions,
     disabled,
-  } = useCheckoutCart({
-    checkout: checkoutInput,
-  })
+  } = useCheckoutCart(checkoutInput)
   const showOverlay = Boolean(overlay)
 
   const {
