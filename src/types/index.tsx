@@ -693,8 +693,6 @@ export type UseCheckoutCartProps = {
   checkout: {
     prices: string[]
   }
-  price: { subscription: string }
-  product: { subscription: string }
 }
 
 export type UsePreviewInvoiceProps = {
