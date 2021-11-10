@@ -60,8 +60,8 @@ export default () => {
 
   return (
     <PriceBlocs {...props}>
-      {({ loading, values, ready, checkout }) => {
-        if (loading || !values || !ready) {
+      {({ loading, values, checkout }) => {
+        if (loading || !values) {
           return null
         }
         const { products } = values
