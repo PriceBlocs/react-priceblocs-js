@@ -4,6 +4,8 @@ export const getPriceCheckoutButtonProps = ({ price, product }) => {
   )
   return {
     checkout: { prices: [price.id] },
-    value: isSubscribed ? 'Active' : 'Select',
+    copy: {
+      value: isSubscribed ? 'Active' : 'Select',
+    },
   }
 }
