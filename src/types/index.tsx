@@ -618,31 +618,88 @@ export type PreviewInvoice = {
 }
 
 export interface PriceBlocsProviderValue {
+  /**
+   * True when Stripe has been initialized and consumer can initialize checkout sessions
+   */
   ready: boolean
+  /**
+   * The Stripe instance initialized and available for use in context
+   */
   stripe: Stripe | null
+  /**
+   * True when fetching
+   */
   loading: boolean
+  /**
+   * True when submitting
+   */
   isSubmitting: boolean
+  /**
+   * PriceBlocs values returned from the API
+   */
   values?: Values
+  /**
+   * Metadata values plucked from API configuration response
+   */
   metadata?: Metadata | null
+  /**
+   * Local error
+   */
   error?: PriceBlocsError | Error
+  /**
+   * Setter to overwrite the context values
+   */
   setValues: (values: Values) => void
+  /**
+   * Setter function to set a value at the provided path
+   */
   setFieldValue: (path: string, value: any) => any
+  /**
+   * Setter function to set the local error
+   */
   setError: (value: Error) => any
+  /**
+   * Getter to re-fetch values from the PriceBlocs API
+   */
   refetch: (props?: FetchCallProps) => Promise<void>
+  /**
+   * Stripe Checkout session intiialization function
+   */
   checkout: ({ prices }: CheckoutProps, stripe: Stripe | null) => void
+  /**
+   * Stripe customer billing portal session intiialization function
+   */
   billing: (
     { customer, return_url }: BillingProps,
     stripe: Stripe | null
   ) => void
+  /**
+   * Helper function to add an item to the checkout cart
+   */
   checkoutAdd: (props: CheckoutAddData) => Values
+  /**
+   * Helper function to remove an item from the checkout cart
+   */
   checkoutRemove: (priceId: string) => Values
+  /**
+   * Helper to preview line item changes against a provided subscription
+   */
   previewInvoice: (
     props: PreviewInvoiceProps
   ) => Promise<FetchPreviewInvoiceResponse | void>
+  /**
+   * Helper to commit updates to a subscription
+   */
   updateSubscription: (
     props: UpdateSubscriptionProps
   ) => Promise<UpdateSubscriptionResponse | void>
+  /**
+   * Helper to report usage for a provided subscription item
+   */
   reportUsage: (props: ReportUsageProps, stripe: Stripe | null) => void
+  /**
+   * Helper to fetch usage for a provided subscription item
+   */
   fetchUsage: (props: FetchUsageProps, stripe: Stripe | null) => void
 }
 
