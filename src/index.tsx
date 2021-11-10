@@ -3,7 +3,6 @@ import { clone, set } from 'lodash'
 import { Elements, useStripe } from '@stripe/react-stripe-js'
 import { loadStripe } from '@stripe/stripe-js'
 import {
-  CheckoutProps,
   Metadata,
   PriceBlocsContextProps,
   Values,
@@ -13,7 +12,6 @@ import {
   StripeElementContextProps,
   WithStripeContextProps,
   PriceBlocsContextType,
-  BillingProps,
   Error,
 } from './types'
 import * as Hooks from './hooks'
@@ -57,34 +55,20 @@ const WithStripeContext = ({
   children,
   Provider,
   providerValue,
-  setReady,
+  setStripe,
   ready,
 }: WithStripeContextProps) => {
-  const stripe = useStripe()
-
   /**
-   * Once Stripe is initialized set ready: true
+   * Once Stripe is initialized cache the instance
    */
+  const stripe = useStripe()
   React.useEffect(() => {
     if (stripe && !ready) {
-      setReady(true)
+      setStripe(stripe)
     }
   }, [stripe, ready])
 
-  const initialCheckout = providerValue.checkout
-  const initialBilling = providerValue.billing
-
-  const value = {
-    ...providerValue,
-    /**
-     * Proxy checkout and billing calls through this function
-     * so that the Stripe instance doesn't need to be exposed / managed by the consumer
-     */
-    checkout: async (props: CheckoutProps) => initialCheckout(props, stripe),
-    billing: async (props: BillingProps) => initialBilling(props, stripe),
-  }
-
-  return <Provider value={value}>{children}</Provider>
+  return <Provider value={providerValue}>{children}</Provider>
 }
 
 const StripeElementContainer = (props: StripeElementContextProps) => {
@@ -93,7 +77,7 @@ const StripeElementContainer = (props: StripeElementContextProps) => {
   return (
     <Elements stripe={promise}>
       <WithStripeContext
-        setReady={props.setReady}
+        setStripe={props.setStripe}
         ready={props.ready}
         providerValue={props.providerValue}
         Provider={props.Provider}
@@ -129,7 +113,8 @@ export const {
       )
       const [loading, setLoading] = React.useState(false)
       const [initialFetch, setInitialFetch] = React.useState(false)
-      const [ready, setReady] = React.useState(false)
+      const [stripe, setStripe] = React.useState(null)
+      const ready = Boolean(stripe)
       const [isSubmitting, setIsSubmitting] = React.useState(false)
       const [error, setError] = React.useState<PriceBlocsError | Error | null>(
         null
@@ -200,6 +185,7 @@ export const {
 
       const providerValue: PriceBlocsProviderValue = {
         ready,
+        stripe,
         loading,
         isSubmitting,
         setValues,
@@ -208,6 +194,7 @@ export const {
         refetch: refetch,
         checkout: checkout({
           ...commonProps,
+          stripe,
           success_url,
           cancel_url,
           return_url,
@@ -250,7 +237,7 @@ export const {
       return clientKey ? (
         <StripeElementContainer
           ready={ready}
-          setReady={setReady}
+          setStripe={setStripe}
           clientKey={clientKey}
           providerValue={providerValue}
           Provider={Provider}
@@ -270,6 +257,7 @@ export const useActiveProductPrice = Hooks.useActiveProductPrice
 export const useSubscriptionItemForPrice = Hooks.useSubscriptionItemForPrice
 export const useEntitlement = Hooks.useEntitlement
 export const useFeature = Hooks.useFeature
+export const useCheckoutCart = Hooks.useCheckoutCart
 
 /**
  * Utils

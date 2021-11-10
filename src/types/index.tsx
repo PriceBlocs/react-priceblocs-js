@@ -204,6 +204,7 @@ export interface FetchDataActionProps
 
 export type CheckoutActionProps = {
   api_key: string
+  stripe: Stripe | null
   success_url?: string
   cancel_url?: string
   return_url?: string
@@ -214,19 +215,19 @@ export type CheckoutActionProps = {
   setError: (error: PriceBlocsError | Error) => void
 }
 
-export type PreviewInvoiceActionProps = {
+export type BillingActionProps = {
   api_key: string
-  values: Values
   customer?: Customer
+  return_url?: string
   isSubmitting: boolean
   setIsSubmitting: (isSubmiting: boolean) => void
   setError: (error: PriceBlocsError | Error) => void
 }
 
-export type BillingActionProps = {
+export type PreviewInvoiceActionProps = {
   api_key: string
+  values: Values
   customer?: Customer
-  return_url?: string
   isSubmitting: boolean
   setIsSubmitting: (isSubmiting: boolean) => void
   setError: (error: PriceBlocsError | Error) => void
@@ -323,15 +324,17 @@ export type Recurring = {
 
 export type Price = {
   id: string
-  currency?: string
-  recurring?: Recurring | null
+  subscription: string | null
+  currency: string
+  recurring: Recurring | null
 }
 
 export type Product = {
   id: string
   name: string
-  description?: string
-  prices?: Price[]
+  description: string | null
+  subscription: string | null
+  prices: Price[]
 }
 
 export type Highlight = {
@@ -466,7 +469,7 @@ export type Error = {
 }
 
 export type StripeElementContextProps = {
-  setReady: (ready: boolean) => void
+  setStripe: (stripe: Stripe) => void
   ready: boolean
   clientKey: string
   children: React.ReactNode
@@ -475,7 +478,7 @@ export type StripeElementContextProps = {
 }
 
 export type WithStripeContextProps = {
-  setReady: (ready: boolean) => void
+  setStripe: (stripe: Stripe) => void
   ready: boolean
   children: React.ReactNode
   providerValue: PriceBlocsProviderValue
@@ -616,6 +619,7 @@ export type PreviewInvoice = {
 
 export interface PriceBlocsProviderValue {
   ready: boolean
+  stripe: Stripe | null
   loading: boolean
   isSubmitting: boolean
   values?: Values
@@ -684,3 +688,16 @@ export interface PriceBlocsProvider
     value?: PriceBlocsProviderValue
     children?: React.ReactNode
   }> {}
+
+export type UseCheckoutCartProps = {
+  checkout: {
+    prices: string[]
+  }
+  price: { subscription: string }
+  product: { subscription: string }
+}
+
+export type UsePreviewInvoiceProps = {
+  subscription: string
+  prices?: string[]
+}
