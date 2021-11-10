@@ -203,19 +203,28 @@ const {
   - update context values
   - initiate checkout and billing sessions
   - preview and confirm subscription updates
+  - manage checkout cart and more
 
-| Key                                       | Type     | Description                                                               |
-| ----------------------------------------- | -------- | ------------------------------------------------------------------------- |
-| [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.               |
-| [checkout](#checkout)                     | Function | Start a checkout session                                                  |
-| [billing](#billing)                       | Function | Start a billing portal session for the provided customer                  |
-| [addCheckout](#addcheckout)               | Function | Add a price to the form checkout items                                    |
-| [removeCheckout](#removecheckout)         | Function | Remove a price from the form checkout items                               |
-| [previewInvoice](#previewInvoice)         | Function | Request a preview of the next invoice for the subscription                |
-| [fetchUsage](#fetchUsage)                 | Function | Fetch usage summary for a subscription line item                          |
-| [reportUsage](#reportUsage)               | Function | Report usage summary for a subscription line item                         |
-| [updateSubscription](#updateSubscription) | Function | Update a subscription with the a collection of updated subscription items |
-| [setFieldValue](#setfieldvalue)           | Function | Update any of the context values                                          |
+| Key                                       | Type     | Description                                                                         |
+| ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.                         |
+| [refetch](#refetch)                       | Function | Function to refetch values from API using initial props                             |
+| [checkout](#checkout)                     | Function | Start a checkout session                                                            |
+| [billing](#billing)                       | Function | Start a billing portal session for the provided customer                            |
+| [checkoutAdd](#checkoutAdd)               | Function | Add a price to the form checkout items                                              |
+| [checkoutRemove](#checkoutRemove)         | Function | Remove a price from the form checkout items                                         |
+| [previewInvoice](#previewInvoice)         | Function | Request a preview of the next invoice for the subscription                          |
+| [fetchUsage](#fetchUsage)                 | Function | Fetch usage summary for a subscription line item                                    |
+| [reportUsage](#reportUsage)               | Function | Report usage summary for a subscription line item                                   |
+| [updateSubscription](#updateSubscription) | Function | Update a subscription with the a collection of updated subscription items           |
+| [setFieldValue](#setfieldvalue)           | Function | Update any of the context values                                                    |
+| [setValues](#setvalues)                   | Function | Update all of the context values                                                    |
+| ready                                     | Boolean  | True when Stripe has been initialized and consumer can initialize checkout sessions |
+| loading                                   | Boolean  | True when fetching                                                                  |
+| isSubmitting                              | Boolean  | True when submitting                                                                |
+| stripe                                    | Object   | Stripe instance initialized and available for use in context                        |
+| error                                     | Error    | Any errors in local state                                                           |
+| [setError](#seterror)                     | Error    | Set error in local state                                                            |
 
 ```javascript
 import {
@@ -251,6 +260,17 @@ const PricingTable = () => {
     </div>
   )
 }
+```
+
+### refetch
+
+- Use the `refetch` function to refetch values from the API
+
+```javascript
+const { refetch } = usePriceBlocsContext()
+
+// Single price
+<button onClick={() => refetch()}>Refetch</button>
 ```
 
 ### checkout
@@ -421,6 +441,20 @@ const previewData = await fetchUsage({
 | timestamp | Unix timestamp usage recording                 | Now as unix timestamp |
 | action    | Usage action type, can be 'increment' or 'set' | increment             |
 
+### setValues
+
+- You can use the `setValues` function to replace the entire values object in context
+- This function is used internally on `refetch`
+- Avoid using this function unless necessary. Calling `refetch` is better for most use cases.
+
+```javascript
+const {
+  setValues,
+} = usePriceBlocsContext()
+
+<button onClick={() => setValues({...})}>Set all values</button>
+```
+
 ### setFieldValue
 
 - You can use the `setFieldValue` function to update any of the state in context
@@ -433,6 +467,18 @@ const {
 } = usePriceBlocsContext()
 
 <button onClick={() => setFieldValue('form.interval', 'month')}>Show monthly prices</button>
+```
+
+### setError
+
+- You can use the `setError` function to set the local error object
+
+```javascript
+const {
+  setError,
+} = usePriceBlocsContext()
+
+<button onClick={() => setError(new Error('Custom error'))}>Set error</button>
 ```
 
 ## API
@@ -567,12 +613,11 @@ This object will be extended with any additional expanded attributes or associat
 
 ##### Feature API
 
-| Key                                   | Description                                                                   | Example                              |
-| ------------------------------------- | ----------------------------------------------------------------------------- | ------------------------------------ |
-| uuid                                  | UUID of the feature group                                                     | f0ecdee3-579f-4a9f-aeba-92ff9dbaa767 |
-| title                                 | Report generator                                                              | Analytics & Reports                  |
-| description                           | Generate monthly financial reports                                            | Analytics & Reports                  |
-| [product_config](#product-config-api) | Definition of what products are enabled for this feature, keyed by product id | { product_123: { enabled: true } }   |
+| Key         | Description                        | Example                              |
+| ----------- | ---------------------------------- | ------------------------------------ |
+| uuid        | UUID of the feature group          | f0ecdee3-579f-4a9f-aeba-92ff9dbaa767 |
+| title       | Report generator                   | Analytics & Reports                  |
+| description | Generate monthly financial reports | Analytics & Reports                  |
 
 ##### Product Config API
 
