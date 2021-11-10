@@ -4,10 +4,18 @@ import { createSession } from 'src/request'
 import { getCheckoutData } from '../request/data'
 
 export default (configProps: CheckoutActionProps) => {
-  const { api_key, isSubmitting, setIsSubmitting, setError } = configProps
+  const {
+    api_key,
+    isSubmitting,
+    setIsSubmitting,
+    setError,
+    stripe: configStripe,
+  } = configProps
 
   return async (callProps: CheckoutProps, stripe?: Stripe) => {
-    if (!stripe) {
+    const ctxStripe = stripe || configStripe
+
+    if (!ctxStripe) {
       console.error(
         'Stripe not present - ensure you have passed a valid API key within initialization or have passed your own Stripe instance to this call.'
       )
@@ -24,7 +32,7 @@ export default (configProps: CheckoutActionProps) => {
     try {
       const response = await createSession(api_key, data)
       if ('id' in response) {
-        stripe.redirectToCheckout({
+        ctxStripe.redirectToCheckout({
           sessionId: response.id,
         })
       }
