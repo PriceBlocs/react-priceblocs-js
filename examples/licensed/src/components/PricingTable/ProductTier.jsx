@@ -10,6 +10,7 @@ import FormattedPriceHeader from '@components/FormattedPriceHeader'
 import CheckoutButton from '@components/CheckoutButton'
 import { CheckCircleIcon } from '@heroicons/react/solid'
 import BillingLabel from '@components/BillingLabel'
+import { getPriceCheckoutButtonProps } from '../../utils/checkout'
 
 const ProductTier = (product) => {
   const {
@@ -36,6 +37,10 @@ const ProductTier = (product) => {
   const showHighlight = highlighted && !subscription
 
   const hasFeatures = features && features.length > 0
+  const checkoutProps = getPriceCheckoutButtonProps({
+    price,
+    product,
+  })
   return (
     <div
       className={classNames(
@@ -102,13 +107,7 @@ const ProductTier = (product) => {
           })}
         </ul>
       )}
-      {price && price.id && (
-        <CheckoutButton
-          checkout={{ prices: [price.id] }}
-          price={price}
-          product={product}
-        />
-      )}
+      {price && price.id && <CheckoutButton {...checkoutProps} />}
     </div>
   )
 }

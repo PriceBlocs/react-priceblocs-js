@@ -1,34 +1,40 @@
-import React from "react";
-import Toggle from "@components/Toggle";
-import CheckoutButton from "@components/CheckoutButton";
-import FormattedPriceHeader from "@components/FormattedPriceHeader";
-import Select from "@components/Select";
-import { useActiveProductPrice } from "@priceblocs/react-priceblocs-js";
+import React from 'react'
+import Toggle from '@components/Toggle'
+import CheckoutButton from '@components/CheckoutButton'
+import FormattedPriceHeader from '@components/FormattedPriceHeader'
+import Select from '@components/Select'
+import { useActiveProductPrice } from '@priceblocs/react-priceblocs-js'
+import { getPriceCheckoutButtonProps } from '../../utils/checkout'
 
 const MobileFeatureTableHeader = ({
   product,
   options,
   emphasisIndex,
   activeIndex,
-  setActiveIndex
+  setActiveIndex,
 }) => {
-  const price = useActiveProductPrice(product.id);
+  const price = useActiveProductPrice(product.id)
 
   const selectProps = {
     options,
     value: {
       id: product.id,
-      label: product.title
+      label: product.title,
     },
     disabled: options.length <= 1,
     onChange: (selection) => {
-      setActiveIndex(selection.id);
+      setActiveIndex(selection.id)
     },
     customClasses: {
       input:
-        "border-box input-reset ba b--black-20 pa2 mb0 db w-full pv2 f5 br2"
-    }
-  };
+        'border-box input-reset ba b--black-20 pa2 mb0 db w-full pv2 f5 br2',
+    },
+  }
+
+  const checkoutProps = getPriceCheckoutButtonProps({
+    price,
+    product,
+  })
 
   return (
     <div className="product-picker-header w-full sticky pv2 pv3-ns bg-white bb bt">
@@ -41,22 +47,20 @@ const MobileFeatureTableHeader = ({
             <FormattedPriceHeader
               price={price}
               customClasses={{
-                container: "flex flex-row font-bold items-end"
+                container: 'flex flex-row font-bold items-end',
               }}
             />
           </div>
         )}
         <div className="flex items-start pl3">
-          {price && price.id && (
-            <CheckoutButton checkout={{ prices: [price.id] }} />
-          )}
+          {price && price.id && <CheckoutButton {...checkoutProps} />}
         </div>
       </div>
       <div className="pt2 pt3-ns">
         <Toggle />
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default MobileFeatureTableHeader;
+export default MobileFeatureTableHeader
