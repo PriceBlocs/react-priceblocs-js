@@ -19,15 +19,18 @@ Everything you need to get started with in-app payments, with less server side c
 
 ## Getting started
 
-- API Keys - Sign up for [PriceBlocs](https://priceblocs.com) and get your publishable API keys.
-- Test mode - Enable test mode from within the app to use test Stripe resources for local development.
-- [Install](#install) - Add `@priceblocs/react-priceblocs-js` to your project
+- API Keys
+  - Sign up for [PriceBlocs](https://priceblocs.com) and get your **publishable** API keys.
+- Development
+  - Enable **test** mode within your PriceBlocs settings tab so that you can use Stripe test mode resources in local development.
+- [Install](#install)
+  - Add `@priceblocs/react-priceblocs-js` to your project
 
 Our first set of components and hooks are compatible with React, examples of which you can see below.
 
 ### Install
 
-- @priceblocs/react-priceblocs-js is available via npm
+- The `@priceblocs/react-priceblocs-js` functional components are available [via npm](https://www.npmjs.com/package/@priceblocs/react-priceblocs-js):
 
 ```
 npm i --save @priceblocs/react-priceblocs-js
@@ -37,9 +40,9 @@ npm i --save @priceblocs/react-priceblocs-js
 
 The quickest way to get started is to:
 
-1. Wrap any content with an authenticated PriceBlocs component
-   1. Production: use a live api key and Stripe prices where livemode is true
-   2. Development: use a test api key and Stripe prices where livemode is false
+1. Wrap any content with an authenticated `PriceBlocs` component
+   1. Production: use a live publishable api key and Stripe prices where livemode is true
+   2. Development: use a test publishable api key and Stripe prices where livemode is false
 2. Attach the `checkout` function to any click handler
 3. Pass any price id to the `checkout` call
 
@@ -100,15 +103,15 @@ There are 3 steps to adding prices and checkout to your app:
 
 - Your PriceBlocs account can have both live and test API key sets
 - Each set of API keys has both a public and secret key
-- Only public keys should be used for client side requests
+- Only public (publishable) keys should be used for client side requests
 - Only `livemode: true` keys can initiate live Stripe checkout charges
 
-| Key name       | Livemode | Audience |
-| -------------- | -------- | -------- |
-| `PB_sk_live_*` | true     | Secret   |
-| `PB_pk_live_*` | true     | Public   |
-| `PB_sk_test_*` | false    | Secret   |
-| `PB_pk_test_*` | false    | Public   |
+| Key name       | Livemode | Audience | Publishable |
+| -------------- | -------- | -------- | ----------- |
+| `PB_sk_live_*` | true     | Secret   | No          |
+| `PB_pk_live_*` | true     | Public   | Yes         |
+| `PB_sk_test_*` | false    | Secret   | No          |
+| `PB_pk_test_*` | false    | Public   | Yes         |
 
 - Your connected Stripe account must have `charges_enabled` in order to initiate a checkout session
   - To achieve this, you will need to complete Stripe's business verification onboarding process
