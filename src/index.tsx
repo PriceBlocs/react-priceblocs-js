@@ -258,6 +258,8 @@ export const useSubscriptionItemForPrice = Hooks.useSubscriptionItemForPrice
 export const useEntitlement = Hooks.useEntitlement
 export const useFeature = Hooks.useFeature
 export const useCheckoutCart = Hooks.useCheckoutCart
+export const useGoodStandingSubscriptions = Hooks.useGoodStandingSubscriptions
+export const usePreviewInvoice = Hooks.usePreviewInvoice
 
 /**
  * Utils

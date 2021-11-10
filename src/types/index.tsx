@@ -701,3 +701,10 @@ export type UsePreviewInvoiceProps = {
   subscription: string
   prices?: string[]
 }
+
+export type UseCheckoutCart = {
+  previewable: boolean
+  subscriptions: StripeNode.Subscription[]
+  checkout: { prices: string[] }
+  disabled: boolean
+}
