@@ -40,9 +40,9 @@ npm i --save @priceblocs/react-priceblocs-js
 
 The quickest way to get started is to:
 
-1. Wrap any content with an authenticated `PriceBlocs` component
-   1. Production: use a live publishable api key and Stripe prices where livemode is true
-   2. Development: use a test publishable api key and Stripe prices where livemode is false
+1. Wrap any content with an authenticated `PriceBlocs` component. To authenticate pass a suitable `api_key` prop:
+   1. In Production: use your live publishable PriceBlocs api key and live Stripe prices (i.e. where livemode is true)
+   2. In Development: use your test publishable PriceBlocs api key and test Stripe prices (i.e.where livemode is false)
 2. Attach the `checkout` function to any click handler
 3. Pass any price id to the `checkout` call
 
