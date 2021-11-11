@@ -2,6 +2,8 @@ import * as React from 'react'
 import { Stripe } from '@stripe/stripe-js'
 import StripeNode from 'stripe'
 
+type AtLeast<T, K extends keyof T> = Partial<T> & Pick<T, K>
+
 export enum StripeCustomerAssociation {
   Subscriptions = 'subscriptions',
   Cards = 'cards',
@@ -332,9 +334,9 @@ export type Price = {
 export type Product = {
   id: string
   name: string
-  description: string | null
-  subscription: string | null
-  prices: Price[]
+  description?: string | null
+  subscription?: string | null
+  prices?: Price[]
 }
 
 export type Highlight = {
@@ -359,7 +361,7 @@ export type Theme = {
 }
 
 export type CheckoutItem = {
-  price: Price
+  price: AtLeast<Price, 'id'>
   quantity?: number
   subscription?: string
 }

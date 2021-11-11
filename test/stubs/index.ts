@@ -1,6 +1,7 @@
 import {
   Entitlement,
   EntitlementsConfig,
+  Product,
   StripeCustomerAssociation,
   UserEntitlement,
 } from '../../src/types'
@@ -19,6 +20,7 @@ export const STUB_PRODUCTS = [
       {
         id: 'p_A_1',
         currency: 'usd',
+        subscription: null,
         recurring: {
           interval: 'month',
         },
@@ -26,6 +28,7 @@ export const STUB_PRODUCTS = [
       {
         id: 'p_A_2',
         currency: 'usd',
+        subscription: null,
         recurring: {
           interval: 'year',
         },
@@ -33,13 +36,14 @@ export const STUB_PRODUCTS = [
       {
         id: 'p_A_3',
         currency: 'gbp',
+        subscription: null,
         recurring: {
           interval: 'year',
         },
       },
     ],
   },
-]
+] as Product[]
 
 const FEATURE_BILLING_PLANS = {
   title: 'Billing plans',

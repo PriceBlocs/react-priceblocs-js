@@ -17,7 +17,7 @@
     "build": "rollup -c",
     "start": "rollup -c -w",
     "test": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx",
-    "test:watch": "NODE_ENV=test env env TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx --watch",
+    "test:watch": "NODE_ENV=test TS_NODE_PROJECT=\"tsconfig.testing.json\" mocha -r ts-node/register -r jsdom-global/register test/**/*.test.ts --jsx --watch --watch-extensions ts --watch-files src",
     "prerelease": "npm version prerelease",
     "prerelease:patch:beta": "npm version prepatch --preid beta",
     "prerelease:minor:beta": "npm version preminor --preid beta",
