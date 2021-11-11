@@ -336,7 +336,7 @@ export type Product = {
   name: string
   description?: string | null
   subscription?: string | null
-  prices?: Price[]
+  prices: Price[]
 }
 
 export type Highlight = {

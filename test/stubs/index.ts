@@ -12,19 +12,21 @@ export const STUB_FETCH_QUERY = {
   },
 }
 
+const STUB_PRODUCT = {
+  id: 'p_A_1',
+  currency: 'usd',
+  subscription: 'sub_123',
+  recurring: {
+    interval: 'month',
+  },
+}
+
 export const STUB_PRODUCTS = [
   {
     name: 'Product A',
     id: 'p_A',
     prices: [
-      {
-        id: 'p_A_1',
-        currency: 'usd',
-        subscription: null,
-        recurring: {
-          interval: 'month',
-        },
-      },
+      STUB_PRODUCT,
       {
         id: 'p_A_2',
         currency: 'usd',
@@ -109,6 +111,7 @@ export const STUB_VALUES = {
     {
       id: 'p_A',
       name: 'Product A',
+      prices: [STUB_PRODUCT],
     },
   ],
   entitlements: STUB_USER_ENTITLEMENTS,
