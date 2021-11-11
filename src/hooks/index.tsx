@@ -80,7 +80,7 @@ export const useFeature = (featureUid: string) => {
  * If subscription present - will preview then update
  * Else will create a new one
  */
-export const useCheckoutCart = (props: UseCheckoutCartProps) => {
+export const useCheckoutCart = (props?: UseCheckoutCartProps) => {
   const result = {
     previewable: false,
     subscriptions: [],
@@ -99,7 +99,7 @@ export const useCheckoutCart = (props: UseCheckoutCartProps) => {
    * 2. prices within context i.e. values.form.checkout.items
    */
   const checkoutPrices = items ? items.map(({ price: { id } }) => id) : []
-  const prices = props.prices ? props.prices : checkoutPrices
+  const prices = props && props.prices ? props.prices : checkoutPrices
   result.checkout = {
     prices,
   }
