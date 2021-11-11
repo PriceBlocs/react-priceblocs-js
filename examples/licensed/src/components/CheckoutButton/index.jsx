@@ -1,10 +1,12 @@
 import React, { Fragment, useState } from 'react'
-import { usePriceBlocsContext } from '@priceblocs/react-priceblocs-js'
+import {
+  usePriceBlocsContext,
+  useCheckoutCart,
+} from '@priceblocs/react-priceblocs-js'
 import Spinner from '@components/Spinner'
 import Overlay from '@components/Overlay'
 import PreviewInvoice from '@components/PreviewInvoice'
 import classNames from '@utils/classNames'
-import { useCartCheckout } from '@hooks/useCartCheckout'
 
 const DEFAULT_COPY = {
   value: 'Buy now',
@@ -20,24 +22,16 @@ const OVERLAY_TITLE_MAP = {
   [OVERLAY_TYPE.PREVIEW_INVOICE]: 'Update subscription',
 }
 
-const CheckoutButton = ({
-  price,
-  product,
-  checkout: checkoutInput,
-  copy: copyProps,
-}) => {
+const CheckoutButton = ({ checkout: checkoutInput, copy: copyProps }) => {
   const [overlay, setOverlay] = useState(null)
 
   const {
-    action,
     checkout: cartCheckout,
-    subscription,
+    previewable,
+    subscriptions,
     disabled,
-  } = useCartCheckout({
-    price,
-    product,
-    checkout: checkoutInput,
-  })
+  } = useCheckoutCart(checkoutInput)
+  const showOverlay = Boolean(overlay)
 
   const {
     refetch,
@@ -46,13 +40,7 @@ const CheckoutButton = ({
       form: { theme },
     },
   } = usePriceBlocsContext()
-  /**
-   * Hierarchy of copy values
-   * - Props
-   * - Inferred
-   * - Defaults
-   */
-  const copy = { ...DEFAULT_COPY, ...action, ...copyProps }
+  const copy = { ...DEFAULT_COPY, ...copyProps }
 
   const primaryColor = theme.colors.primary
   const [loading, setLoading] = useState(false)
@@ -70,7 +58,14 @@ const CheckoutButton = ({
     className: buttonClasses,
   }
 
-  let trigger = (
+  const trigger = previewable ? (
+    <button
+      {...buttonProps}
+      onClick={() => setOverlay(OVERLAY_TYPE.PREVIEW_INVOICE)}
+    >
+      {buttonCopy}
+    </button>
+  ) : (
     <button
       {...buttonProps}
       onClick={async () => {
@@ -83,32 +78,24 @@ const CheckoutButton = ({
       {buttonCopy}
     </button>
   )
-  if (subscription) {
-    trigger = (
-      <button
-        {...buttonProps}
-        onClick={() => setOverlay(OVERLAY_TYPE.PREVIEW_INVOICE)}
-      >
-        {buttonCopy}
-      </button>
-    )
-  }
 
   return (
     <Fragment>
       {trigger}
-      <Overlay open={Boolean(overlay)} setOpen={setOverlay}>
-        <PreviewInvoice
-          title={OVERLAY_TITLE_MAP[overlay]}
-          setOpen={setOverlay}
-          subscription={subscription}
-          prices={cartCheckout.prices}
-          afterConfirm={() => {
-            setOverlay(null)
-            refetch()
-          }}
-        />
-      </Overlay>
+      {previewable && (
+        <Overlay open={showOverlay} setOpen={setOverlay}>
+          <PreviewInvoice
+            title={OVERLAY_TITLE_MAP[overlay]}
+            setOpen={setOverlay}
+            subscription={subscriptions[0]}
+            prices={cartCheckout.prices}
+            afterConfirm={() => {
+              setOverlay(null)
+              refetch()
+            }}
+          />
+        </Overlay>
+      )}
     </Fragment>
   )
 }

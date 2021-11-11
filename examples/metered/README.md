@@ -65,7 +65,7 @@ export default () => {
           return null
         }
         const { products } = values
-        const { name, name, prices } = products[0]
+        const { name, prices } = products[0]
         const { id } = prices[0]
         return <button onClick={() => checkout(id)}>{`Buy ${name}`}</button>
       }}

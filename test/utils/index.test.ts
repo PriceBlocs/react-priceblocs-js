@@ -1,6 +1,6 @@
 import chai from 'chai'
 import Stripe from 'stripe'
-import { Entitlement } from '../../src/types'
+import { Entitlement, Price } from '../../src/types'
 import {
   getActiveProductPrice,
   getProductFeatures,
@@ -54,7 +54,8 @@ describe('utils', () => {
         recurring: {
           interval: 'year',
         },
-      }
+        subscription: null,
+      } as Price
 
       assert.deepEqual(result, target)
     })
