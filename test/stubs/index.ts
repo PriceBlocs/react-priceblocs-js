@@ -4,6 +4,7 @@ import {
   Product,
   StripeCustomerAssociation,
   UserEntitlement,
+  SessionInput,
 } from '../../src/types'
 
 export const STUB_FETCH_QUERY = {
@@ -100,6 +101,16 @@ export const STUB_USER_ENTITLEMENTS = {
   } as UserEntitlement,
 }
 
+const STUB_SESSIONS = [
+  {
+    line_items: [
+      {
+        price: 'p_A_1',
+      },
+    ],
+  },
+] as SessionInput[]
+
 export const STUB_VALUES = {
   admin: {
     clientKey: 'clientKey',
@@ -114,6 +125,7 @@ export const STUB_VALUES = {
       prices: [STUB_PRODUCT],
     },
   ],
+  sessions: STUB_SESSIONS,
   entitlements: STUB_USER_ENTITLEMENTS,
   config: {
     entitlements: STUB_ENTITLEMENTS_CONFIG,

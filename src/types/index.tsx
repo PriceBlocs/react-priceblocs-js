@@ -779,7 +779,8 @@ export type SessionInputItem = {
   price: string
   quantity?: string
 }
-type SessionInput = {
+
+export type SessionInput = {
   line_items: SessionInputItem[]
 }
 
