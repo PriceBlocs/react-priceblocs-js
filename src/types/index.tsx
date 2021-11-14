@@ -84,20 +84,48 @@ export type CustomerParams = {
   email?: string
 }
 
-export interface FetchConfigData
-  extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
-  [key: string]: string | string[] | FetchConfigQueryParams
-  prices?: string[]
-  id?: string
-  session?: string
-  query?: FetchConfigQueryParams
+type FetchPresentationQueryParams = {
+  order: 'asc' | 'desc'
 }
+
+type FetchCapabilitiesQueryParams = {
+  enabled: boolean
+}
+
+type FetchFeaturesQueryParams = {
+  enabled: boolean
+}
+
+type FetchContactlessQueryParams = {
+  enabled: boolean
+  data_url: boolean
+}
+
+type FetchConfigDataValue =
+  | string
+  | string[]
+  | SessionInput[]
+  | DiscountInput[]
+  | FetchConfigQueryParams
+  | FetchPresentationQueryParams
+  | FetchCapabilitiesQueryParams
+  | FetchFeaturesQueryParams
+  | FetchContactlessQueryParams
 
 export interface FetchConfigProps
   extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
-  prices: string[]
+  [key: string]: FetchConfigDataValue
+  prices?: string[]
+  sessions?: SessionInput[]
+  discounts?: DiscountInput[]
   query?: FetchConfigQueryParams
+  presentation?: FetchPresentationQueryParams
+  capabilities?: FetchCapabilitiesQueryParams
+  features?: FetchFeaturesQueryParams
+  contactless?: FetchContactlessQueryParams
 }
+
+export type FetchConfigData = Partial<FetchConfigProps>
 
 export interface FetchConfigResponseData extends Metadata {
   data: Values
@@ -183,25 +211,43 @@ export type UpdateSubscriptionResponse =
   | UpdateSubscriptionResponseData
   | PriceBlocsError
 
-export interface FetchPreviewInvoiceParams
+type FetchDataActionPropsValue =
+  | ((loading: boolean) => void)
+  | ((values: Values) => void)
+  | ((values: Metadata) => void)
+  | ((error: PriceBlocsError | Error) => void)
+  | string
+  | boolean
+  | string[]
+  | FetchConfigQueryParams
+  | SessionInput[]
+  | DiscountInput[]
+  | FetchPresentationQueryParams
+  | FetchCapabilitiesQueryParams
+  | FetchFeaturesQueryParams
+  | FetchContactlessQueryParams
+
+interface SessionFields
   extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
-  [key: string]: string | string[] | FetchConfigQueryParams
-  prices?: string[]
   id?: string
-  session?: string
+  prices?: string[]
+  sessions?: SessionInput[]
+  discounts?: DiscountInput[]
   query?: FetchConfigQueryParams
+  presentation?: FetchPresentationQueryParams
+  capabilities?: FetchCapabilitiesQueryParams
+  features?: FetchFeaturesQueryParams
+  contactless?: FetchContactlessQueryParams
 }
 
-export interface FetchDataActionProps
-  extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
+export interface FetchDataActionProps extends SessionFields {
+  [key: string]: FetchDataActionPropsValue
   api_key: string
   loading: boolean
   setLoading: (loading: boolean) => void
   setValues: (values: Values) => void
   setMetadata: (values: Metadata) => void
   setError: (error: PriceBlocsError | Error) => void
-  prices: string[]
-  query?: FetchConfigQueryParams
 }
 
 export type CheckoutActionProps = {
@@ -302,17 +348,17 @@ export interface CheckoutData
   success_url?: string
   return_url?: string
   id?: string
-  session?: string
+  sessionId?: string
 }
 
 export type CheckoutProps = {
-  prices: string[]
+  prices?: string[]
   cancel_url?: string
   success_url?: string
   return_url?: string
   id?: string
   customer?: Customer
-  session?: string
+  sessionId?: string
   metadata?: Metadata
 }
 
@@ -453,11 +499,17 @@ export type EntitlementsConfig = {
   }
 }
 
+type Session = {
+  id: string
+  products: Product[]
+}
+
 export type Values = {
   admin: Admin
   customer: Customer
   form: FormData
   products: Product[]
+  sessions: Session[]
   entitlements: UserEntitlements
   featureGroups: FeatureGroup[]
   config: {
@@ -723,11 +775,26 @@ export interface PriceBlocsError {
   chat: string
 }
 
+export type SessionInputItem = {
+  price: string
+  quantity?: string
+}
+type SessionInput = {
+  line_items: SessionInputItem[]
+}
+
+type DiscountInput = {
+  coupon?: string
+  promotion_code?: string
+}
+
 export interface PriceBlocsContextProps
   extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
   api_key: string
   children: React.ReactNode | ((props: PriceBlocsProviderValue) => any)
   prices?: string[]
+  sessions?: SessionInput[]
+  discounts?: DiscountInput[]
   query?: FetchConfigQueryParams
   success_url?: string
   cancel_url?: string
