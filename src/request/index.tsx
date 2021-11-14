@@ -22,10 +22,10 @@ export const fetchConfig = async (
   apiKey: string,
   data: FetchConfigData
 ): Promise<FetchConfigResponse> => {
-  const url = `${URLS.PRICING}?${stringify(data)}`
-  const response = await fetch(url, {
-    method: METHODS.GET,
+  const response = await fetch(URLS.PRICING, {
+    method: METHODS.POST,
     headers: getAuthHeaders(apiKey),
+    body: JSON.stringify(data),
   })
 
   const result: FetchConfigResponse = await response.json()
