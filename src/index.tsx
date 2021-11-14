@@ -99,12 +99,11 @@ export const {
       const {
         children,
         api_key,
+        values: initialValues,
         success_url,
         cancel_url,
         return_url,
-        prices,
-        query,
-        values: initialValues,
+        ...fetchConfigProps
       } = contextProps
 
       const [metadata, setMetadata] = React.useState<Metadata | undefined>()
@@ -132,17 +131,18 @@ export const {
       const email = contextProps.email
 
       const refetch = fetchData({
-        api_key,
-        customer: customerId,
-        customer_email: customerEmail,
-        email: email,
-        prices,
-        query,
-        loading,
         setLoading,
         setValues,
         setMetadata,
         setError,
+        api_key,
+        customer: customerId,
+        customer_email: customerEmail,
+        email: email,
+        loading,
+        success_url,
+        cancel_url,
+        ...fetchConfigProps,
       })
 
       /**
