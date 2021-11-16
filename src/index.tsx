@@ -103,8 +103,11 @@ export const {
         success_url,
         cancel_url,
         return_url,
+        config: initialConfig,
         ...fetchConfigProps
       } = contextProps
+
+      const config = Utils.getConfig(initialConfig)
 
       const [metadata, setMetadata] = React.useState<Metadata | undefined>()
       const [values, setValues] = React.useState<Values | undefined>(
@@ -151,16 +154,18 @@ export const {
        * - not loading
        * - no error
        * - initial fetch has not happened
+       * - initial_fetch
        */
       React.useEffect(() => {
         const preventRequest = Boolean(loading || error)
-        const makeInitialFetch = !values && !preventRequest && !initialFetch
+        const makeInitialFetch =
+          !values && !preventRequest && !initialFetch && config.fetch.onMount
 
         if (makeInitialFetch) {
           setInitialFetch(true)
           refetch()
         }
-      }, [values, loading, error, initialFetch])
+      }, [values, loading, error, initialFetch, config.fetch.onMount])
 
       /**
        * Auto-refetch if
@@ -170,10 +175,12 @@ export const {
        */
       React.useEffect(() => {
         const hasCustomerRef = Boolean(customerId || customerEmail || email)
-        if (hasCustomerRef && !error) {
+        const makeOnCustomerChangeFetch =
+          hasCustomerRef && !error && config.fetch.onCustomerChange
+        if (makeOnCustomerChangeFetch) {
           refetch({ force: true })
         }
-      }, [customerId, customerEmail, email])
+      }, [customerId, customerEmail, email, config.fetch.onCustomerChange])
 
       const commonProps = {
         api_key,

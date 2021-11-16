@@ -789,6 +789,14 @@ type DiscountInput = {
   promotion_code?: string
 }
 
+export type PriceBlocsConfigProps = {
+  debug: boolean
+  fetch: {
+    onMount: boolean
+    onCustomerChange: boolean
+  }
+}
+
 export interface PriceBlocsContextProps
   extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
   api_key: string
@@ -801,6 +809,7 @@ export interface PriceBlocsContextProps
   cancel_url?: string
   return_url?: string
   values?: Values
+  config?: PriceBlocsConfigProps
 }
 
 export interface PriceBlocsContextType {

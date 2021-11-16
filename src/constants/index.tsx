@@ -79,3 +79,11 @@ export const SESSION_FIELDS = [
   'trial_end',
   'metadata',
 ]
+
+export const CONFIG_DEFAULTS = {
+  debug: true,
+  fetch: {
+    on_mount: true,
+    on_customer_change: true,
+  },
+}
