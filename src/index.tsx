@@ -159,13 +159,13 @@ export const {
       React.useEffect(() => {
         const preventRequest = Boolean(loading || error)
         const makeInitialFetch =
-          !values && !preventRequest && !initialFetch && config.fetch.onMount
+          !values && !preventRequest && !initialFetch && config.fetch.on_mount
 
         if (makeInitialFetch) {
           setInitialFetch(true)
           refetch()
         }
-      }, [values, loading, error, initialFetch, config.fetch.onMount])
+      }, [values, loading, error, initialFetch, config.fetch.on_mount])
 
       /**
        * Auto-refetch if
@@ -176,11 +176,11 @@ export const {
       React.useEffect(() => {
         const hasCustomerRef = Boolean(customerId || customerEmail || email)
         const makeOnCustomerChangeFetch =
-          hasCustomerRef && !error && config.fetch.onCustomerChange
+          hasCustomerRef && !error && config.fetch.on_customer_change
         if (makeOnCustomerChangeFetch) {
           refetch({ force: true })
         }
-      }, [customerId, customerEmail, email, config.fetch.onCustomerChange])
+      }, [customerId, customerEmail, email, config.fetch.on_customer_change])
 
       const commonProps = {
         api_key,
