@@ -54,7 +54,7 @@ export const SESSION_FIELDS = [
   'cancel_url',
   'query',
   'presentation',
-  'capabilities',
+  'entitlements',
   'features',
   'payment_method_types',
   'discounts',
@@ -81,7 +81,7 @@ export const SESSION_FIELDS = [
 ]
 
 export const CONFIG_DEFAULTS = {
-  debug: true,
+  debug: false,
   fetch: {
     on_mount: true,
     on_customer_change: true,

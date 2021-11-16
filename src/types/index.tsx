@@ -88,7 +88,7 @@ type FetchPresentationQueryParams = {
   order: 'asc' | 'desc'
 }
 
-type FetchCapabilitiesQueryParams = {
+type FetchEntitlementsQueryParams = {
   enabled: boolean
 }
 
@@ -108,7 +108,7 @@ type FetchConfigDataValue =
   | DiscountInput[]
   | FetchConfigQueryParams
   | FetchPresentationQueryParams
-  | FetchCapabilitiesQueryParams
+  | FetchEntitlementsQueryParams
   | FetchFeaturesQueryParams
   | FetchContactlessQueryParams
 
@@ -120,7 +120,7 @@ export interface FetchConfigProps
   discounts?: DiscountInput[]
   query?: FetchConfigQueryParams
   presentation?: FetchPresentationQueryParams
-  capabilities?: FetchCapabilitiesQueryParams
+  entitlements?: FetchEntitlementsQueryParams
   features?: FetchFeaturesQueryParams
   contactless?: FetchContactlessQueryParams
 }
@@ -223,7 +223,7 @@ type FetchDataActionPropsValue =
   | SessionInput[]
   | DiscountInput[]
   | FetchPresentationQueryParams
-  | FetchCapabilitiesQueryParams
+  | FetchEntitlementsQueryParams
   | FetchFeaturesQueryParams
   | FetchContactlessQueryParams
 
@@ -235,7 +235,7 @@ interface SessionFields
   discounts?: DiscountInput[]
   query?: FetchConfigQueryParams
   presentation?: FetchPresentationQueryParams
-  capabilities?: FetchCapabilitiesQueryParams
+  entitlements?: FetchEntitlementsQueryParams
   features?: FetchFeaturesQueryParams
   contactless?: FetchContactlessQueryParams
 }
