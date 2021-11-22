@@ -13,7 +13,7 @@ import {
 } from '../types'
 import Stripe from 'stripe'
 import { merge } from 'lodash'
-import { CONFIG_DEFAULTS } from 'src/constants'
+import { CONFIG_DEFAULTS } from '../constants'
 
 type QueryInput = Pick<FormData, 'currency' | 'interval'>
 

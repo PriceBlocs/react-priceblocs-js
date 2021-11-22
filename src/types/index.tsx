@@ -499,17 +499,12 @@ export type EntitlementsConfig = {
   }
 }
 
-type Session = {
-  id: string
-  products: Product[]
-}
-
 export type Values = {
   admin: Admin
   customer: Customer
   form: FormData
   products: Product[]
-  sessions: Session[]
+  sessions: SessionInput[]
   entitlements: UserEntitlements
   featureGroups: FeatureGroup[]
   config: {
@@ -775,13 +770,13 @@ export interface PriceBlocsError {
   chat: string
 }
 
-export type SessionInputItem = {
+export type SessionLineItemInput = {
   price: string
   quantity?: string
 }
 
 export type SessionInput = {
-  line_items: SessionInputItem[]
+  line_items: SessionLineItemInput[]
 }
 
 type DiscountInput = {

@@ -101,7 +101,7 @@ export const STUB_USER_ENTITLEMENTS = {
   } as UserEntitlement,
 }
 
-const STUB_SESSIONS = [
+const STUB_SESSIONS_INPUT = [
   {
     line_items: [
       {
@@ -125,7 +125,7 @@ export const STUB_VALUES = {
       prices: [STUB_PRODUCT],
     },
   ],
-  sessions: STUB_SESSIONS,
+  sessions: STUB_SESSIONS_INPUT,
   entitlements: STUB_USER_ENTITLEMENTS,
   config: {
     entitlements: STUB_ENTITLEMENTS_CONFIG,
