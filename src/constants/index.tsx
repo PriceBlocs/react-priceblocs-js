@@ -73,7 +73,7 @@ export const SESSION_FIELDS = [
   'automatic_tax',
   'client_reference_id',
   'tax_id_collection',
-  'shipping_rates',
+  'shipping_options',
   'payment_intent_data',
   'trial_period_days',
   'trial_end',
