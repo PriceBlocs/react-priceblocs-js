@@ -26,7 +26,7 @@ import {
   FetchUsageData,
 } from 'src/types'
 
-import { SESSION_FIELDS } from 'src/constants'
+import { SESSION_FIELDS } from '../constants'
 
 export const getAuthHeaders = (apiKey: string): AuthHeaders => ({
   'Content-Type': 'application/json',
