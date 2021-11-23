@@ -9,7 +9,7 @@ import {
   UseCheckoutCart,
   UseCheckoutCartProps,
   UsePreviewInvoiceProps,
-} from '../types'
+} from 'src/types'
 
 export const useActiveProductPrice = (productId: string) => {
   const { values } = usePriceBlocsContext()

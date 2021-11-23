@@ -3,7 +3,7 @@ import {
   CheckoutItem,
   SetCheckoutProps,
   CheckoutAddData,
-} from '../types'
+} from 'src/types'
 import { clone, set } from 'lodash'
 
 export const checkoutAdd = (props: SetCheckoutProps) => {

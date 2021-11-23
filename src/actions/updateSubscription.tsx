@@ -4,7 +4,7 @@ import {
   UpdateSubscriptionActionProps,
 } from 'src/types'
 import { updateSubscription } from 'src/request'
-import { getUpdateSubscriptionData } from '../request/data'
+import { getUpdateSubscriptionData } from 'src/request/data'
 
 export default (configProps: UpdateSubscriptionActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps

@@ -1,6 +1,6 @@
 import { BillingActionProps, BillingProps } from 'src/types'
-import { createBilling } from '../request'
-import { getBillingData } from '../request/data'
+import { createBilling } from 'src/request'
+import { getBillingData } from 'src/request/data'
 
 export default (configProps: BillingActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps

@@ -1,7 +1,7 @@
 import { CheckoutProps, CheckoutActionProps } from 'src/types'
 import { Stripe } from '@stripe/stripe-js'
 import { createSession } from 'src/request'
-import { getCheckoutData } from '../request/data'
+import { getCheckoutData } from 'src/request/data'
 
 export default (configProps: CheckoutActionProps) => {
   const {

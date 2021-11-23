@@ -10,10 +10,10 @@ import {
   EntitlementsConfig,
   Entitlement,
   PriceBlocsConfigProps,
-} from '../types'
+} from 'src/types'
 import Stripe from 'stripe'
 import { merge } from 'lodash'
-import { CONFIG_DEFAULTS } from '../constants'
+import { CONFIG_DEFAULTS } from 'src/constants'
 
 type QueryInput = Pick<FormData, 'currency' | 'interval'>
 

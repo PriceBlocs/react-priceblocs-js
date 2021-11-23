@@ -13,8 +13,8 @@ import {
   ReportUsageResponse,
   FetchUsageData,
   FetchUsageResponse,
-} from '../types'
-import { URLS, METHODS } from '../constants'
+} from 'src/types'
+import { URLS, METHODS } from 'src/constants'
 import { stringify } from 'qs'
 import { getAuthHeaders } from './data'
 
