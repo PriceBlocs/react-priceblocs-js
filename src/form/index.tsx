@@ -3,7 +3,8 @@ import {
   CheckoutItem,
   SetCheckoutProps,
   CheckoutAddData,
-} from '../types'
+  Price,
+} from 'src/types'
 import { clone, set } from 'lodash'
 
 export const checkoutAdd = (props: SetCheckoutProps) => {
@@ -13,7 +14,7 @@ export const checkoutAdd = (props: SetCheckoutProps) => {
 
     const checkoutItems = updatedValues.form.checkout.items
     const priceIndex = updatedValues.form.checkout.items.findIndex(
-      ({ price: { id } }) => id === priceId
+      ({ price: { id } }: { price: Price }) => id === priceId
     )
 
     if (priceIndex === -1) {
@@ -37,7 +38,7 @@ export const checkoutRemove = (props: SetCheckoutProps) => {
     const updatedValues = clone(props.values)
     const checkoutItems = updatedValues.form.checkout.items
     const priceIndex = updatedValues.form.checkout.items.findIndex(
-      ({ price: { id } }) => id === priceId
+      ({ price: { id } }: { price: Price }) => id === priceId
     )
 
     if (priceIndex >= 0) {

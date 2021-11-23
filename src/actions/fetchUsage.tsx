@@ -2,9 +2,9 @@ import {
   FetchUsageProps,
   FetchUsageActionProps,
   FetchUsageResponse,
-} from '../types'
-import { fetchUsage } from '../request'
-import { getFetchUsageData } from '../request/data'
+} from 'src/types'
+import { fetchUsage } from 'src/request'
+import { getFetchUsageData } from 'src/request/data'
 
 export default (configProps: FetchUsageActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps

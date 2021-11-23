@@ -9,8 +9,11 @@ import {
   SubscriptionStatus,
   EntitlementsConfig,
   Entitlement,
+  PriceBlocsConfigProps,
 } from '../types'
 import Stripe from 'stripe'
+import { merge } from 'lodash'
+import { CONFIG_DEFAULTS } from '../constants'
 
 type QueryInput = Pick<FormData, 'currency' | 'interval'>
 
@@ -123,3 +126,6 @@ export const getGoodStandingSubscriptions = (
       status === SubscriptionStatus.Active.toString() ||
       status === SubscriptionStatus.Trialing.toString()
   )
+
+export const getConfig = (config: PriceBlocsConfigProps) =>
+  merge(CONFIG_DEFAULTS, config)

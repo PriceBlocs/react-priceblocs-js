@@ -24,7 +24,9 @@ import {
   FetchUsageConfigProps,
   FetchUsageProps,
   FetchUsageData,
-} from '../types'
+} from 'src/types'
+
+import { SESSION_FIELDS } from '../constants'
 
 export const getAuthHeaders = (apiKey: string): AuthHeaders => ({
   'Content-Type': 'application/json',
@@ -54,15 +56,20 @@ export const getFetchConfigData = (
   } else if (configProps.email) {
     result.email = configProps.email
   }
-  if (configProps.prices && configProps.prices.length > 0) {
-    result.prices = configProps.prices
-  }
-  if (configProps.query) {
-    result.query = configProps.query
-  }
+
+  SESSION_FIELDS.forEach((field) => {
+    const configVal = configProps[field]
+    if (configVal) {
+      result[field] = configVal
+    }
+  })
 
   return result
 }
+
+export const ENCRYPTED_PREFIX_RE = /^Fe26/
+export const isEncryptedValue = (value: string) =>
+  ENCRYPTED_PREFIX_RE.test(value)
 
 export const getCheckoutData = (
   configProps: CheckoutConfigProps,
@@ -71,9 +78,13 @@ export const getCheckoutData = (
   const currentUrl = window.location.href
   if (typeof callProps === 'string') {
     const result = {
-      prices: [callProps],
       cancel_url: currentUrl,
     } as CheckoutData
+    if (isEncryptedValue(callProps)) {
+      result.sessionId = callProps
+    } else {
+      result.prices = [callProps]
+    }
 
     if (configProps.success_url) {
       result.success_url = configProps.success_url
@@ -96,9 +107,15 @@ export const getCheckoutData = (
     return result
   } else {
     const result = {
-      prices: callProps.prices,
       cancel_url: currentUrl,
     } as CheckoutData
+    if (callProps.sessionId) {
+      result.sessionId = callProps.sessionId
+    } else if (callProps.prices) {
+      result.prices = callProps.prices
+    } else {
+      throw new Error('A set of prices or session id must be passed')
+    }
 
     if (configProps.metadata && configProps.metadata.id) {
       result.id = configProps.metadata.id

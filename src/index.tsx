@@ -99,13 +99,15 @@ export const {
       const {
         children,
         api_key,
+        values: initialValues,
         success_url,
         cancel_url,
         return_url,
-        prices,
-        query,
-        values: initialValues,
+        config: initialConfig,
+        ...fetchConfigProps
       } = contextProps
+
+      const config = Utils.getConfig(initialConfig)
 
       const [metadata, setMetadata] = React.useState<Metadata | undefined>()
       const [values, setValues] = React.useState<Values | undefined>(
@@ -132,17 +134,18 @@ export const {
       const email = contextProps.email
 
       const refetch = fetchData({
-        api_key,
-        customer: customerId,
-        customer_email: customerEmail,
-        email: email,
-        prices,
-        query,
-        loading,
         setLoading,
         setValues,
         setMetadata,
         setError,
+        api_key,
+        customer: customerId,
+        customer_email: customerEmail,
+        email: email,
+        loading,
+        success_url,
+        cancel_url,
+        ...fetchConfigProps,
       })
 
       /**
@@ -151,16 +154,18 @@ export const {
        * - not loading
        * - no error
        * - initial fetch has not happened
+       * - initial_fetch
        */
       React.useEffect(() => {
         const preventRequest = Boolean(loading || error)
-        const makeInitialFetch = !values && !preventRequest && !initialFetch
+        const makeInitialFetch =
+          !values && !preventRequest && !initialFetch && config.fetch.on_mount
 
         if (makeInitialFetch) {
           setInitialFetch(true)
           refetch()
         }
-      }, [values, loading, error, initialFetch])
+      }, [values, loading, error, initialFetch, config.fetch.on_mount])
 
       /**
        * Auto-refetch if
@@ -170,10 +175,12 @@ export const {
        */
       React.useEffect(() => {
         const hasCustomerRef = Boolean(customerId || customerEmail || email)
-        if (hasCustomerRef && !error) {
+        const makeOnCustomerChangeFetch =
+          hasCustomerRef && !error && config.fetch.on_customer_change
+        if (makeOnCustomerChangeFetch) {
           refetch({ force: true })
         }
-      }, [customerId, customerEmail, email])
+      }, [customerId, customerEmail, email, config.fetch.on_customer_change])
 
       const commonProps = {
         api_key,

@@ -4,7 +4,7 @@ import {
   FetchPreviewInvoiceResponse,
 } from 'src/types'
 import { fetchPreviewInvoice } from 'src/request'
-import { getPreviewInvoiceData } from '../request/data'
+import { getPreviewInvoiceData } from 'src/request/data'
 
 export default (configProps: PreviewInvoiceActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps

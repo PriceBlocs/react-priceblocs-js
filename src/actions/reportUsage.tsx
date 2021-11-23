@@ -4,7 +4,7 @@ import {
   ReportUsageResponse,
 } from 'src/types'
 import { reportUsage } from 'src/request'
-import { getReportUsageData } from '../request/data'
+import { getReportUsageData } from 'src/request/data'
 
 export default (configProps: ReportUsageActionProps) => {
   const { api_key, isSubmitting, setIsSubmitting, setError } = configProps

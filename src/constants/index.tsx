@@ -45,3 +45,45 @@ export const INTERVAL_SHORTHAND_MAP = {
   [RECURRING_INTERVALS.MONTH]: 'mo',
   [RECURRING_INTERVALS.YEAR]: 'mo',
 }
+
+export const SESSION_FIELDS = [
+  'id',
+  'prices',
+  'sessions',
+  'success_url',
+  'cancel_url',
+  'query',
+  'presentation',
+  'entitlements',
+  'features',
+  'payment_method_types',
+  'discounts',
+  'contactless',
+  'allow_promotion_codes',
+  'billing_address_collection',
+  'shipping_address_collection',
+  'submit_type',
+  'consent_collection',
+  'after_expiration',
+  'expires_at',
+  'shipping_worldwide',
+  'adjustable_quantity',
+  'tax_rates',
+  'dynamic_tax_rates',
+  'automatic_tax',
+  'client_reference_id',
+  'tax_id_collection',
+  'shipping_options',
+  'payment_intent_data',
+  'trial_period_days',
+  'trial_end',
+  'metadata',
+]
+
+export const CONFIG_DEFAULTS = {
+  debug: false,
+  fetch: {
+    on_mount: true,
+    on_customer_change: true,
+  },
+}
