@@ -10,6 +10,7 @@ import {
   UseCheckoutCartProps,
   UsePreviewInvoiceProps,
 } from 'src/types'
+import { getCheckoutDisabled } from 'src/utils/helpers'
 
 export const useActiveProductPrice = (productId: string) => {
   const { values } = usePriceBlocsContext()
@@ -105,42 +106,25 @@ export const useCheckoutCart = (props?: UseCheckoutCartProps) => {
   }
 
   /**
+   * Disable checkout if all prices are the same:
+   * - price id count is same price ids in the cart are the same as the sub
    * If all of the current checkout cart prices are already subscribed to
    * then we disable checkout
    */
   let checkoutDisabled = false
-  result.subscriptions =
+  const subscriptions =
     customer && customer.subscriptions && getGoodStandingSubscriptions
       ? getGoodStandingSubscriptions(customer.subscriptions)
       : []
+  result.subscriptions = subscriptions
   const subsCount = result.subscriptions.length
   const hasActiveSubs = subsCount > 0
   result.previewable = hasActiveSubs
   if (hasActiveSubs) {
-    checkoutDisabled = true
-    const activeSubPriceMap = result.subscriptions.reduce(
-      (memo, subscription) => {
-        subscription.items.data.forEach(({ price: { id } }) => {
-          if (!memo[id]) {
-            memo[id] = true
-          }
-        })
-        return memo
-      },
-      {} as { [key: string]: boolean }
-    )
-
-    /**
-     * If any prices in the checkout cart are not subscribed to
-     * then re-enable checkout
-     */
-    for (let priceIx = 0; priceIx < prices.length; priceIx++) {
-      const alreadySubscribedToPrice = activeSubPriceMap[prices[priceIx]]
-      if (!alreadySubscribedToPrice) {
-        checkoutDisabled = false
-        break
-      }
-    }
+    checkoutDisabled = getCheckoutDisabled({
+      subscriptions,
+      prices,
+    })
   }
 
   const hasPrices = prices.length > 0
