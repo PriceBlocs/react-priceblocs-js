@@ -148,17 +148,18 @@ export default () => {
 
 #### Props
 
-| Key                   | Required | Type   | Description                                                                                                                                                                    | Example                                                             |
-| --------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| api_key               | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...                                               |
-| prices                | Yes      | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['price_123', 'price_456']                                          |
-| success_url           | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success                                       |
-| cancel_url            | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel                                        |
-| customer              | No       | String | Stripe customer id                                                                                                                                                             | cu_123                                                              |
-| email                 | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com                                                  |
-| presentation          | No       | Object | Control the presentation of the response                                                                                                                                       | {order: 'desc'}                                                     |
-| [query](#query-props) | No       | Object | Fetch associations or expand responses                                                                                                                                         | {customer: {expand: ['default_source'], associations: ['invoices']} |
-| [values](#values-api) | No       | Object | Values to initialize context with and prevent fetch on mount                                                                                                                   | {products: [...], ...}                                              |
+| Key                        | Required | Type   | Description                                                                                                                                                                    | Example                                                             |
+| -------------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
+| api_key                    | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...                                               |
+| prices                     | No       | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['price_123', 'price_456']                                          |
+| [sessions](#session-props) | No       | Array  | Array of checkout inputs to generate session ids from                                                                                                                          | [ { line_items: [{price_id: 'price_123'}], ... } ]                  |
+| success_url                | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success                                       |
+| cancel_url                 | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel                                        |
+| customer                   | No       | String | Stripe customer id                                                                                                                                                             | cu_123                                                              |
+| email                      | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com                                                  |
+| presentation               | No       | Object | Control the presentation of the response                                                                                                                                       | {order: 'desc'}                                                     |
+| [query](#query-props)      | No       | Object | Fetch associations or expand responses                                                                                                                                         | {customer: {expand: ['default_source'], associations: ['invoices']} |
+| [values](#values-api)      | No       | Object | Values to initialize context with and prevent fetch on mount                                                                                                                   | {products: [...], ...}                                              |
 
 ##### Query props
 
@@ -198,6 +199,141 @@ const {
 } = usePriceBlocsContext()
 ```
 
+##### Session props
+
+- The `sessions` field allows you to compose checkout sessions using multiple Stripe resources
+- You can pass in one of more `session` inputs to generate a unique checkout id based on all of the values passed
+- The `id` returned in the response can then be passed in any `checkout` action call to initiate a new Stripe Checkout session
+- All of the values passed in the initial request will be used to initialize a new Checkout session
+- For example, a checkout session with multiple `line_items` and a `discount` will create a new Checkout session for those items with the disount applied
+- This way you can describe one or more checkout sessions from the client and then when you're ready, initiate a checkout sessioun by just passing the checkout id
+
+```javascript
+{
+  sessions: [
+    {
+      line_items: [
+        {
+          price: 'price_123',
+        },
+      ],
+      discounts: [
+        {
+          coupon: 'cou_123',
+        },
+      ],
+    },
+  ]
+}
+```
+
+- The Session input aligns closely to that of the Stripe checkout api which you can see [here](https://stripe.com/docs/api/checkout/sessions/create)
+
+| Key                                                                                                                                     | Type    | Description                                                                                             |
+| --------------------------------------------------------------------------------------------------------------------------------------- | ------- | ------------------------------------------------------------------------------------------------------- |
+| [line_items](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-line_items)                                   | Array   | One or more prices to apply to this checkout session                                                    |
+| [success_url](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-success_url)                                 | string  | url to be redirected to after a successful checkout session                                             |
+| [cancel_url](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-cancel_url)                                   | string  | url to be redirected to when a checkout session is canceled                                             |
+| [payment_method_types](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-payment_method_types)               | array   | array of payment method types to use at checkout time                                                   |
+| [allow_promotion_codes](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-allow_promotion_codes)             | boolean | whether to allow promotion codes during checkout                                                        |
+| [discounts](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-discounts)                                     | array   | Discounts to apply to the checkout. Max 1                                                               |
+| [billing_address_collection](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-billing_address_collection)   | Object  | Whether to collect billing address info                                                                 |
+| [shipping_address_collection](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-shipping_address_collection) | Object  | Shipping adddress configuration. Set one or more allowed countries                                      |
+| shipping_worldwide                                                                                                                      | boolean | Whether shipping options are worldwide                                                                  |
+| shipping_options                                                                                                                        | array   | Up to 5 shipping rate options to present at checkout time                                               |
+| [submit_type](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-submit_type)                                 | string  | Type of copy to use within checkout session                                                             |
+| [consent_collection](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-consent_collection)                   | object  | Configuration for consent collection related to marketing                                               |
+| [after_expiration](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-after_expiration)                       | object  | Configuration for post checkout session expiration                                                      |
+| [expires_at](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-expires_at)                                   | number  | Timestamp of when to expire the session                                                                 |
+| adjustable_quantity                                                                                                                     | object  | Configuration object for adjustable quantity                                                            |
+| [tax_rates](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-tax_rates)                                     | array   | Array of tax ids to apply to checkout session                                                           |
+| [dynamic_tax_rates](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-dynamic_tax_rates)                     | array   | Array of dynamic tax ids to apply to checkout session                                                   |
+| [automatic_tax](<(https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-automatic_tax)>)                         | object  | Automatic tax configuration object                                                                      |
+| [client_reference_id](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-client_reference)                    | string  | Client reference id to attach to payment                                                                |
+| [tax_id_collection](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-tax_id_collection)                     | object  | Tax id collection configuration object                                                                  |
+| [payment_intent_data](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-payment_intent_data)                 | object  | Payment intent confiration object which can control capture method.                                     |
+| [trial_period_days](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-trial_period_days)                     | number  | Number of days to apply to any line_item's with a recurring price type                                  |
+| [trial_end](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-trial_end)                                     | number  | Timestamp of when the trial ends                                                                        |
+| [metadata](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-metadata)                                       | object  | Key value pair object to attach to the checkout and any resulting subscription / payment intent records |
+| [mode](https://stripe.com/docs/api/checkout/sessions/create#create_checkout_session-metadata)                                           | string  | What mode the session should be initialized in                                                          |
+
+###### Shared configuration (inheritence)
+
+- You can share session configuration options across multiple inputs by setting the field as a sibling to the sessions key.
+- For example, let's say you want to apply the same discount to all of the session inputs.
+- To do that you would set the discounts as a sibling to sessions like so
+
+```javascript
+{
+  sessions: [
+    {
+      line_items: [
+        {
+          price: 'price_123',
+        },
+      ],
+    },
+    {
+      line_items: [
+        {
+          price: 'price_999',
+        },
+      ],
+    },
+  ],
+  discounts: [
+    {
+      coupon: 'cou_123',
+    },
+  ],
+}
+```
+
+**Overrides**
+
+- However if you wanted override common configuration you would define a more specific configuration within the session input itself like below.
+- Here we are sharing discount `cou_123` across the first two sessions but then overriding it withing the third session by setting coupon `cou_abc`
+- This ability to override works for every key within the configuration
+- The most specific configuration wins
+
+```javascript
+{
+  sessions: [
+    {
+      line_items: [
+        {
+          price: 'price_123',
+        },
+      ],
+    },
+    {
+      line_items: [
+        {
+          price: 'price_999',
+        },
+      ],
+    },
+    {
+      line_items: [
+        {
+          price: 'price_456',
+        },
+      ],
+      discounts: [
+        {
+          coupon: 'cou_abc',
+        },
+      ],
+    },
+  ],
+  discounts: [
+    {
+      coupon: 'cou_123',
+    },
+  ],
+}
+```
+
 ### Presentation
 
 - Once initialized, you will be able to access your fetched data via the `usePriceBlocsContext` context hook
@@ -210,6 +346,7 @@ const {
 
 | Key                                       | Type     | Description                                                                         |
 | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
+| [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.                         |
 | [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.                         |
 | [refetch](#refetch)                       | Function | Function to refetch values from API using initial props                             |
 | [checkout](#checkout)                     | Function | Start a checkout session                                                            |
@@ -279,14 +416,27 @@ const { refetch } = usePriceBlocsContext()
 ### checkout
 
 - Use the `checkout` function from context to start a checkout session
-- `checkout` accepts either a single price or a collection or resources as an argument
+- The simplest way is to call it with a single price id like so:
+
+```javascript
+const { checkout } = usePriceBlocsContext()
+// Single price
+<button onClick={() => checkout(price.id)}>Buy Now</button>
+```
+
+- `checkout` accepts a variety of arguments such as a:
+  - price id
+  - encrypted session id or a
+  - collection of resources
 
 ```javascript
 const { checkout } = usePriceBlocsContext()
 
 // Single price
 <button onClick={() => checkout(price.id)}>Buy Now</button>
-// Price collection
+// Session id
+<button onClick={() => checkout(sessionId)}>Buy Now</button>
+// Resource collection
 <button onClick={() => checkout({prices: [price.id]})}>Buy Now</button>
 ```
 
