@@ -148,18 +148,19 @@ export default () => {
 
 #### Props
 
-| Key                        | Required | Type   | Description                                                                                                                                                                    | Example                                                             |
-| -------------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------- |
-| api_key                    | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...                                               |
-| prices                     | No       | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['price_123', 'price_456']                                          |
-| [sessions](#session-props) | No       | Array  | Array of checkout inputs to generate session ids from                                                                                                                          | [ { line_items: [{price_id: 'price_123'}], ... } ]                  |
-| success_url                | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success                                       |
-| cancel_url                 | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel                                        |
-| customer                   | No       | String | Stripe customer id                                                                                                                                                             | cu_123                                                              |
-| email                      | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com                                                  |
-| presentation               | No       | Object | Control the presentation of the response                                                                                                                                       | {order: 'desc'}                                                     |
-| [query](#query-props)      | No       | Object | Fetch associations or expand responses                                                                                                                                         | {customer: {expand: ['default_source'], associations: ['invoices']} |
-| [values](#values-api)      | No       | Object | Values to initialize context with and prevent fetch on mount                                                                                                                   | {products: [...], ...}                                              |
+| Key                        | Required | Type   | Description                                                                                                                                                                    | Example                                                               |
+| -------------------------- | -------- | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------- |
+| api_key                    | Yes      | String | One of your PriceBlocs publishable API key                                                                                                                                     | PB_pk_test_sRADszm...                                                 |
+| prices                     | No       | Array  | Array of Stripe price ids to fetch                                                                                                                                             | ['price_123', 'price_456']                                            |
+| [sessions](#session-props) | No       | Array  | Array of checkout inputs to generate session ids from                                                                                                                          | [ { line_items: [{price_id: 'price_123'}], ... } ]                    |
+| success_url                | No       | String | Redirect location after a successful checkout                                                                                                                                  | https://your-site.com/success                                         |
+| cancel_url                 | No       | String | Redirect location if a user cancels their current checkout session                                                                                                             | https://your-site.com/cancel                                          |
+| customer                   | No       | String | Stripe customer id                                                                                                                                                             | cu_123                                                                |
+| email                      | No       | String | Email for your customer customer. If there is a matching customer within you Stripe account, we will use this to initiate the checkout session in the context of that customer | some.one@email.com                                                    |
+| presentation               | No       | Object | Control the presentation of the response                                                                                                                                       | { order: 'desc' }                                                     |
+| [query](#query-props)      | No       | Object | Fetch associations or expand responses                                                                                                                                         | { customer: {expand: ['default_source'], associations: ['invoices'] } |
+| [values](#values-api)      | No       | Object | Values to initialize context with and prevent fetch on mount                                                                                                                   | {products: [...], ...}                                                |
+| [config](#config-props)    | No       | Object | Initial configuration object for the lib internals. Control behavior like fetch on mount or customer change                                                                    | { fetch: { on_mount: true, on_customer_change: true }                 |
 
 ##### Query props
 
@@ -332,6 +333,32 @@ const {
     },
   ],
 }
+```
+
+##### Config props
+
+- You can configure how the default behavior of the lib internals with the configuration object
+- By default the component will fetch data from the PriceBlocs API on mount and when the customer reference changes
+- You can override that configuration by passing in a config object
+
+```javascript
+{
+  fetch: {
+    on_mount: true,
+    on_customer_change: true
+  }
+}
+```
+
+- You can then access the associations and expanded properties on the related resource within the context values
+- For example, customer associations and expansions are then available on the customer object
+
+```javascript
+const {
+  values: {
+    customer: { default_source, subscriptions, invoices, cards },
+  },
+} = usePriceBlocsContext()
 ```
 
 ### Presentation
