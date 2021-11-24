@@ -787,8 +787,8 @@ type DiscountInput = {
 export type PriceBlocsConfigProps = {
   debug: boolean
   fetch: {
-    onMount: boolean
-    onCustomerChange: boolean
+    on_mount: boolean
+    on_customer_change: boolean
   }
 }
 
