@@ -70,10 +70,12 @@ export const getProductsFeaturesTable = ({
   entitlementsConfig,
   products,
   featureGroups,
+  featureKey = 'uid',
 }: {
   entitlementsConfig: EntitlementsConfig
   products: Product[]
   featureGroups: FeatureGroup[]
+  featureKey?: string
 }): ProductsFeatureTable => {
   return {
     header: products.map(({ name, id }) => ({
@@ -103,8 +105,8 @@ export const getProductsFeaturesTable = ({
             (memo, product) => {
               const entitlement =
                 entitlementsConfig &&
-                entitlementsConfig[feature.uid] &&
-                entitlementsConfig[feature.uid][product.id]
+                entitlementsConfig[feature[featureKey]] &&
+                entitlementsConfig[feature[featureKey]][product.id]
               memo[product.id] = entitlement || null
               return memo
             },

@@ -374,7 +374,6 @@ const {
 | Key                                       | Type     | Description                                                                         |
 | ----------------------------------------- | -------- | ----------------------------------------------------------------------------------- |
 | [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.                         |
-| [values](#values-api)                     | Object   | Core pricing resources like products and featureGroups etc.                         |
 | [refetch](#refetch)                       | Function | Function to refetch values from API using initial props                             |
 | [checkout](#checkout)                     | Function | Start a checkout session                                                            |
 | [billing](#billing)                       | Function | Start a billing portal session for the provided customer                            |

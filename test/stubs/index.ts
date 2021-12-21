@@ -49,6 +49,7 @@ export const STUB_PRODUCTS = [
 ] as Product[]
 
 const FEATURE_BILLING_PLANS = {
+  uuid: 'feature-uuid-billing-plans',
   title: 'Billing plans',
   tooltip: 'Customizable',
   description: 'description',
@@ -56,6 +57,7 @@ const FEATURE_BILLING_PLANS = {
 }
 
 const FEATURE_SSO = {
+  uuid: 'feature-uuid-sso',
   title: 'SSO',
   uid: 'sso',
   description: 'description',
@@ -64,10 +66,12 @@ const FEATURE_SSO = {
 
 export const STUB_FEATURE_GROUPS = [
   {
+    uuid: 'feature-group-uuid-1234',
     title: 'Payments infrastructure',
     features: [FEATURE_BILLING_PLANS],
   },
   {
+    uuid: 'feature-group-uuid-5678',
     title: 'Security',
     features: [FEATURE_SSO],
   },

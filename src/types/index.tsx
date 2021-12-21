@@ -539,6 +539,8 @@ export type AuthHeaders = {
 }
 
 export type Feature = {
+  [key: string]: string | null
+  uuid: string
   title: string
   uid: string
   description: string
@@ -546,6 +548,7 @@ export type Feature = {
 }
 
 export type FeatureGroup = {
+  uuid: string
   title: string
   features: Feature[]
 }

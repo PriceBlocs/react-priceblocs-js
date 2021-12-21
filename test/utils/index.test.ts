@@ -72,6 +72,7 @@ describe('utils', () => {
       const target = [
         {
           title: 'Billing plans',
+          uuid: 'feature-uuid-billing-plans',
           tooltip: 'Customizable',
           description: 'description',
           uid: 'billing-plans',
