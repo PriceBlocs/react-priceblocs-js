@@ -117,6 +117,7 @@ export const {
       const [initialFetch, setInitialFetch] = React.useState(false)
       const [stripe, setStripe] = React.useState(null)
       const ready = Boolean(stripe)
+
       const [isSubmitting, setIsSubmitting] = React.useState(false)
       const [error, setError] = React.useState<PriceBlocsError | Error | null>(
         null
@@ -133,6 +134,10 @@ export const {
       const customerEmail = contextProps.customer_email
       const email = contextProps.email
 
+      /**
+       * Fetch values based on provided fetchConfigProps
+       * - Note: will also fetch corresponding products and their metadata
+       */
       const refetch = fetchData({
         setLoading,
         setValues,

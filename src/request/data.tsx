@@ -26,7 +26,7 @@ import {
   FetchUsageData,
 } from 'src/types'
 
-import { SESSION_FIELDS } from '../constants'
+import { CONFIG_FIELDS, SESSION_FIELDS } from '../constants'
 
 export const getAuthHeaders = (apiKey: string): AuthHeaders => ({
   'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const getFetchConfigData = (
     result.email = configProps.email
   }
 
-  SESSION_FIELDS.forEach((field) => {
+  CONFIG_FIELDS.forEach((field) => {
     const configVal = configProps[field]
     if (configVal) {
       result[field] = configVal
@@ -113,6 +113,13 @@ export const getCheckoutData = (
       result.sessionId = callProps.sessionId
     } else if (callProps.prices) {
       result.prices = callProps.prices
+    } else if (callProps.line_items) {
+      SESSION_FIELDS.forEach((field) => {
+        const configVal = callProps[field]
+        if (configVal) {
+          result[field] = configVal
+        }
+      })
     } else {
       throw new Error('A set of prices or session id must be passed')
     }

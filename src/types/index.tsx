@@ -51,6 +51,10 @@ export type UpdateSubscriptionConfigProps = Pick<
   'customer'
 >
 
+/**
+ * Checkout can take a single price id string or
+ * More complex session configuration
+ */
 export type CheckoutCallProps = CheckoutProps | string
 
 export type ActionConfigProps =
@@ -222,6 +226,7 @@ type FetchDataActionPropsValue =
   | FetchConfigQueryParams
   | SessionInput[]
   | DiscountInput[]
+  | SessionLineItemInput[]
   | FetchPresentationQueryParams
   | FetchEntitlementsQueryParams
   | FetchFeaturesQueryParams
@@ -342,7 +347,12 @@ export type Metadata = {
 
 export interface CheckoutData
   extends Pick<CustomerParams, 'customer' | 'customer_email'> {
-  [key: string]: string | string[]
+  [key: string]:
+    | string
+    | string[]
+    | Customer
+    | Metadata
+    | SessionLineItemInput[]
   prices: string[]
   cancel_url: string
   success_url?: string
@@ -352,14 +362,25 @@ export interface CheckoutData
 }
 
 export type CheckoutProps = {
+  [key: string]:
+    | string
+    | string[]
+    | Customer
+    | Metadata
+    | SessionLineItemInput[]
   prices?: string[]
   cancel_url?: string
   success_url?: string
   return_url?: string
   id?: string
   customer?: Customer
+  // Should be snakecased session_id
   sessionId?: string
   metadata?: Metadata
+  line_items?: SessionLineItemInput[]
+  /**
+   * Should extend with the whole Stripe session shape
+   */
 }
 
 export type Admin = {
@@ -799,15 +820,23 @@ export interface PriceBlocsContextProps
   extends Pick<CustomerParams, 'customer' | 'customer_email' | 'email'> {
   api_key: string
   children: React.ReactNode | ((props: PriceBlocsProviderValue) => any)
+  /**
+   * TODO: Billing Plans
+   * - pass plan
+   */
+  // Pass billing plan id
+  // plan_id?: string,
+  // Stripe price ids
   prices?: string[]
-  sessions?: SessionInput[]
-  discounts?: DiscountInput[]
+  // Full session objects get back encrypted session ids
   query?: FetchConfigQueryParams
   success_url?: string
   cancel_url?: string
   return_url?: string
   values?: Values
   config?: PriceBlocsConfigProps
+  discounts?: DiscountInput[]
+  line_items?: SessionLineItemInput[]
 }
 
 export interface PriceBlocsContextType {
