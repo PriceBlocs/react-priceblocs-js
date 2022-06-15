@@ -113,20 +113,33 @@ export const getCheckoutData = (
       result.sessionId = callProps.sessionId
     } else if (callProps.prices) {
       result.prices = callProps.prices
-    } else if (callProps.line_items) {
-      SESSION_FIELDS.forEach((field) => {
-        const configVal = callProps[field]
-        if (configVal) {
-          result[field] = configVal
-        }
-      })
+    } else if (
+      Array.isArray(callProps.line_items) &&
+      callProps.line_items.length > 0
+    ) {
+      result.line_items = callProps.line_items
     } else {
-      throw new Error('A set of prices or session id must be passed')
+      throw new Error(
+        'Insufficient checkout params passed. You must pass at least one price id, session id or one line_item'
+      )
     }
 
     if (configProps.metadata && configProps.metadata.id) {
       result.id = configProps.metadata.id
     }
+
+    /**
+     * Extend with any defined session fields
+     */
+    SESSION_FIELDS.forEach((field) => {
+      const configVal = callProps[field]
+      /**
+       * TODO: should check defined?
+       */
+      if (configVal) {
+        result[field] = configVal
+      }
+    })
 
     const successUrl = callProps.success_url || configProps.success_url
     if (successUrl) {
