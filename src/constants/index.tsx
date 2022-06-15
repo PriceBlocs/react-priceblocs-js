@@ -81,33 +81,11 @@ export const CONFIG_FIELDS = [
   'entitlements',
   'features',
   'contactless',
-  /**
-   * TODO: Should spread SESSION_INPUT
-   */
-  'shipping_worldwide',
-  'success_url',
-  'cancel_url',
-  'payment_method_types',
-  'discounts',
-  'allow_promotion_codes',
-  'billing_address_collection',
-  'shipping_address_collection',
-  'submit_type',
-  'consent_collection',
-  'after_expiration',
-  'expires_at',
-  'adjustable_quantity',
-  'tax_rates',
-  'dynamic_tax_rates',
-  'automatic_tax',
-  'client_reference_id',
-  'tax_id_collection',
-  'shipping_options',
-  'payment_intent_data',
-  'trial_period_days',
-  'trial_end',
-  'metadata',
 ]
+/**
+ * TODO: need to enable spread operator for ts
+ */
+SESSION_FIELDS.forEach((field) => CONFIG_FIELDS.push(field))
 
 export const CONFIG_DEFAULTS = {
   debug: false,
