@@ -69,9 +69,9 @@ export default () => {
 }
 ```
 
-### Product metadata
+### Display product metadata
 
-If you need product metadata like name and description to show to the user then you can pass one or more prices to the component and retrive the associated products via the values object in context
+If you need to display product metadata to the user (e.g name and description) then you can pass one or more prices to the functional component and on initialization. The products associated with the prices will be fetched and the made available via the values object for use within your UI.
 
 ```javascript
 import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
@@ -95,7 +95,8 @@ export default () => {
           return null
         }
         /**
-         * Destructure products from values and use the associated name and prices
+         * 1. Destructure products from values
+         * 2. Use product attributes
          */
         const { products } = values
         const { name, prices } = products[0]
@@ -484,7 +485,7 @@ const { checkout } = usePriceBlocsContext()
   - single price id
   - collection of price ids
   - encrypted session id
-  - full session configuration
+  - full Stripe Checkout session [configuration](https://stripe.com/docs/api/checkout/sessions/create)
 
 ```javascript
 const { checkout } = usePriceBlocsContext()

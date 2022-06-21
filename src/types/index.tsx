@@ -823,13 +823,10 @@ export interface PriceBlocsContextProps
   children: React.ReactNode | ((props: PriceBlocsProviderValue) => any)
   /**
    * TODO: Billing Plans
-   * - pass plan
+   * - pass plan id
    */
-  // Pass billing plan id
-  // plan_id?: string,
   // Stripe price ids
   prices?: string[]
-  // Full session objects get back encrypted session ids
   query?: FetchConfigQueryParams
   success_url?: string
   cancel_url?: string
