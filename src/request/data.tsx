@@ -133,9 +133,6 @@ export const getCheckoutData = (
      */
     SESSION_FIELDS.forEach((field) => {
       const configVal = callProps[field]
-      /**
-       * TODO: should check defined?
-       */
       if (configVal) {
         result[field] = configVal
       }

@@ -353,7 +353,8 @@ export interface CheckoutData
     | Customer
     | Metadata
     | SessionLineItemInput[]
-  prices: string[]
+  prices?: string[]
+  line_items?: SessionLineItemInput[]
   cancel_url: string
   success_url?: string
   return_url?: string
