@@ -26,7 +26,7 @@ import {
   FetchUsageData,
 } from 'src/types'
 
-import { SESSION_FIELDS } from '../constants'
+import { CONFIG_FIELDS, SESSION_FIELDS } from '../constants'
 
 export const getAuthHeaders = (apiKey: string): AuthHeaders => ({
   'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const getFetchConfigData = (
     result.email = configProps.email
   }
 
-  SESSION_FIELDS.forEach((field) => {
+  CONFIG_FIELDS.forEach((field) => {
     const configVal = configProps[field]
     if (configVal) {
       result[field] = configVal
@@ -113,13 +113,30 @@ export const getCheckoutData = (
       result.sessionId = callProps.sessionId
     } else if (callProps.prices) {
       result.prices = callProps.prices
+    } else if (
+      Array.isArray(callProps.line_items) &&
+      callProps.line_items.length > 0
+    ) {
+      result.line_items = callProps.line_items
     } else {
-      throw new Error('A set of prices or session id must be passed')
+      throw new Error(
+        'Insufficient checkout params passed. You must pass at least one price id, session id or one line_item'
+      )
     }
 
     if (configProps.metadata && configProps.metadata.id) {
       result.id = configProps.metadata.id
     }
+
+    /**
+     * Extend with any defined session fields
+     */
+    SESSION_FIELDS.forEach((field) => {
+      const configVal = callProps[field]
+      if (configVal) {
+        result[field] = configVal
+      }
+    })
 
     const successUrl = callProps.success_url || configProps.success_url
     if (successUrl) {

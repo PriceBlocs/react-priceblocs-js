@@ -47,18 +47,11 @@ export const INTERVAL_SHORTHAND_MAP = {
 }
 
 export const SESSION_FIELDS = [
-  'id',
-  'prices',
-  'sessions',
+  'shipping_worldwide',
   'success_url',
   'cancel_url',
-  'query',
-  'presentation',
-  'entitlements',
-  'features',
   'payment_method_types',
   'discounts',
-  'contactless',
   'allow_promotion_codes',
   'billing_address_collection',
   'shipping_address_collection',
@@ -66,7 +59,6 @@ export const SESSION_FIELDS = [
   'consent_collection',
   'after_expiration',
   'expires_at',
-  'shipping_worldwide',
   'adjustable_quantity',
   'tax_rates',
   'dynamic_tax_rates',
@@ -79,6 +71,21 @@ export const SESSION_FIELDS = [
   'trial_end',
   'metadata',
 ]
+
+export const CONFIG_FIELDS = [
+  'id',
+  'prices',
+  'sessions',
+  'query',
+  'presentation',
+  'entitlements',
+  'features',
+  'contactless',
+]
+/**
+ * TODO: need to enable spread operator for ts
+ */
+SESSION_FIELDS.forEach((field) => CONFIG_FIELDS.push(field))
 
 export const CONFIG_DEFAULTS = {
   debug: false,

@@ -105,29 +105,77 @@ describe('request/data', () => {
   })
 
   describe('getCheckoutData', () => {
-    describe('single price', () => {
-      it('prepares data with fallback cancel_url', () => {
-        const callProps = 'price_123'
-        const configProps = {
-          api_key: 'api_key',
-          success_url: 'success_url',
-          return_url: 'return_url',
-          customer: {
-            id: 'cus_123',
-          },
-        }
-        const result = getCheckoutData(configProps, callProps)
+    it('single price', () => {
+      const callProps = 'price_123'
+      const configProps = {
+        api_key: 'api_key',
+        success_url: 'success_url',
+        return_url: 'return_url',
+        customer: {
+          id: 'cus_123',
+        },
+      }
+      const result = getCheckoutData(configProps, callProps)
 
-        const target = {
-          prices: ['price_123'],
-          cancel_url: 'http://priceblocs.com',
-          success_url: 'success_url',
-          return_url: 'return_url',
-          customer: 'cus_123',
-        }
+      const target = {
+        prices: ['price_123'],
+        cancel_url: 'http://priceblocs.com',
+        success_url: 'success_url',
+        return_url: 'return_url',
+        customer: 'cus_123',
+      }
 
-        assert.deepEqual(result, target)
-      })
+      assert.deepEqual(result, target)
+    })
+
+    it('session id', () => {
+      const callProps = {
+        sessionId: 'Fe.123',
+      }
+      const configProps = {
+        api_key: 'api_key',
+        success_url: 'success_url',
+        return_url: 'return_url',
+        customer: {
+          id: 'cus_123',
+        },
+      }
+      const result = getCheckoutData(configProps, callProps)
+
+      const target = {
+        sessionId: 'Fe.123',
+        cancel_url: 'http://priceblocs.com',
+        success_url: 'success_url',
+        return_url: 'return_url',
+        customer: 'cus_123',
+      }
+
+      assert.deepEqual(result, target)
+    })
+
+    it('session config', () => {
+      const callProps = {
+        line_items: [{ price: 'price_123' }],
+      }
+      const configProps = {
+        api_key: 'api_key',
+        success_url: 'success_url',
+        return_url: 'return_url',
+        customer: {
+          id: 'cus_123',
+        },
+      }
+      const result = getCheckoutData(configProps, callProps)
+
+      const target = {
+        line_items: [{ price: 'price_123' }],
+        cancel_url: 'http://priceblocs.com',
+        success_url: 'success_url',
+        return_url: 'return_url',
+        customer: 'cus_123',
+      }
+
+      assert.deepEqual(result, target)
     })
 
     describe('callProps config', () => {

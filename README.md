@@ -38,13 +38,40 @@ npm i --save @priceblocs/react-priceblocs-js
 
 ## Quick start
 
-The quickest way to get started is to:
+### Single price
 
-1. Wrap any content with an authenticated `PriceBlocs` component. To authenticate pass a suitable `api_key` prop:
-   1. In Production: use your live publishable PriceBlocs api key and live Stripe prices (i.e. where livemode is true)
-   2. In Development: use your test publishable PriceBlocs api key and test Stripe prices (i.e.where livemode is false)
+The quickest way to get started is with a single price:
+
+1. Wrap any part of your app with an authenticated `PriceBlocs` component. To authenticate, pass your PriceBlocs `api_key` prop:
+   1. In Production: use your live publishable PriceBlocs api key and live Stripe price id _(i.e. where livemode is **true**)_
+   2. In Development: use your test publishable PriceBlocs api key and test Stripe price id _(i.e.where livemode is **false**)_
 2. Attach the `checkout` function to any click handler
 3. Pass any price id to the `checkout` call
+
+```javascript
+import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
+
+export default () => {
+  const isProd = process.env.NODE_ENV === 'production'
+  const apiKey = isProd ? 'PB_pk_live_*' : 'PB_pk_test_*'
+  const price = isProd ? 'price_123' : 'price_456'
+
+  return (
+    <PriceBlocs api_key={apiKey}>
+      {({ loading, values, checkout }) => {
+        if (loading || !values) {
+          return null
+        }
+        return <button onClick={() => checkout(price)}>Buy Now</button>
+      }}
+    </PriceBlocs>
+  )
+}
+```
+
+### Display product metadata
+
+If you need to display product metadata to the user (e.g name and description) then you can pass one or more prices to the functional component and on initialization. The products associated with the prices will be fetched and the made available via the values object for use within your UI.
 
 ```javascript
 import { PriceBlocs } from '@priceblocs/react-priceblocs-js'
@@ -67,6 +94,10 @@ export default () => {
         if (loading || !values) {
           return null
         }
+        /**
+         * 1. Destructure products from values
+         * 2. Use product attributes
+         */
         const { products } = values
         const { name, prices } = products[0]
         const { id } = prices[0]
@@ -207,7 +238,7 @@ const {
 - The `id` returned in the response can then be passed in any `checkout` action call to initiate a new Stripe Checkout session
 - All of the values passed in the initial request will be used to initialize a new Checkout session
 - For example, a checkout session with multiple `line_items` and a `discount` will create a new Checkout session for those items with the disount applied
-- This way you can describe one or more checkout sessions from the client and then when you're ready, initiate a checkout sessioun by just passing the checkout id
+- This way you can describe one or more checkout sessions from the client and then when you're ready, initiate a checkout session by just passing the checkout id
 
 ```javascript
 {
@@ -450,20 +481,42 @@ const { checkout } = usePriceBlocsContext()
 <button onClick={() => checkout(price.id)}>Buy Now</button>
 ```
 
-- `checkout` accepts a variety of arguments such as a:
-  - price id
-  - encrypted session id or a
-  - collection of resources
+- `checkout` accepts a variety of arguments such as:
+  - single price id
+  - collection of price ids
+  - encrypted session id
+  - full Stripe Checkout session [configuration](https://stripe.com/docs/api/checkout/sessions/create)
 
 ```javascript
 const { checkout } = usePriceBlocsContext()
 
-// Single price
+/**
+ * Single price
+ */
+const price = 'price_123'
 <button onClick={() => checkout(price.id)}>Buy Now</button>
-// Session id
+/**
+ * Session id
+ * - session id fetched via PriceBlocs fetchData function
+ */
+const sessionId = 'cs_live_123'
 <button onClick={() => checkout(sessionId)}>Buy Now</button>
-// Resource collection
-<button onClick={() => checkout({prices: [price.id]})}>Buy Now</button>
+/**
+ * Pass one or more prices to include multiple products within checkout
+ */
+const prices = ['price_123', 'price_456']
+<button onClick={() => checkout({ prices })}>Buy Now</button>
+/**
+ * Pass full session configuration object
+ */
+const session = {
+  line_items: [
+    {
+      price: 'price_123',
+    }
+  ]
+}
+<button onClick={() => checkout(session)}>Buy Now</button>
 ```
 
 ### billing
