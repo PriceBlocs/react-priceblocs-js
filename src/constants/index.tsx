@@ -69,6 +69,8 @@ export const SESSION_FIELDS = [
   'payment_intent_data',
   'trial_period_days',
   'trial_end',
+  'customer',
+  'customer_email',
   'metadata',
 ]
 
